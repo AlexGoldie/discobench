@@ -1,0 +1,10 @@
+fixed_files:
+  - main.py
+  - config.py
+  - make_dataset.py
+  - utils.py
+
+module_files:
+  - loss.py
+  - networks.py
+  - optim.py

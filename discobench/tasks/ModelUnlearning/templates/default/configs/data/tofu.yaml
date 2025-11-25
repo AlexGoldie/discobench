@@ -1,0 +1,5 @@
+defaults:
+  - datasets@forget: TOFU_QA_forget
+  - datasets@retain: TOFU_QA_retain
+
+anchor: forget

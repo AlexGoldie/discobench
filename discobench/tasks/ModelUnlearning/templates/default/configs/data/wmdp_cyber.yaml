@@ -1,0 +1,5 @@
+defaults:
+  - datasets@forget: WMDP_forget_cyber
+  - datasets@retain: WMDP_retain_cyber
+
+anchor: forget

@@ -1,0 +1,16 @@
+config = {
+    "NUM_ENVS": 64,
+    "BUFFER_SIZE": 300_000,
+    "BUFFER_BATCH_SIZE": 128,
+    "TOTAL_TIMESTEPS": 10_000_000,
+    "EPSILON_START": 1.0,
+    "EPSILON_FINISH": 0.05,
+    "EPSILON_ANNEAL_TIME": 4e4,
+    "TARGET_UPDATE_INTERVAL": 500,
+    "LR": 3e-4,
+    "LEARNING_STARTS": 1000,
+    "TRAINING_INTERVAL": 4,
+    "LR_LINEAR_DECAY": False,
+    "GAMMA": 0.99,
+    "TAU": 1.0,
+}

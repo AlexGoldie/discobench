@@ -1,0 +1,14 @@
+fixed_files:
+  - __init__.py
+  - make_env.py
+  - config.py
+  - main.py
+  - domain.py
+
+module_files:
+  - acq_fn.py
+  - acq_optimizer.py
+  - next_queries.py
+  - sampler.py
+  - surrogate.py
+  - surrogate_optimizer.py

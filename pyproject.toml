@@ -1,0 +1,191 @@
+[project]
+name = "discobench"
+version = "0.0.1"
+description = "This repository contains code for the DiscoBench modular benchmark for automated algorithm discovery."
+authors = [{ name = "Alex Goldie", email = "goldie@robots.ox.ac.uk" }]
+readme = "README.md"
+keywords = ['python']
+requires-python = ">=3.12,<4.0"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "datasets>=4.3.0",
+    "gymnasium>=1.2.1",
+    "huggingface-hub>=0.36.0",
+    "matplotlib>=3.10.7",
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
+    "scikit-learn>=1.7.2",
+    "scipy>=1.16.3",
+    "torch>=2.9.0",
+    "torchvision>=0.24.0",
+    "transformers[torch]>=4.57.1",
+    "pnpl>=0.0.7",
+    "click>=8.3.0",
+]
+
+[project.urls]
+Homepage = "https://AlexGoldie.github.io/discobench/"
+Repository = "https://github.com/AlexGoldie/discobench"
+Documentation = "https://AlexGoldie.github.io/discobench/"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.2.0",
+    "pre-commit>=2.20.0",
+    "tox-uv>=1.11.3",
+    "mypy>=0.991",
+    "ruff>=0.11.5",
+    "mkdocs>=1.4.2",
+    "mkdocs-material>=8.5.10",
+    "mkdocstrings[python]>=0.26.1",
+    "types-pyyaml>=6.0.12.20250915",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["discobench"]
+
+[project.scripts]
+discobench = "discobench.cli:cli"
+
+[tool.mypy]
+namespace_packages = true
+# The options below are what `--strict` encompasses.
+no_implicit_optional = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+extra_checks = true
+implicit_reexport = false
+strict_equality = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+exclude = [
+    # Ignore errors in task files.
+    "tests/*",
+    "discobench/tasks/*",
+    "task_src/*"
+]
+
+
+[tool.pyright]
+typeCheckingMode = "off"
+ignore = ["*"]
+
+
+# TODO: Add integration tests for new tasks
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+# Same excludes as black
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    ".github",
+    ".cursorrules",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    # ---- project specific ----
+    # Exclude tasks
+    "discobench/tasks/*",
+]
+target-version = "py312"
+line-length = 120
+indent-width = 4
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint]
+select = [
+    "ANN",  # flake8-annotations
+    "YTT",  # flake8-2020
+    "S", # flake8-bandit
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "T10", # flake8-debugger
+    "SIM", # flake8-simplify
+    "PYI", # flake8-pyi
+    "TCH", # flake8-type-checking
+    "RUF", # Ruff-specific-rules
+    "I", # isort
+    "C90", # mccabe
+    "E", "W", "D", # pycodestyle
+    "F", # pyflakes
+    "PGH", # pygrep-hooks
+    "UP", # pyupgrade
+    "TRY", # tryceratops
+]
+ignore = [
+    "E722",  # Equivalent to pylint's broad-except-caught (W0718)
+    "B023",  # Roughly equivalent to logging-fstring-interpolation (W1203)
+    "E501",  # Line too long (handled by formatter)
+    "TRY003",  # Tryceratops: long raise message
+    "F841", # Unused variable (ported from ToolSandbox)
+    "D100", # Missing docstring in public module
+    "D104", # Missing docstring in public package
+    "D105", # Missing docstring in magic method
+]
+fixable = ["ALL"]
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.isort]
+known-first-party = ["discobench"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+# Ignore unused imports in all `__init__.py` files
+"__init__.py" = ["F401"]
+
+[tool.ruff.format]
+preview = true
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = true
+line-ending = "auto"
+docstring-code-format=true

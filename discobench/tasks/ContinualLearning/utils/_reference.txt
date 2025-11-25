@@ -1,0 +1,28 @@
+References & Attribution — ContinualLearning
+
+Code dependencies (libraries)
+- PyTorch (MIT). Version used in requirements: torch 2.3.x. Repo: https://github.com/pytorch/pytorch
+- Torchvision (MIT). Version used: torchvision 0.18.x. Repo: https://github.com/pytorch/vision
+  • ResNet-18 architecture imported from torchvision.models (weights=None)
+- timm — PyTorch Image Models (Apache-2.0). Version used: 0.9.16. Repo: https://github.com/huggingface/pytorch-image-models
+  • ViT-Tiny backbone via timm.create_model('vit_tiny_patch16_224', num_classes=0)
+
+Datasets (sources)
+- MNIST (Y. LeCun, C. Cortes, C. Burges). Homepage: http://yann.lecun.com/exdb/mnist/
+  • Downloaded via torchvision.datasets.MNIST (mirrored at https://ossci-datasets.s3.amazonaws.com/mnist/)
+- CIFAR-100 (A. Krizhevsky). Homepage: https://www.cs.toronto.edu/~kriz/cifar.html
+  • Downloaded via torchvision.datasets.CIFAR100
+- Tiny ImageNet (CS231n, Stanford). Homepage: http://cs231n.stanford.edu/tiny-imagenet-200.zip
+  • Downloaded and extracted under task-local data directory
+
+Algorithmic references (concepts; implementation written here)
+- EWC (Elastic Weight Consolidation): Kirkpatrick et al., “Overcoming catastrophic forgetting in neural networks”, PNAS 2017.
+  • Paper: https://doi.org/10.1073/pnas.1611835114
+- Reservoir sampling: Vitter, “Random sampling with a reservoir”, ACM TOMS 1985.
+  • DOI: https://doi.org/10.1145/3147.3165
+- Permuted-MNIST protocol widely used in continual learning literature (task-specific fixed pixel permutations).
+
+Other notes
+- Accuracy/Forgetting/Score metrics follow common CL definitions; implemented per task_spec.
+- Unless explicitly imported from the libraries above, code in this task is authored in this repository under the project license.
+Upstream inspirations and licenses will be listed here in detail.

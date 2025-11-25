@@ -1,0 +1,10 @@
+TOFU_QA_wf_pert:
+  handler: QADataset
+  args:
+    hf_args:
+      name: "world_facts_perturbed"
+      split: "train"
+      path: "locuslab/TOFU"
+    question_key: "question"
+    answer_key: "perturbed_answer"
+    max_length: 512

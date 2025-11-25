@@ -1,0 +1,14 @@
+fixed_files:
+  - __init__.py
+  - wrappers.py
+  - make_env.py
+  - main.py
+
+module_files:
+  - config.py
+  - q_update.py
+  - policy.py
+  - networks.py
+  - optim.py
+  - rb.py
+  - train.py

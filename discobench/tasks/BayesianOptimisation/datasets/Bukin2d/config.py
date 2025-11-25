@@ -1,0 +1,21 @@
+config = {
+    'surrogate_min_log_diag': -10.0,
+    'surrogate_max_log_diag': -3,
+    'surrogate_log_scale_1_initialisation': -0.75,
+    'surrogate_log_diag_initialisation': -3.0,
+    'surrogate_use_noise': False,
+    'surrogate_use_jitter': True,
+    'surrogate_optimizer_lr': 3e-3,
+    'surrogate_fit_posterior_num_steps': 1000,
+    'acq_xi': 0.01,
+    'acq_kappa': 2.0,
+    'acq_gradient_max_iter': 10,
+    'acq_gradient_lr': 1e-3,
+    'acq_sample_size': 10000,
+    'acq_top_n_samples': 50,
+    'next_queries_batch_size': 1,
+    'fixed_budget': 32,
+    'fixed_num_initial_samples': 8, # should be base 2, so that sobol sampler is balanced [see scipy warning].
+    'seed': 0,
+    'num_seeds': 8,
+}

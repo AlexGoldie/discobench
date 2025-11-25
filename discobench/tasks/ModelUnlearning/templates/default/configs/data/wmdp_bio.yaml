@@ -1,0 +1,5 @@
+defaults:
+  - datasets@forget: WMDP_forget_bio
+  - datasets@retain: WMDP_retain_bio
+
+anchor: forget

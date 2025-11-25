@@ -1,0 +1,267 @@
+# Using DiscoBench
+
+This guide covers how to use DiscoBench for algorithm discovery tasks.
+
+## Installation
+
+Install DiscoBench using pip (once published) or from source:
+
+### From Source
+
+```bash
+git clone https://github.com/AlexGoldie/discobench.git
+cd discobench
+make install
+```
+
+This will:
+- Create a virtual environment using uv
+- Install all dependencies
+- Set up pre-commit hooks
+
+## Quick Start
+
+### 1. List Available Domains
+
+See all available task domains:
+
+```bash
+discobench get-domains
+```
+
+### 2. View Modules for Each Domain
+
+See which modules are available for each domain:
+
+```bash
+discobench get-modules
+```
+
+### 3. Create a Task
+
+Create task files for a specific domain:
+
+```bash
+discobench create-task --task-domain OnPolicyRL
+```
+
+This creates a training task with default configuration. The generated files will appear in the `task_src/` directory.
+
+## CLI Reference
+
+DiscoBench provides three main commands:
+
+### `create-task`
+
+Create task source files for algorithm discovery.
+
+**Usage:**
+```bash
+discobench create-task --task-domain DOMAIN [OPTIONS]
+```
+
+**Required Options:**
+- `--task-domain TEXT`: The task domain to create (e.g., OnPolicyRL, LanguageModelling)
+
+**Optional Flags:**
+- `--test`: Create test task instead of training task
+- `--config-path PATH`: Path to custom task_config.yaml (defaults to built-in config)
+- `--example`: Create example task using prebuilt example configs
+
+**Examples:**
+
+Create a training task for OnPolicyRL:
+```bash
+discobench create-task --task-domain OnPolicyRL
+```
+
+Create a test task:
+```bash
+discobench create-task --task-domain OnPolicyRL --test
+```
+
+Use a custom configuration:
+```bash
+discobench create-task --task-domain LanguageModelling --config-path my_config.yaml
+```
+
+Use the example configuration:
+```bash
+discobench create-task --task-domain LanguageModelling --example
+```
+
+### `get-domains`
+
+List all available task domains in DiscoBench.
+
+**Usage:**
+```bash
+discobench get-domains
+```
+
+**Output:**
+Shows a list of all available domains like OnPolicyRL, LanguageModelling, BayesianOptimisation, etc.
+
+### `get-modules`
+
+List all available modules for each domain.
+
+**Usage:**
+```bash
+discobench get-modules
+```
+
+**Output:**
+Shows which modular components are available in each domain (e.g., loss, networks, optim, train).
+
+## Python API
+
+You can also use DiscoBench programmatically from Python:
+
+### Creating Tasks
+
+```python
+from discobench import create_task
+
+# Create a training task
+create_task(task_domain="OnPolicyRL", test=False)
+
+# Create a test task with custom config
+create_task(
+    task_domain="LanguageModelling",
+    test=True,
+    config_path="my_config.yaml"
+)
+```
+
+### Getting Domain Information
+
+```python
+from discobench import get_domains, get_modules
+
+# Get list of all domains
+domains = get_domains()
+print(domains)
+
+# Get modules for each domain
+modules = get_modules()
+for domain, module_list in modules.items():
+    print(f"{domain}: {module_list}")
+```
+
+### Creating Custom Configurations
+
+```python
+from discobench import create_config
+
+# Get default config for a domain
+config = create_config(task_domain="OnPolicyRL")
+
+# Modify the config
+config["change_optim"] = True
+config["change_loss"] = False
+
+# Use it to create a task
+create_task(
+    task_domain="OnPolicyRL",
+    test=False,
+    config_dict=config
+)
+```
+
+## Configuration Files
+
+Task behavior is controlled by `task_config.yaml` files. Here would be an example:
+
+```yaml
+train_task_id: [MinAtar/Breakout, MinAtar/Freeway]
+test_task_id: [MinAtar/Asterix, MinAtar/SpaceInvaders]
+
+source_path: task_src/OnPolicyRL
+template_backend: default
+
+change_optim: true
+change_loss: true
+change_networks: false
+change_train: false
+```
+
+**Key Fields:**
+
+- `train_task_id`: Datasets/environments for training
+- `test_task_id`: Datasets/environments for testing
+- `source_path`: Where to create the task files (default: `task_src/`)
+- `template_backend`: Which template variant to use (e.g., default, transformer, recurrent)
+- `change_*`: Set to `true` to use editable module versions, `false` for baseline implementations
+
+## Common Workflows
+
+### Workflow 1: Running a Default Task
+
+```bash
+# 1. Create the task
+discobench create-task --task-domain OnPolicyRL
+
+# 2. Navigate to the created task
+cd task_src/OnPolicyRL
+
+# 3. Run all task_ids in the task
+# Note: this will only run if change_*=False for all *
+# or you have completed module implementations!
+python run_main.py
+```
+
+### Workflow 2: Using the example config
+
+```bash
+# 1. Create the task
+discobench create-task --task-domain OnPolicyRL --example
+
+# 2. Navigate to the created task
+cd task_src/OnPolicyRL
+
+# 3. Run your agent to develop new algorithms
+
+# 4. Create the test task
+discobench create-task --task-domain OnPolicyRL --example --test
+
+# 5. Run evaluation
+python run_main.py
+```
+
+### Workflow 3: Customizing Module Selection
+
+1. Get the default config:
+   ```python
+   from discobench import create_config
+   config = create_config("OnPolicyRL")
+   ```
+
+2. Modify which modules are editable:
+   ```python
+   config["change_optim"] = True  # Use editable optimizer
+   config["change_loss"] = True   # Use editable loss
+   ```
+
+3. Create task with custom config:
+   ```python
+   from discobench import create_task
+   create_task("OnPolicyRL", test=False, config_dict=config)
+   ```
+
+### Workflow 4: Testing Across Multiple Domains
+
+```bash
+# Create tasks for different domains
+discobench create-task --task-domain OnPolicyRL
+discobench create-task --task-domain LanguageModelling
+discobench create-task --task-domain BayesianOptimisation
+
+# Each creates files in task_src/{domain_specific_folder}/
+```
+
+## Next Steps
+
+- See [Domains](domains.md) for detailed information about available task domains
+- See [Contributing Guide](how_to/overview.md) to add your own tasks
+- See [Dataset Integration](how_to/dataset_integration.md) to add new datasets
