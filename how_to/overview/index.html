@@ -1,0 +1,1386 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="This repository contains code for the DiscoBench modular benchmark for automated algorithm discovery.">
+      
+      
+        <meta name="author" content="Alex Goldie">
+      
+      
+        <link rel="canonical" href="https://AlexGoldie.github.io/discobench/how_to/overview/">
+      
+      
+        <link rel="prev" href="../../domains/">
+      
+      
+        <link rel="next" href="../dataset_integration/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Overview - DiscoBench</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-contribute-a-task-for-discobench" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DiscoBench" class="md-header__button md-logo" aria-label="DiscoBench" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DiscoBench
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/AlexGoldie/discobench" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    AlexGoldie/discobench
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DiscoBench" class="md-nav__button md-logo" aria-label="DiscoBench" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DiscoBench
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/AlexGoldie/discobench" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    AlexGoldie/discobench
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using DiscoBench
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domains/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domains
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Directory Structure Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step-explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Step-by-Step Explanation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧩 Step-by-Step Explanation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 datasets/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ templates/
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ templates/">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#must-contain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must contain:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧰 utils/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template_backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 template_backends/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task_configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧾 task_config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤖 (Optional) models/
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-make-a-new-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧱 How to Make a New Task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ Dataset Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-your-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Verifying Your Task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nice-to-know" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Nice to Know
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧭 Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataset_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding Datasets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Directory Structure Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step-explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Step-by-Step Explanation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧩 Step-by-Step Explanation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 datasets/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ templates/
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ templates/">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#must-contain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Must contain:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧰 utils/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template_backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 template_backends/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task_configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧾 task_config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤖 (Optional) models/
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-make-a-new-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧱 How to Make a New Task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ Dataset Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-your-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Verifying Your Task
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nice-to-know" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Nice to Know
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧭 Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="how-to-contribute-a-task-for-discobench">🪩 <strong>How to Contribute a Task for DiscoBench</strong><a class="headerlink" href="#how-to-contribute-a-task-for-discobench" title="Permanent link">&para;</a></h1>
+<p>Thank you for your interest in making a task for <strong>DiscoBench</strong>!
+Your contribution is <em>hugely appreciated</em> and will help unlock new research in <strong>automated research</strong> and <strong>algorithm discovery</strong> using agentic LLMs.</p>
+<hr />
+<h2 id="goal">🎯 Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h2>
+<p>The goal of <strong>DiscoBench</strong> is to develop a series of <strong>modular tasks</strong>, where an ML codebase is broken into its constituent components, for LLMs to use when discovering new algorithms. Through configs, we can choose which modules should use <strong>default code</strong> (the original implementation) and which should be <strong>LLM-generated</strong>. We want to ensure that LLMs can produce <strong>performant, generalisable</strong> algorithms for AI research.</p>
+<hr />
+<h2 id="getting-started">⚙️ Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Follow the setup instructions from the <a href="https://github.com/AlexGoldie/discobench/">DiscoBench repository</a> to prepare your environment.</li>
+<li>Clone the repo and ensure everything runs correctly.</li>
+<li>Follow the guide below to create your own task.</li>
+</ol>
+<hr />
+<h2 id="directory-structure-example">📁 Directory Structure Example<a class="headerlink" href="#directory-structure-example" title="Permanent link">&para;</a></h2>
+<p>Here, we will use <strong>OnPolicyRL</strong> as an example task structure. The OnPolicyRL directory looks as follows.</p>
+<pre><code>OnPolicyRL/
+├── datasets/
+│   ├── Brax/
+│   ├── Craftax/
+│   ├── GridWorld/
+│   └── MinAtar/
+│
+├── templates/
+│   ├── default/
+│   │   ├── base/
+│   │   ├── edit/
+│   │   ├── main.py
+│   │   ├── __init__.py
+│   │   └── wrappers.py
+│   │
+│   ├── recurrent/
+│   ├── transformer/
+│   │
+│   └── utils/
+│       ├── _reference.txt
+│       ├── description.md
+│       ├── requirements.txt
+│       ├── task_information.yaml
+│       └── task_spec.yaml
+│
+└── task_config.yaml
+</code></pre>
+<hr />
+<h2 id="step-by-step-explanation">🧩 Step-by-Step Explanation<a class="headerlink" href="#step-by-step-explanation" title="Permanent link">&para;</a></h2>
+<h3 id="datasets">🧠 <code>datasets/</code><a class="headerlink" href="#datasets" title="Permanent link">&para;</a></h3>
+<p>Contains each dataset (or environment) that your code can run with.</p>
+<p>Each dataset folder should include:</p>
+<ul>
+<li><strong><code>description.md</code></strong> — explains what the dataset/environment is (e.g., “This is Breakout!”).</li>
+<li><strong><code>make_env.py</code> / <code>make_dataset.py</code></strong> — loads and returns the dataset or environment. See <code>dataset_integration.md</code> for a more thorough explanation of how to handle datasets in your new DiscoBench task!</li>
+<li>Any <strong>dataset-specific configs</strong> or helper files.</li>
+</ul>
+<hr />
+<h3 id="templates">🏗️ <code>templates/</code><a class="headerlink" href="#templates" title="Permanent link">&para;</a></h3>
+<p>The <code>templates/</code> directory contains all versions of your code templates.</p>
+<h4 id="must-contain">Must contain:<a class="headerlink" href="#must-contain" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>default/</code></strong> — includes:</p>
+</li>
+<li>
+<p><code>base/</code>: fully implemented modules.</p>
+</li>
+<li><code>edit/</code>: same file names as <code>base/</code>, but with function <em>signatures</em>, <em>comments</em>, and possibly some <em>useful lines</em> only. These are the files to be completed by an LLM.</li>
+<li><code>main.py</code>: the main entry point to the task.</li>
+<li>Other necessary files like <code>wrappers.py</code>, or any model evaluation logic. Any non-modules should be stored outside of <code>base</code>/<code>edit</code>.</li>
+<li><strong><code>utils/</code></strong> — meta-information and configuration files.</li>
+</ul>
+<h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>base/optim.py</code>:</li>
+</ul>
+<p><img alt="Base optim.py implementation" src="../images/image4.png" />
+* <code>edit/optim.py</code>:</p>
+<p><img alt="Edit optim.py template" src="../images/image6.png" /></p>
+<blockquote>
+<p>🧩 Files in <code>templates/</code> (outside <code>base</code>/<code>edit</code>) are shared — used regardless of which version (default or LLM-generated) is selected.</p>
+</blockquote>
+<hr />
+<h3 id="utils">🧰 <code>utils/</code><a class="headerlink" href="#utils" title="Permanent link">&para;</a></h3>
+<p>This folder <strong>always</strong> contains:</p>
+<ul>
+<li>
+<p><strong><code>description.md</code></strong> — general task-domain description (e.g., what RL is).</p>
+</li>
+<li>
+<p><strong><code>requirements.txt</code></strong> — dependencies required to run the benchmark.</p>
+</li>
+<li>
+<p><strong><code>task_information.yaml</code></strong> — describes per-module prompts for <code>edit</code> codebases.
+  Each <code>{module}_prompt</code> must match the corresponding filename.</p>
+</li>
+<li>
+<p><strong><code>task_spec.yaml</code></strong> — defines all files which need to be loaded to define a task. Also sets which files are fixed and which are modular.</p>
+</li>
+</ul>
+<hr />
+<h3 id="template_backends">🧠 <code>template_backends/</code><a class="headerlink" href="#template_backends" title="Permanent link">&para;</a></h3>
+<p>Folders like <code>transformer/</code> or <code>recurrent/</code> are <strong>optional backends</strong> that <em>override</em> specific files in <code>default/</code>.</p>
+<p>Example:</p>
+<ul>
+<li><code>transformer/networks.py</code> replaces <code>default/networks.py</code> with a transformer implementation.</li>
+<li>If implementing any additional backends, there should be an updated <code>task_information.yaml</code> in the backend folder for whichever modules have been overwritten.</li>
+</ul>
+<hr />
+<h3 id="task_configyaml">🧾 <code>task_config.yaml</code><a class="headerlink" href="#task_configyaml" title="Permanent link">&para;</a></h3>
+<p>Defines which modules use <strong>base</strong> or <strong>edit</strong> code.
+This is what anyone running the benchmark can use to configure the task.</p>
+<p>It also:</p>
+<ul>
+<li>Specifies the dataset/environment</li>
+<li>Chooses backend (default/recurrent/transformer)</li>
+<li>Defines where to save the task under <code>task_src/</code></li>
+</ul>
+<p><strong><code>task_spec.yaml</code> vs <code>task_config.yaml</code>:</strong></p>
+<ul>
+<li>
+<p><strong><code>task_spec.yaml</code></strong> (in <code>utils/</code>): Defines the <strong>structure</strong> of your task domain. It lists which files are fixed (always copied as-is) vs which are module files (can have <code>base/</code> and <code>edit/</code> versions). This file is <strong>static</strong> and defines the task domain architecture.</p>
+</li>
+<li>
+<p><strong><code>task_config.yaml</code></strong> (in task root): Defines the <strong>runtime configuration</strong> for a specific task instance. It specifies:</p>
+<ul>
+<li>Which datasets to use (<code>train_task_id</code>, <code>test_task_id</code>)</li>
+<li>Which modules should use <code>edit/</code> implementations (<code>change_loss: true</code>, <code>change_optim: false</code>, etc.)</li>
+<li>Which backend to create the task with.</li>
+<li>Any task-specific settings</li>
+</ul>
+</li>
+</ul>
+<p>This file is <strong>dynamic</strong> and can be modified to change which parts of the code are editable for participants.</p>
+<hr />
+<h3 id="optional-models">🤖 (Optional) <code>models/</code><a class="headerlink" href="#optional-models" title="Permanent link">&para;</a></h3>
+<p>Contains different pretrained models that your code relies on. These can optionally be included in your tasks if they involve finetuning or changing pretrained models.</p>
+<p>Each model folder should include:
+* <strong><code>description.md</code></strong> - an explanation of that model
+* <strong><code>model_config.yaml</code></strong> - everything needed to download the model from HuggingFace.</p>
+<p>See <code>discobench/tasks/ModelUnlearning</code> for an example of how <code>models</code> can be used!</p>
+<hr />
+<h2 id="how-to-make-a-new-task">🧱 How to Make a New Task<a class="headerlink" href="#how-to-make-a-new-task" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Choose a codebase</strong></p>
+</li>
+<li>
+<p>Stay close to a known repo for verification and reproducibility.</p>
+</li>
+<li>
+<p>Example: OnPolicyRL is derived from PureJaxRL.</p>
+</li>
+<li>
+<p><strong>Identify modules</strong></p>
+</li>
+<li>
+<p>Generally, there are some easy modules to identify: <code>network</code>, <code>loss</code>, <code>optimizer</code></p>
+</li>
+<li>
+<p>Optionally include <code>config</code>, <code>training loop</code>, or other unique artifacts.</p>
+</li>
+<li>
+<p><strong>Split code into modules</strong></p>
+</li>
+<li>
+<p>Each module should ideally have a single purpose (e.g. <code>get_optimizer()</code>).</p>
+</li>
+<li>
+<p><strong>Create base and edit folders</strong></p>
+</li>
+<li>
+<p><code>base/</code>: complete implementations.</p>
+</li>
+<li>
+<p><code>edit/</code>: empty or commented versions, keeping function signatures and minimal guidance.</p>
+</li>
+<li>
+<p><strong>Define a metric</strong></p>
+</li>
+<li>
+<p>Must return or print a performance metric.</p>
+</li>
+<li>E.g., validation accuracy, test score after tuning, etc.</li>
+<li>The logic for producing this metric must <strong>not</strong> reside in a module (otherwise the LLM could cheat)!</li>
+<li>
+<p>Be consistent across tasks!</p>
+</li>
+<li>
+<p><strong>Create <code>task_spec.yaml</code></strong></p>
+</li>
+<li>
+<p>List all modules and mark whether they're editable or fixed. This file defines the structure of your task and does not change. It lives in <code>utils/task_spec.yaml</code>. Below you can find an example <code>task_spec.yaml</code> file:</p>
+<p>```yaml
+   fixed_files:
+ - train.py
+ - evaluate.py
+ - make_dataset.py
+ - config.py
+ - main.py</p>
+</li>
+</ol>
+<p>module_files:
+     - loss.py
+     - networks.py
+     - optim.py
+   ```</p>
+<ol>
+<li>
+<p><strong>(Optional)</strong> Add backends (<code>transformer/</code>, <code>recurrent/</code>, etc.)</p>
+</li>
+<li>
+<p><strong>Write metadata</strong></p>
+</li>
+<li>
+<p>Add <code>description.md</code>, <code>task_information.yaml</code>, <code>requirements.txt</code> inside <code>utils/</code>.</p>
+</li>
+<li>
+<p><strong>Add datasets</strong></p>
+</li>
+<li>
+<p>Each under <code>datasets/</code>, with its own <code>description.md</code> and loader/configs.</p>
+</li>
+<li>
+<p><strong>Verify your code</strong></p>
+<ul>
+<li>Ensure base code runs to expected performance.</li>
+<li>Check <code>edit</code> code has correct signatures and structure.</li>
+<li>You can temporarily replace edit with base code to verify functionality.</li>
+</ul>
+</li>
+<li>
+<p><strong>Add <code>_reference.txt</code></strong></p>
+<ul>
+<li>Include original codebase and dataset citation or source link.</li>
+</ul>
+</li>
+<li>
+<p><strong>Ensure <code>main.py</code> exists</strong></p>
+<ul>
+<li>This must be the <strong>entrypoint</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Create <code>task_config.yaml</code></strong></p>
+<ul>
+<li>This file lives in the task root directory (same level as <code>utils/</code>, <code>templates/</code>, etc.).</li>
+<li>It specifies which datasets to use and which modules should use <code>edit/</code> implementations.</li>
+<li>For every file listed in <code>module_files</code> in your <code>task_spec.yaml</code>, you must include a corresponding <code>change_&lt;module_name&gt;</code> entry (without the <code>.py</code> extension).</li>
+</ul>
+<p>Example from OnPolicyRL:</p>
+<p>```yaml
+train_task_id: [MinAtar/Breakout, MinAtar/Freeway]
+test_task_id: [MinAtar/Breakout, MinAtar/SpaceInvaders, MinAtar/Freeway, MinAtar/Asterix, Brax/Ant]</p>
+<p>source_path: task_src/OnPolicyRL
+template_backend: default # default, transformer, recurrent</p>
+<p>change_optim: false
+change_loss: true
+change_networks: false
+change_train: false
+```</p>
+<ul>
+<li><code>train_task_id</code> and <code>test_task_id</code>: Specify which datasets to use (must match dataset folder names under <code>datasets/</code>).</li>
+<li><code>change_&lt;module&gt;</code>: Set to <code>true</code> to use the <code>edit/</code> version (participants can modify), <code>false</code> to use the <code>base/</code> version (fixed implementation).</li>
+<li>Each module file from <code>task_spec.yaml</code>'s <code>module_files</code> list needs a corresponding <code>change_&lt;module&gt;</code> entry (e.g., <code>loss.py</code> → <code>change_loss</code>, <code>networks.py</code> → <code>change_networks</code>, <code>optim.py</code> → <code>change_optim</code>).</li>
+</ul>
+</li>
+<li>
+<p><strong>Create example_config in <code>example_configs/&lt;task_domain&gt;.yaml</code></strong></p>
+<ul>
+<li>This will create an example task for anyone who wants to test an agent on your task.</li>
+</ul>
+<p>Example from OnPolicyRL:</p>
+<p>```yaml
+train_task_id: [MinAtar/Breakout, MinAtar/Freeway,]
+test_task_id: [MinAtar/Asterix, MinAtar/SpaceInvaders]</p>
+<p>source_path: task_src/OnPolicyRL
+template_backend: default # default, transformer, recurrent</p>
+<p>change_optim: true
+change_loss: true
+change_networks: false
+change_train: false
+```</p>
+</li>
+<li>
+<p><strong>Keep metrics outside modules</strong></p>
+<ul>
+<li>The main performance metric should not be computed <em>inside</em> a module (we don't want it to be possible to cheat)!</li>
+</ul>
+</li>
+</ol>
+<p>✅ Done! Your task is ready for integration.</p>
+<hr />
+<h2 id="dataset-integration">🗂️ Dataset Integration<a class="headerlink" href="#dataset-integration" title="Permanent link">&para;</a></h2>
+<p>For detailed instructions on adding new datasets to your tasks, see our <a href="../dataset_integration/">Dataset Integration Guide</a>.</p>
+<h2 id="verifying-your-task">🧪 Verifying Your Task<a class="headerlink" href="#verifying-your-task" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Generate the LLM-facing file system</strong></li>
+</ol>
+<p>To test whether your task is runnable, try creating the file system as it would be used in <code>discobench</code> with the command:</p>
+<p><code>bash
+   python3 -m discobench.create_task --task_domain &lt;TASK_NAME&gt;</code></p>
+<p>This will populate:</p>
+<p><code>task_src/&lt;TASK_NAME&gt;</code></p>
+<p>The first check should therefore be that the above runs through without any errors.</p>
+<ol>
+<li>
+<p><strong>Verifying that your code can run.</strong></p>
+<p>After you verified that your task can run using <code>make_files.py</code>, it is now time to actually run your code. There are many ways to do so.
+One easy way is to (i) change edit to <code>false</code> for all modules and (ii) include all datasets as train tasks in the <code>task_config.yaml</code>. Then re-run the script in (1); you should be able to run the files in the file system created under <code>task_src/</code>. To test this, use <code>run_main.py</code>, which will run all files called <code>main.py</code>.</p>
+</li>
+<li>
+<p><strong>Make sure that all additional files are there</strong></p>
+</li>
+</ol>
+<p>There are some files that are needed to generate the LLM Agent prompts, which currently do not lead to errors in steps (1) and (2), even when they are missing. While they were already mentioned in the text above, here you can find a compact collection to make sure that all the files you need are there:</p>
+<ul>
+<li><strong><code>description.md</code></strong> — general task-domain description (e.g., what RL is).</li>
+<li><strong><code>requirements.txt</code></strong> — dependencies required to run the benchmark.</li>
+<li><strong><code>task_information.yaml</code></strong> — describes per-module prompts for <code>edit</code> codebases.
+  Each <code>{module}_prompt</code> must match the corresponding filename.</li>
+<li><strong><code>_reference.txt</code></strong> — original codebase citation or source link for attribution and reproducibility.</li>
+<li><strong><code>datasets/&lt;DATASET_NAME&gt;/description.md</code></strong> — Must be provided for each dataset. Explains what the dataset/environment is (e.g., "This is Breakout!").</li>
+</ul>
+<hr />
+<h2 id="nice-to-know">💡 Nice to Know<a class="headerlink" href="#nice-to-know" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Running pre-commit hooks on every commit can be annoying.
+  You can disable them temporarily:</li>
+</ul>
+<p><code>bash
+  git commit --no-verify</code></p>
+<p>Then, when you’re ready to push:</p>
+<p><code>bash
+  pre-commit run --all-files</code></p>
+<p>or simply commit again without <code>--no-verify</code>.</p>
+<hr />
+<h2 id="summary">🧭 Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Creating a DiscoBench task involves:</p>
+<ol>
+<li>Structuring your files (<code>datasets</code>, <code>templates</code>, <code>utils</code>).</li>
+<li>Separating full (<code>base</code>) and empty (<code>edit</code>) implementations.</li>
+<li>Adding metadata (<code>task_information.yaml</code>, <code>task_spec.yaml</code>).</li>
+<li>Ensuring reproducibility and attribution.</li>
+<li>Verifying your task with the creation script.</li>
+</ol>
+<p>Follow this guide carefully — doing so makes our lives <em>much</em> easier when integrating your task! ✨</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Maintained by <a href="https://AlexGoldie.com">AlexGoldie</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/AlexGoldie/discobench" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/discobench" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://alexgoldie.github.io/discobench-blog/" target="_blank" rel="noopener" title="alexgoldie.github.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224 24c0-13.3 10.7-24 24-24 145.8 0 264 118.2 264 264 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-119.3-96.7-216-216-216-13.3 0-24-10.7-24-24M80 96c26.5 0 48 21.5 48 48v224c0 26.5 21.5 48 48 48s48-21.5 48-48-21.5-48-48-48c-8.8 0-16-7.2-16-16v-64c0-8.8 7.2-16 16-16 79.5 0 144 64.5 144 144s-64.5 144-144 144S32 447.5 32 368V144c0-26.5 21.5-48 48-48m168 0c92.8 0 168 75.2 168 168 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-66.3-53.7-120-120-120-13.3 0-24-10.7-24-24s10.7-24 24-24"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
