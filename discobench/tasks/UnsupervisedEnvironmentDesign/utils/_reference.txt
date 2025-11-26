@@ -1,0 +1,4 @@
+- PureJaxRL (https://github.com/luchris429/purejaxrl)
+- SFL (https://github.com/amacrutherford/sampling-for-learnability)
+- Kinetix (https://github.com/RobertTLange/gymnax)
+- Minigrid (https://github.com/google/brax)
