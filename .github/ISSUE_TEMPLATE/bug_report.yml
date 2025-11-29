@@ -1,0 +1,128 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in DiscoBench
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the sections below to help us understand and reproduce the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: What happened? What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Set up environment with...
+        2. Run command '...'
+        3. Observe error at...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Describe the expected outcome
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened (include error messages, stack traces, logs)
+      placeholder: Paste error messages, stack traces, or relevant logs here
+      render: shell
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        **Component Guide:**
+        - **Core**: Root package files in `discobench/` (e.g., `discobench/__init__.py`, `discobench/cli.py`)
+        - **Tasks**: Task domain implementations in `discobench/tasks/` (e.g., `discobench/tasks/OnPolicyRL/`, `discobench/tasks/ModelUnlearning/`)
+        - **Utils**: Utility modules in `discobench/utils/` (e.g., `discobench/utils/make_files.py`)
+        - **Documentation**: Documentation files (e.g., `docs/`, `mkdocs.yml`, `README.md`)
+        - **Testing Infrastructure**: Testing and CI/CD (e.g., `tests/`, `.github/workflows/`, `.pre-commit-config.yaml`, `pytest.ini`)
+        - **Other**: Project configuration and other files (e.g., `pyproject.toml`, `Makefile`, `.gitignore`)
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component is affected?
+      options:
+        - Core
+        - Tasks
+        - Utils
+        - Documentation
+        - Testing Infrastructure
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Your environment details
+      value: |
+        - OS: [e.g., macOS 14.0, Ubuntu 22.04]
+        - Python version: [e.g., 3.12.1]
+        - DiscoBench version/commit: [e.g., v0.1.0 or commit hash]
+        - Installed via: [e.g., pip, uv, git clone]
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: minimal-example
+    attributes:
+      label: Minimal Reproducible Example
+      description: If possible, provide a minimal code example that reproduces the issue
+      placeholder: |
+        ```python
+        import discobench
+        # Minimal code that reproduces the bug...
+        ```
+      render: python
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Any relevant logs or CLI output
+      placeholder: Paste relevant log excerpts here
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem (screenshots, related issues, etc.)
+      placeholder: Add any other context, screenshots, or information here
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have included a minimal reproducible example (if applicable)
+          required: false
+        - label: I have included relevant logs and error messages
+          required: false

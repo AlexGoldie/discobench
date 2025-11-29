@@ -1,0 +1,136 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for DiscoBench
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please provide as much detail as possible to help us understand your proposal.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A clear and concise description of the feature you'd like to see
+      placeholder: What feature would you like to add or improve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation and Use Case
+      description: Why is this feature needed? What problem does it solve?
+      placeholder: |
+        Describe the problem or limitation you're experiencing:
+        - What are you trying to accomplish?
+        - How would this feature help your research or workflow?
+        - Who else would benefit from this feature?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How do you envision this feature working?
+      placeholder: |
+        Describe your proposed solution:
+        - What should the API/interface look like?
+        - How should it integrate with existing components?
+        - Any specific implementation details or pseudocode?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: |
+        - What alternatives have you considered?
+        - Are there existing workarounds?
+        - Why is the proposed solution better?
+
+  - type: markdown
+    attributes:
+      value: |
+        **Component Guide:**
+        - **Core**: Root package files in `discobench/` (e.g., `discobench/__init__.py`, `discobench/cli.py`)
+        - **Tasks**: Task domain implementations in `discobench/tasks/` (e.g., `discobench/tasks/OnPolicyRL/`, `discobench/tasks/ModelUnlearning/`)
+        - **Utils**: Utility modules in `discobench/utils/` (e.g., `discobench/utils/make_files.py`)
+        - **Documentation**: Documentation files (e.g., `docs/`, `mkdocs.yml`, `README.md`)
+        - **Testing Infrastructure**: Testing and CI/CD (e.g., `tests/`, `.github/workflows/`, `.pre-commit-config.yaml`)
+        - **Other**: Project configuration and other files (e.g., `pyproject.toml`, `Makefile`, `.gitignore`)
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component would this feature affect?
+      options:
+        - Core
+        - Tasks
+        - Utils
+        - Documentation
+        - Testing Infrastructure
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to your work?
+      options:
+        - Critical - Blocking my research
+        - High - Would significantly improve my workflow
+        - Medium - Nice to have
+        - Low - Minor improvement
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Usage
+      description: If applicable, show how you would use this feature
+      placeholder: |
+        ```python
+        # Example of how you'd use the proposed feature
+        import discobench
+
+        # Your example code here...
+        ```
+      render: python
+
+  - type: textarea
+    id: related-work
+    attributes:
+      label: Related Work
+      description: Are there similar features in other frameworks or papers?
+      placeholder: |
+        - Link to similar implementations in other frameworks
+        - Relevant research papers or blog posts
+        - Related GitHub issues or discussions
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, diagrams, or information
+      placeholder: Add any other context, diagrams, or information here
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues and discussions to ensure this is not a duplicate
+          required: true
+        - label: I have considered how this feature fits with DiscoBench's goals
+          required: false
+        - label: I am willing to contribute to implementing this feature
+          required: false
