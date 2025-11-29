@@ -7,7 +7,7 @@ def get_modules() -> dict[str, list[str]]:
     Returns:
         Dictionary of {domain: modules}.
     """
-    task_path = pathlib.Path("discobench/tasks")
+    task_path = pathlib.Path(__file__).parent.parent / "tasks"
     module_dict = {}
     for task in task_path.iterdir():
         domain_path = task / "templates/default/base"

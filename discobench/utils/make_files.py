@@ -1,4 +1,5 @@
 import importlib
+import importlib.util
 import os
 import shutil
 from collections.abc import Callable
@@ -17,7 +18,7 @@ class MakeFiles:
         Args:
             task_domain: The task domain to create the task for.
         """
-        self.base_path = Path(f"discobench/tasks/{task_domain}")
+        self.base_path = Path(__file__).parent.parent / "tasks" / task_domain
         task_spec_path = self.base_path / "utils" / "task_spec.yaml"
         with open(task_spec_path) as f:
             self.task_spec = yaml.safe_load(f)
@@ -321,7 +322,7 @@ class MakeFiles:
 
     def _load_discobench_description(self) -> str:
         """Load the base description once during initialization."""
-        discobench_path = Path("discobench/utils/description.md")
+        discobench_path = Path(__file__).parent / "description.md"
         return discobench_path.read_text(encoding="utf-8")
 
     def _load_domain_description(self, template_backend: str) -> str:
@@ -356,7 +357,7 @@ class MakeFiles:
 
     def load_run_main(self) -> None:
         """Load run_main.py."""
-        run_main_path = Path("discobench/utils/run_main.py")
+        run_main_path = Path(__file__).parent / "run_main.py"
 
         dest = self.source_path / "run_main.py"
         shutil.copy2(run_main_path, dest)
@@ -393,8 +394,12 @@ class MakeFiles:
             dataset_file = task_path / "make_dataset.py"
             if not dataset_file.is_file():
                 return download_dataset
-            module_name = task_path / "make_dataset"
-            task_module = importlib.import_module(module_name.as_posix().replace("/", "."))
+            spec = importlib.util.spec_from_file_location("make_dataset", dataset_file)
+            if spec is None or spec.loader is None:
+                return download_dataset
+            task_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(task_module)
+
             download_dataset = getattr(task_module, "download_dataset", None)
         except ModuleNotFoundError as e:
             # If we cannot import a downloader, do nothing for this task

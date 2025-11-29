@@ -7,6 +7,6 @@ def get_domains() -> list[str]:
     Returns:
         List of [domains].
     """
-    task_path = pathlib.Path("discobench/tasks")
+    task_path = pathlib.Path(__file__).parent.parent / "tasks"
     domains = [p.name for p in task_path.iterdir()]
     return domains

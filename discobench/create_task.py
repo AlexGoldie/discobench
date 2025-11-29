@@ -1,7 +1,7 @@
 """A function so you can just import create_task and it will return make_files_public, make_files_private and task_description."""
 
 import argparse
-import os
+from pathlib import Path
 from typing import Any
 
 import yaml
@@ -33,9 +33,9 @@ def create_task(
 
     if config_path is None and config_dict is None:
         if example is True:
-            config_path = os.path.join(os.path.dirname(__file__), f"example_configs/{task_domain}.yaml")
+            config_path = str(Path(__file__).parent / f"example_configs/{task_domain}.yaml")
         else:
-            config_path = os.path.join(os.path.dirname(__file__), f"tasks/{task_domain}/task_config.yaml")
+            config_path = str(Path(__file__).parent / f"tasks/{task_domain}/task_config.yaml")
     if config_dict is not None:
         task_config = config_dict
     else:
