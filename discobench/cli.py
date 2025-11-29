@@ -30,14 +30,14 @@ def create_task_cmd(task_domain: str, test: bool, config_path: str | None = None
     click.echo(f"Successfully created {mode} task for domain: {task_domain}.")
 
 
-@cli.command("list-domains")
+@cli.command("get-domains")
 def get_domains_cmd() -> None:
     """List all available task domains in DiscoBench."""
     domains = get_domains()
     click.echo("\n".join(domains))
 
 
-@cli.command("list-modules")
+@cli.command("get-modules")
 def get_modules_cmd() -> None:
     """List all available modules for a specified task domain."""
     module_dict = get_modules()

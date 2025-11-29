@@ -8,4 +8,3 @@ datasets
 gymnasium
 transformers[torch]
 datasets
-matplotlib

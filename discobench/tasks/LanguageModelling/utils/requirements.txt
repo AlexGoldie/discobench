@@ -8,5 +8,4 @@ datasets
 gymnasium
 transformers[torch]
 datasets
-matplotlib
 huggingface-hub
