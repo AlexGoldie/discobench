@@ -1,5 +1,5 @@
-train_task_id: [CIFAR10C, CIFAR10, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StandfordCars, TinyImageNet]
-test_task_id: [CIFAR10C, CIFAR10, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StandfordCars, TinyImageNet]
+train_task_id: [CIFAR10C, CIFAR10, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StanfordCars, TinyImageNet]
+test_task_id: [CIFAR10C, CIFAR10, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StanfordCars, TinyImageNet]
 
 source_path: task_src/ComputerVisionClassification
 
