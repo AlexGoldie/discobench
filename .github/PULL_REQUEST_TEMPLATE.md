@@ -82,7 +82,6 @@ Closes #
 ## Code Quality
 
 - [ ] Pre-commit hooks pass (see output below)
-- [ ] No dependency issues (`uv run deptry discobench`)
 - [ ] Code follows project style guidelines
 
 **Pre-commit output:**
