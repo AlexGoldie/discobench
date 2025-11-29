@@ -67,6 +67,7 @@ discobench create-task --task-domain DOMAIN [OPTIONS]
 - `--test`: Create test task instead of training task
 - `--config-path PATH`: Path to custom task_config.yaml (defaults to built-in config)
 - `--example`: Create example task using prebuilt example configs
+- `--no-data`: Creates codebase without downloading or copying any data. This will not run in a production setting, but can be useful for quickly nderstanding how a codebase looks before running experiments (without having to wait for data download).
 
 **Examples:**
 

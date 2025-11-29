@@ -153,6 +153,7 @@ class MakeFiles:
         train_test: str,
         template_backend: str,
         train: bool,
+        no_data: bool | None,
     ) -> tuple[list[str], str, str]:
         """Process a single task: create files and return discovered files and description.
 
@@ -163,6 +164,7 @@ class MakeFiles:
             train_test: Either "train" or "test".
             template_backend: The template backend to use.
             train: Whether this is for training.
+            no_data: Whether to create the task without loading any data files.
 
         Returns:
             Tuple of (discovered_files, data_description).
@@ -209,7 +211,7 @@ class MakeFiles:
                 discovered_files.append(module_file)
 
         # Ensure dataset exists
-        self._ensure_dataset_cached_and_copied(task_id=task_id, task_path=task_path, dest_loc=dest_loc)
+        self._ensure_dataset_cached_and_copied(task_id=task_id, task_path=task_path, dest_loc=dest_loc, no_data=no_data)
 
         return discovered_files, data_description, model_description
 
@@ -410,7 +412,9 @@ class MakeFiles:
 
         return download_dataset
 
-    def _ensure_dataset_cached_and_copied(self, task_id: str, task_path: Path, dest_loc: Path) -> None:
+    def _ensure_dataset_cached_and_copied(
+        self, task_id: str, task_path: Path, dest_loc: Path, no_data: bool | None
+    ) -> None:
         """Cache dataset under ./cache/<task_id> and copy it to dest_loc/"data".
 
         Workflow:
@@ -424,6 +428,9 @@ class MakeFiles:
         download_dataset = self._get_download_dataset(task_id, task_path)
 
         have_data = False
+
+        if no_data:
+            return
 
         # Only proceed when we have a downloader; create cache only when needed
         if self._dir_empty(cache_dir) and download_dataset:
@@ -465,12 +472,13 @@ class MakeFiles:
             # For older python versions lacking dirs_exist_ok but we already removed dst
             shutil.copytree(src, dst)
 
-    def make_files(self, config: dict[str, Any], train: bool) -> None:
+    def make_files(self, config: dict[str, Any], train: bool, no_data: bool | None) -> None:
         """Prepare the training and test files for a task.
 
         Args:
             config: The task configuration.
             train: Whether to create the training subset of the task.
+            no_data: If True, will create the codebase without loading any data files.
         """
         self.source_path = Path(config.get("source_path", "task_src"))
 
@@ -500,7 +508,7 @@ class MakeFiles:
 
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
             discovered_files, data_description, model_description = self._process_single_task(
-                task_id, model_id, config, train_test, template_backend, train
+                task_id, model_id, config, train_test, template_backend, train, no_data
             )
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
