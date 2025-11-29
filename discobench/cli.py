@@ -23,9 +23,20 @@ def cli() -> None:
     type=str,
     help="The path to your task_config.yaml. If not provided, this will default to the DiscoBench task_config.yaml for your provided task_domain.",
 )
-def create_task_cmd(task_domain: str, test: bool, config_path: str | None = None, example: bool | None = None) -> None:
+@click.option(
+    "--no-data",
+    is_flag=True,
+    help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
+)
+def create_task_cmd(
+    task_domain: str,
+    test: bool,
+    config_path: str | None = None,
+    example: bool | None = None,
+    no_data: bool | None = None,
+) -> None:
     """Create task source files for a specified task domain."""
-    create_task(task_domain=task_domain, test=test, config_path=config_path, example=example)
+    create_task(task_domain=task_domain, test=test, config_path=config_path, example=example, no_data=no_data)
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} task for domain: {task_domain}.")
 
