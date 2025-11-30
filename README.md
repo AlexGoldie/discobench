@@ -38,7 +38,7 @@ Every domain includes references in `discobench/tasks/<task_domain>/utils/_refer
 | :--- | :--- | :--- | :--- |
 | **BayesianOptimisation** | acq_fn, acq_optimizer, domain, next_queries, surrogate, surrogate_optimizer | 11 synthetic functions (Ackley, Branin, Bukin, Cosine, DropWave, EggHolder, Griewank, Hartmann, HolderTable, Levy). | Optimization of black-box functions using surrogate models to find global minima/maxima. |
 | **BrainSpeechDetection** | loss, networks, optim | 7 LibriBrain tasks. | Detecting speech features directly from brain activity data. |
-| **ComputerVisionClassification** | loss, networks, optim, preprocess | CIFAR10, CIFAR10C, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StandfordCars, TinyImageNet. | Image classification on a range of datasets. |
+| **ComputerVisionClassification** | loss, networks, optim, preprocess | CIFAR10, CIFAR10C, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StanfordCars, TinyImageNet. | Image classification on a range of datasets. |
 | **ContinualLearning** | optim, regularizer, replay, sampler, scheduler | PermutedMNIST, SplitCIFAR100, TinyImageNetSplit. | Training a model on continually changing data, such that it can adapt to new data without losing old capabilities. |
 | **GreenhouseGasPrediction** | data_processing, model | 4 Mauna Loa Time-series (CO2, N2O, SF6, CH4). | Time-series forecasting of atmospheric greenhouse gas concentrations. |
 | **LanguageModelling** | loss, networks, optimizer | OPCFineWebCode, OPCFineWebMath, LMFineWeb, TinyStories. | Training transformer-based models on code, mathematics, and narrative text. |
