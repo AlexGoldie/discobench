@@ -14,12 +14,6 @@ Evaluation data from the MUSE-News dataset:
 - Knowledge memorization (knowmem): 100 QA pairs from forget set (forget_qa split), 100 QA pairs from retain set (retain_qa split)
 - Verbatim memorization (verbmem): Text completion tasks on forget set to test exact memorization
 
-STARTING STATE
-The unlearning process begins with:
-
-- Pre-trained Qwen2.5-1.5B-Instruct base model
-- Access to forget corpus (889 articles) and retain corpus (1,777 articles) for training
-
 TASK OBJECTIVE
 The primary goal is to implement an unlearning algorithm that satisfies:
 
