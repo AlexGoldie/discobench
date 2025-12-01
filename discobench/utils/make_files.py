@@ -495,6 +495,8 @@ class MakeFiles:
 
         # Step 4: Get template backend and prepare discovered path
         template_backend = config.get("template_backend", "default")
+        discovered_path = self.source_path / "discovered"
+        discovered_path.mkdir(parents=True, exist_ok=True)
 
         # Step 5: Build base description
         base_description = self._build_base_description(template_backend)
