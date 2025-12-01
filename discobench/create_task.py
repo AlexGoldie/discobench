@@ -15,6 +15,7 @@ def create_task(
     config_path: str | None = None,
     config_dict: dict[str, Any] | None = None,
     example: bool | None = None,
+    no_data: bool | None = None,
 ) -> None:
     """Prepare files for the training or testing subset of the task.
 
@@ -24,6 +25,7 @@ def create_task(
         config_path: The path to the task configuration file. If not provided, the default task configuration file will be used. Check `discobench/tasks/{task_domain}/task_config.yaml` for expected structure for a given task.
         config_dict: A pre-built config dictionary, following the expected structure from `discobench/tasks/{task_domain}/task_config.yaml`.
         example: Whether to use the pre-built example task_config for the task_domain.
+        no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
 
     Notes:
         Only one of config_path, example OR config_dict (not more than one) should be passed as an argument here, to avoid any conflict.
@@ -47,7 +49,7 @@ def create_task(
 
     train = not test
 
-    MakeFiles(task_domain).make_files(task_config, train=train)
+    MakeFiles(task_domain).make_files(task_config, train=train, no_data=no_data)
 
 
 if __name__ == "__main__":

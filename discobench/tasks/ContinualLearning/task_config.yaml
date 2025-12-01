@@ -1,7 +1,7 @@
 train_task_id: [PermutedMNIST, SplitCIFAR100, TinyImageNetSplit]
 test_task_id: [PermutedMNIST, SplitCIFAR100, TinyImageNetSplit]
 
-source_path: task_src
+source_path: task_src/ContinualLearning
 template_backend: default  # default, parameter_isolation, transformer
 
 change_regularizer: false
