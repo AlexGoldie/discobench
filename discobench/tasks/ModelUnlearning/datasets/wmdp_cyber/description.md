@@ -14,12 +14,6 @@ This task uses the following components:
 - cyber-forget-corpus: Text data containing hazardous cybersecurity knowledge to be unlearned
 - cyber-retain-corpus: General text data to maintain model capabilities
 
-STARTING STATE
-The unlearning process begins with:
-
-- Pre-trained Qwen2.5-1.5B-Instruct base model
-- Access to forget corpus and retain corpus
-
 TASK OBJECTIVE
 The primary goal is to implement an unlearning algorithm that satisfies:
 

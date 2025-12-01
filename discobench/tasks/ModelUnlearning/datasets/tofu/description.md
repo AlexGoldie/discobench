@@ -16,12 +16,6 @@ This task uses the following splits from the TOFU dataset:
 - retain90: 90% of the dataset (180 authors) - information to be preserved
 - holdout10: 10% holdout set for evaluation purposes
 
-STARTING STATE
-The unlearning process begins with:
-
-- Pre-trained Qwen2.5-1.5B-Instruct base model
-- Access to forget set, retain set, and holdout set
-
 TASK OBJECTIVE
 The primary goal is to implement an unlearning algorithm that satisfies:
 
