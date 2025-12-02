@@ -1,6 +1,6 @@
 [project]
 name = "discobench"
-version = "0.0.1"
+version = "0.1.0"
 description = "This repository contains code for the DiscoBench modular benchmark for automated algorithm discovery."
 authors = [{ name = "Alex Goldie", email = "goldie@robots.ox.ac.uk" }]
 readme = "README.md"
