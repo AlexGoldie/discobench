@@ -30,8 +30,12 @@ def create_task(
     Notes:
         Only one of config_path, example OR config_dict (not more than one) should be passed as an argument here, to avoid any conflict.
     """
-    if sum(arg is not None for arg in [config_path, config_dict, example]) > 1:
-        raise ValueError("Provide only one of config_path, example, or config_dict.")
+    explicit_configs = sum(arg is not None for arg in [config_path, config_dict])
+
+    example_flag = 1 if example is True else 0
+
+    if explicit_configs + example_flag > 1:
+        raise ValueError("Provide only one of config_path, example=True, or config_dict.")
 
     if config_path is None and config_dict is None:
         if example is True:

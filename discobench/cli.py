@@ -17,7 +17,7 @@ def cli() -> None:
 @cli.command("create-task")
 @click.option("--task-domain", type=str, required=True, help="The task domain to create the task for.")
 @click.option("--test", is_flag=True, help="If passed, create test task instead of training task.")
-@click.option("--example", is_flag=True, help="If passed, use example task config rather than your own.")
+@click.option("--example", is_flag=True, default=None, help="If passed, use example task config rather than your own.")
 @click.option(
     "--config-path",
     type=str,
