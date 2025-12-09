@@ -1,41 +1,40 @@
 DESCRIPTION
-In Brax Humanoid, a 2D one-legged hopper robot must learn to hop forward while maintaining balance. The hopper has 4 degrees of freedom controlling its leg joints and torso. The challenge is to coordinate hopping motions to move forward efficiently without falling over.
+A 3D humanoid robot with 21 degrees of freedom must learn to walk forward while maintaining balance and upright posture. The humanoid has a complex structure with torso, arms, and legs. The goal is to achieve stable bipedal locomotion.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (15,) containing:
+The observation is a ndarray with shape (227,) containing:
 
-Joint angles and angular velocities of the 4 joints
-Root position (y-coordinate height and x-coordinate)
-Root orientation and angular velocity
-Contact forces with the ground
+Joint angles and angular velocities of all 21 joints
+Root position and orientation (3D position and quaternion)
+Root linear and angular velocities
+Contact forces at feet and other body parts
+Center of mass information
 
 ACTION SPACE
-The action space consists of 3 continuous actions in the range [-1, 1]:
+The action space consists of 21 continuous actions in the range [-1, 1]:
 
-Torques applied to the thigh, leg, and foot joints
+Torques applied to all joints including spine, arms, hips, knees, and ankles
 
 TRANSITION DYNAMICS
-
-2D physics simulation in the sagittal plane
-Single point of ground contact through the foot
-Must maintain balance to avoid falling
-Forward progress through hopping motions
+Full 3D physics simulation with complex multi-body dynamics
+Multiple contact points with ground (feet, potentially other body parts)
+Must maintain balance in 3D space
+Coordinated movement of all limbs required
 
 REWARD
-
 Positive reward for forward velocity
+Reward for maintaining upright posture
 Small negative reward for energy expenditure (control cost)
-Reward for staying alive (not falling)
-Episode reward typically ranges from 0 to 3500+
+Penalty for impact forces (falling)
+Episode reward typically ranges from 0 to 5000+
 
 STARTING STATE
-
-Hopper starts in an upright standing position
-Small random noise added to initial joint angles and velocities
-Root height starts above ground level
+Humanoid starts in upright standing position
+Small random noise added to all joint positions and velocities
+Center of mass positioned above support polygon
 
 EPISODE END
 The episode ends if either of the following happens:
 
-Termination: Hopper falls over (height below threshold or extreme angle)
+Termination: Humanoid falls over (torso height below threshold or extreme orientation)
 Truncation: The length of the episode reaches max_steps (default: 1000)

@@ -1,43 +1,38 @@
 DESCRIPTION
-Asterix MinAtar is a simplified version where the player moves freely along 4 cardinal directions. Enemies and treasure spawn from the sides. A reward of +1 is given for picking up treasure. The goal is to guide Asterix to avoid enemies and collect as many treasure objects as possible.
+A 2D one-legged hopper robot must learn to hop forward while maintaining balance. The hopper has 4 degrees of freedom controlling its leg joints and torso. The challenge is to coordinate hopping motions to move forward efficiently without falling over.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (10, 10, 4) where the channels correspond to the following:
+The observation is a ndarray with shape (15,) containing:
 
-Channel Description
-0 player - position of Asterix character
-1 enemies - positions of enemy objects
-2 treasure - positions of collectible treasure
-3 background - static background elements
-
-Each channel contains binary values (0 or 1) indicating presence/absence of the respective element.
+Joint angles and angular velocities of the 4 joints
+Root position (y-coordinate height and x-coordinate)
+Root orientation and angular velocity
+Contact forces with the ground
 
 ACTION SPACE
-The action space consists of 5 discrete actions:
+The action space consists of 3 continuous actions in the range [-1, 1]:
 
-Num Action
-0 no-op (no movement)
-1 move up
-2 move down
-3 move left
-4 move right
+Torques applied to the thigh, leg, and foot joints
 
 TRANSITION DYNAMICS
-- The player can move freely in all four cardinal directions
-- Enemies spawn from the sides and move across the screen
-- Treasure objects spawn from the sides and move across the screen
-- Player must avoid enemies while collecting treasure
-- Objects that reach the opposite side disappear
+2D physics simulation in the sagittal plane
+Single point of ground contact through the foot
+Must maintain balance to avoid falling
+Forward progress through hopping motions
 
 REWARD
-- +1 reward for each treasure collected
-- No negative rewards
+Positive reward for forward velocity
+Small negative reward for energy expenditure (control cost)
+Reward for staying alive (not falling)
+Episode reward typically ranges from 0 to 3500+
 
 STARTING STATE
-- Player starts in a central position
-- Initial enemies and treasure spawn from the sides
+Hopper starts in an upright standing position
+Small random noise added to initial joint angles and velocities
+Root height starts above ground level
 
 EPISODE END
 The episode ends if either of the following happens:
-1. Termination: Player collides with an enemy
-2. Truncation: The length of the episode reaches max_steps_in_episode (default: 1000)
+
+Termination: Hopper falls over (height below threshold or extreme angle)
+Truncation: The length of the episode reaches max_steps (default: 1000)
