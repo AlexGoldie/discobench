@@ -2,12 +2,11 @@ DESCRIPTION
 A 2D one-legged hopper robot must learn to hop forward while maintaining balance. The hopper has 4 degrees of freedom controlling its leg joints and torso. The challenge is to coordinate hopping motions to move forward efficiently without falling over.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (15,) containing:
+The observation is a ndarray with shape (11,) containing:
 
 Joint angles and angular velocities of the 4 joints
 Root position (y-coordinate height and x-coordinate)
 Root orientation and angular velocity
-Contact forces with the ground
 
 ACTION SPACE
 The action space consists of 3 continuous actions in the range [-1, 1]:

@@ -2,16 +2,15 @@ DESCRIPTION
 A 3D humanoid robot with 21 degrees of freedom must learn to walk forward while maintaining balance and upright posture. The humanoid has a complex structure with torso, arms, and legs. The goal is to achieve stable bipedal locomotion.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (227,) containing:
+The observation is a ndarray with shape (376,) containing:
 
 Joint angles and angular velocities of all 21 joints
 Root position and orientation (3D position and quaternion)
 Root linear and angular velocities
-Contact forces at feet and other body parts
 Center of mass information
 
 ACTION SPACE
-The action space consists of 21 continuous actions in the range [-1, 1]:
+The action space consists of 17 continuous actions in the range [-1, 1]:
 
 Torques applied to all joints including spine, arms, hips, knees, and ankles
 

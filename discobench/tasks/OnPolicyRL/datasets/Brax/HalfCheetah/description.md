@@ -2,7 +2,7 @@ DESCRIPTION
 In Brax HalfCheetah, a 2D cheetah robot constrained to move in the sagittal plane must learn to run forward as quickly as possible. The cheetah has 6 degrees of freedom controlling its spine and legs. The goal is to achieve maximum forward running speed while maintaining stability.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (17,) containing:
+The observation is a ndarray with shape (18,) containing:
 
 Joint angles and angular velocities of the 6 joints
 Root position (x-coordinate only, no y or z)
