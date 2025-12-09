@@ -2,12 +2,11 @@ DESCRIPTION
 In Brax Ant, a quadrupedal ant robot with 8 degrees of freedom must learn to walk forward as quickly as possible. The ant consists of a torso with four legs, each having two joints (hip and ankle). The goal is to coordinate the leg movements to achieve stable and fast forward locomotion while maintaining balance.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (87,) containing:
+The observation is a ndarray with shape (27,) containing:
 
 Joint angles and angular velocities of the 8 joints
 Position and orientation of the torso (x, y, z position and quaternion orientation)
 Linear and angular velocities of the torso
-Contact forces at the feet
 
 ACTION SPACE
 The action space consists of 8 continuous actions in the range [-1, 1]:

@@ -1,43 +1,37 @@
 DESCRIPTION
-In Brax Reacher, a 3-link arm robot must learn to push a cylinder to a target location. The arm has 7 degrees of freedom and operates in a 2D plane. The goal is to manipulate the cylinder to reach the target position using coordinated arm movements.
+A 2-link arm robot must learn to reach a target location with its end-effector. The arm operates in a 2D plane and has 2 degrees of freedom. The goal is to position the end-effector as close as possible to a randomly placed target.
 
 OBSERVATION SPACE
-The observation is a ndarray with shape (23,) containing:
+The observation is a ndarray with shape (11,) containing:
 
-Joint angles and angular velocities of the 7 arm joints
-End-effector position
-Cylinder position and velocity
-Target position
-Distance vectors between relevant objects
+Joint angles and angular velocities of the 2 joints
+End-effector position (x, y coordinates)
+Target position (x, y coordinates)
+Distance vector from end-effector to target
 
 ACTION SPACE
-The action space consists of 7 continuous actions in the range [-1, 1]:
+The action space consists of 2 continuous actions in the range [-1, 1]:
 
-Torques applied to each of the 7 arm joints
+Torques applied to the shoulder and elbow joints
 
 TRANSITION DYNAMICS
-
-2D physics simulation with arm and cylinder interactions
-Contact forces between arm and cylinder enable pushing
-Cylinder can be pushed around the 2D workspace
-Target position remains fixed during episode
+2D kinematic chain with two revolute joints
+End-effector position determined by forward kinematics
+No contact forces or external objects
+Simple point-to-point reaching task
 
 REWARD
-
-Large negative reward based on distance from cylinder to target
-Small negative reward based on distance from end-effector to cylinder
-Small negative reward for control effort
-Dense reward signal guides learning
+Large negative reward proportional to distance from end-effector to target
+Small negative reward for control effort (action magnitude)
+Dense reward signal provides continuous feedback
 
 STARTING STATE
-
-Arm starts in a neutral configuration
-Cylinder placed at random position in workspace
-Target position set randomly in reachable area
-Small noise added to initial joint angles
+Arm starts in random initial configuration
+Target placed randomly within reachable workspace
+Joint angles initialized with small random noise
 
 EPISODE END
 The episode ends when:
 
-Truncation: The length of the episode reaches max_steps (default: 1000)
-(No termination conditions based on task completion)
+Truncation: The length of the episode reaches max_steps (default: 50)
+(No termination conditions - short episodes for reaching task)
