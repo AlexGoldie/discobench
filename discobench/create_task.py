@@ -11,8 +11,8 @@ from discobench.utils.make_files import MakeFiles
 def create_task(
     task_domain: str,
     test: bool,
-    example: bool,
-    no_data: bool,
+    example: bool = False,
+    no_data: bool = False,
     config_path: str | None = None,
     config_dict: dict[str, Any] | None = None,
 ) -> None:
