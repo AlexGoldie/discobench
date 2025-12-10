@@ -28,13 +28,7 @@ def cli() -> None:
     is_flag=True,
     help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
 )
-def create_task_cmd(
-    task_domain: str,
-    test: bool,
-    config_path: str | None = None,
-    example: bool | None = None,
-    no_data: bool | None = None,
-) -> None:
+def create_task_cmd(task_domain: str, test: bool, example: bool, no_data: bool, config_path: str | None = None) -> None:
     """Create task source files for a specified task domain."""
     create_task(task_domain=task_domain, test=test, config_path=config_path, example=example, no_data=no_data)
     mode = "test" if test else "training"
