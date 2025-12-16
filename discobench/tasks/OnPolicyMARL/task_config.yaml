@@ -1,0 +1,13 @@
+train_task_id: [MABrax/Ant]
+test_task_id: []
+
+source_path: task_src/OnPolicyMARL
+template_backend: default
+
+change_config: false
+change_optim: false
+change_loss: false
+change_networks: false
+change_train: false
+change_activation: false
+change_targets: false
