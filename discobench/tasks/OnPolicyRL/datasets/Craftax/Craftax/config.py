@@ -12,6 +12,5 @@ config = {
         "ENT_COEF": 0.01,
         "VF_COEF": 0.5,
         "MAX_GRAD_NORM": 0.5,
-        "ACTIVATION": "relu",
         "HSIZE": 512,
     }
