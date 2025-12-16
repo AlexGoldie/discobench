@@ -9,3 +9,4 @@ change_networks: false
 change_optim: false
 change_rb: false
 change_train: false
+change_activation: false

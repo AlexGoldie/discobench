@@ -1,8 +1,13 @@
 import flax.linen as nn
 import jax.numpy as jnp
+from typing import Callable
 
 class QNetwork(nn.Module):
     action_dim: int
+    width: int
+    depth: int
+    activation: Callable
+
     @nn.compact
     def __call__(self, x: jnp.ndarray):
         """Insert your network logic here."""

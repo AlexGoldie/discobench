@@ -12,3 +12,4 @@ module_files:
   - optim.py
   - rb.py
   - train.py
+  - activation.py

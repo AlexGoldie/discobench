@@ -9,6 +9,7 @@ from policy import exploit
 import json
 from functools import partial
 import jax.numpy as jnp
+from activation import activation
 
 def eval(params, rng, config, num_episodes):
     env, env_params, _ = make_env()
@@ -20,7 +21,7 @@ def eval(params, rng, config, num_episodes):
         env.step, in_axes=(0, 0, 0, None)
     )(jax.random.split(rng, n_envs), env_state, action, env_params)
 
-    network = QNetwork(action_dim=env.action_space(env_params).n, width=config["WIDTH"], depth=config["DEPTH"])
+    network = QNetwork(action_dim=env.action_space(env_params).n, width=config["WIDTH"], depth=config["DEPTH"], activation=activation)
 
     rng, rng_init = jax.random.split(rng)
     init_obs, env_state = vmap_reset(num_episodes)(rng_init)

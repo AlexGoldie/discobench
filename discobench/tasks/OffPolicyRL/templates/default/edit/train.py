@@ -10,6 +10,7 @@ from optim import scale_by_optimizer
 from policy import explore
 from q_update import q_loss_fn
 from make_env import make_env
+from activation import activation
 
 @chex.dataclass(frozen=True)
 class TimeStep:
@@ -36,7 +37,7 @@ def make_train(config):
         env.step, in_axes=(0, 0, 0, None)
     )(jax.random.split(rng, n_envs), env_state, action, env_params)
 
-    network = QNetwork(action_dim=env.action_space(env_params).n, width=config["WIDTH"], depth=config["DEPTH"])
+    network = QNetwork(action_dim=env.action_space(env_params).n, width=config["WIDTH"], depth=config["DEPTH"], activation=activation)
 
     def train(rng):
 
