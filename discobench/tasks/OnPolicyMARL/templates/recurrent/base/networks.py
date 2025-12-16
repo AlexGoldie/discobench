@@ -7,6 +7,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from flax.linen.initializers import constant, orthogonal
+from typing import Callable
 
 class RecurrentModule(nn.Module):
     @functools.partial(
@@ -39,6 +40,7 @@ class RecurrentModule(nn.Module):
 class ActorCritic(nn.Module):
     action_dim: Sequence[int]
     config: Dict
+    activation: Callable
 
     @nn.compact
     def __call__(self, hidden, x):
@@ -49,7 +51,7 @@ class ActorCritic(nn.Module):
         embedding = nn.Dense(
             self.config["FC_DIM_SIZE"], kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
         )(obs)
-        embedding = nn.relu(embedding)
+        embedding = self.activation(embedding)
 
         rnn_in = (embedding, dones)
         hidden, embedding = RecurrentModule()(hidden, rnn_in)
@@ -57,7 +59,7 @@ class ActorCritic(nn.Module):
         actor_mean = nn.Dense(self.config["GRU_HIDDEN_DIM"], kernel_init=orthogonal(2), bias_init=constant(0.0))(
             embedding
         )
-        actor_mean = nn.relu(actor_mean)
+        actor_mean = self.activation(actor_mean)
         actor_mean = nn.Dense(
             self.action_dim, kernel_init=orthogonal(0.01), bias_init=constant(0.0)
         )(actor_mean)
@@ -72,7 +74,7 @@ class ActorCritic(nn.Module):
         critic = nn.Dense(self.config["FC_DIM_SIZE"], kernel_init=orthogonal(2), bias_init=constant(0.0))(
             embedding
         )
-        critic = nn.relu(critic)
+        critic = self.activation(critic)
         critic = nn.Dense(1, kernel_init=orthogonal(1.0), bias_init=constant(0.0))(
             critic
         )

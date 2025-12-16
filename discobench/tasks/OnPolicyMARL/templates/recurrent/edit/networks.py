@@ -1,4 +1,5 @@
-from typing import Sequence
+import functools
+from typing import Sequence, Callable, Dict
 
 import distrax
 import flax.linen as nn
@@ -20,22 +21,27 @@ class RecurrentModule(nn.Module):
     @nn.compact
     def __call__(self, carry, x):
         """Insert your recurrent logic here."""
-        return new_rnn_state, y
+        # return new_rnn_state, y
+        pass
 
     @staticmethod
     def initialize_carry(batch_size, hidden_size):
         # Add initialize_carry function.
-        return initialized_carry
+        # return initialized_carry
+        pass
 
 class ActorCritic(nn.Module):
     action_dim: Sequence[int]
-    config: dict
+    config: Dict
+    activation: Callable
 
     @nn.compact
     def __call__(self, hidden, x):
         """Insert your network logic here. You should call your recurrent module."""
         # Input = x. x is the environment observation.
         obs, dones = x
+
+        # You can use self.activation(x) here.
 
         # Some environments have continuous action spaces, and some have discrete action spaces. This is denoted by config["CONTINUOUS"}]
         if self.config.get("CONTINUOUS", False):
@@ -44,4 +50,5 @@ class ActorCritic(nn.Module):
             pi = ...
 
         # You must somehow produce pi and v.
-        return hidden, pi, jnp.squeeze(critic, axis=-1)
+        # return hidden, pi, jnp.squeeze(critic, axis=-1)
+        pass

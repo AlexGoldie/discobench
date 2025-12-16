@@ -6,6 +6,8 @@ from typing import NamedTuple
 from flax.training.train_state import TrainState
 from networks import ActorCritic, RecurrentModule
 from loss import loss_actor_and_critic
+from targets import get_targets
+from activation import activation
 from make_env import make_env
 from jaxmarl.environments import spaces
 from optim import scale_by_optimizer
@@ -63,7 +65,7 @@ def make_train(config):
                 raise ValueError(f"Unsupported action space type: {type(action_space)}")
 
         # INIT NETWORK
-        network = ActorCritic(get_action_dim(env.action_space(env.agents[0])), config=config)
+        network = ActorCritic(get_action_dim(env.action_space(env.agents[0])), config=config, activation=activation)
         rng, _rng = jax.random.split(rng)
         if config.get("GET_AVAIL_ACTIONS", False):
             init_x = (
@@ -200,31 +202,7 @@ def make_train(config):
             _, _, last_val = network.apply(train_state.params, hstate, ac_in)
             last_val = last_val.squeeze()
 
-            def _calculate_gae(traj_batch, last_val):
-                def _get_advantages(gae_and_next_value, transition):
-                    gae, next_value = gae_and_next_value
-                    done, value, reward = (
-                        transition.global_done,
-                        transition.value,
-                        transition.reward,
-                    )
-                    delta = reward + config["GAMMA"] * next_value * (1 - done) - value
-                    gae = (
-                        delta
-                        + config["GAMMA"] * config["GAE_LAMBDA"] * (1 - done) * gae
-                    )
-                    return (gae, value), gae
-
-                _, advantages = jax.lax.scan(
-                    _get_advantages,
-                    (jnp.zeros_like(last_val), last_val),
-                    traj_batch,
-                    reverse=True,
-                    unroll=16,
-                )
-                return advantages, advantages + traj_batch.value
-
-            advantages, targets = _calculate_gae(traj_batch, last_val)
+            advantages, targets = get_targets(traj_batch, last_val, config)
 
             # UPDATE NETWORK
             def _update_epoch(update_state, unused):

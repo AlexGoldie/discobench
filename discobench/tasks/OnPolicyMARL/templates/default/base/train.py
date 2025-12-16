@@ -11,6 +11,8 @@ from networks import ActorCritic
 from optim import scale_by_optimizer
 from loss import loss_actor_and_critic
 from make_env import make_env
+from activation import activation
+from targets import get_targets
 from jaxmarl.environments import spaces
 
 class Transition(NamedTuple):
@@ -71,7 +73,8 @@ def make_train(config):
         # INIT NETWORK
         network = ActorCritic(
             get_action_dim(env.action_space(env.agents[0])),
-            config=config
+            config=config,
+            activation=activation,
         )
 
         rng, rng_init = jax.random.split(rng)
@@ -152,31 +155,7 @@ def make_train(config):
             last_obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
             _, last_val = network.apply(train_state.params, last_obs_batch)
 
-            def _calculate_gae(traj_batch, last_val):
-                def _get_advantages(gae_and_next_value, transition):
-                    gae, next_value = gae_and_next_value
-                    done, value, reward = (
-                        transition.done,
-                        transition.value,
-                        transition.reward,
-                    )
-                    delta = reward + config["GAMMA"] * next_value * (1 - done) - value
-                    gae = (
-                        delta
-                        + config["GAMMA"] * config["GAE_LAMBDA"] * (1 - done) * gae
-                    )
-                    return (gae, value), gae
-
-                _, advantages = jax.lax.scan(
-                    _get_advantages,
-                    (jnp.zeros_like(last_val), last_val),
-                    traj_batch,
-                    reverse=True,
-                    unroll=8,
-                )
-                return advantages, advantages + traj_batch.value
-
-            advantages, targets = _calculate_gae(traj_batch, last_val)
+            advantages, targets = get_targets(traj_batch, last_val, config)
 
             # UPDATE NETWORK
             def _update_epoch(update_state, unused):

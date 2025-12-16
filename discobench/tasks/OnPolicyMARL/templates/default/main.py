@@ -12,6 +12,7 @@ from make_env import make_env
 from networks import ActorCritic
 from train import make_train, batchify, unbatchify
 from config import config
+from activation import activation
 
 
 # Evaluation loop
@@ -28,7 +29,8 @@ def make_eval(config, num_episodes):
 
     network = ActorCritic(
         get_action_dim(env.action_space(env.agents[0])),
-        config=config
+        config=config,
+        activation=activation,
     )
 
     def eval(params, rng):

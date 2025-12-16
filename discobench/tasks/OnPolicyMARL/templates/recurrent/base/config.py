@@ -34,9 +34,8 @@ config = {
     "ENT_COEF": 0.01,
     "VF_COEF": 0.5,
     "MAX_GRAD_NORM": 0.25,
-    "ACTIVATION": "relu",
     "ANNEAL_LR": True,
-    "DEBUG": False,
+    "DEBUG": True,
     "GET_AVAIL_ACTIONS": True,
     "DONT_VMAP": True
 } # SMAX
