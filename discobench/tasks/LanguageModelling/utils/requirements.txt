@@ -9,3 +9,5 @@ gymnasium
 transformers[torch]
 datasets
 huggingface-hub
+mamba-ssm>=2.0.0
+causal-conv1d>=1.4.0
