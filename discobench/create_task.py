@@ -12,6 +12,7 @@ def create_task(
     task_domain: str,
     test: bool,
     example: bool = False,
+    use_base: bool = False,
     no_data: bool = False,
     config_path: str | None = None,
     config_dict: dict[str, Any] | None = None,
@@ -23,6 +24,7 @@ def create_task(
         test: Whether to create the train or test version of a task (as defined by the config).
         example: Whether to use the pre-built example task_config for the task_domain.
         no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
+        use_base: Whether to use the baseline implementations for each editable module. Defaults to False, meaning a default task will use an `edit` implementation (i.e., only the interface for a module is defined).
         config_path: The path to the task configuration file. If not provided, the default task configuration file will be used. Check `discobench/tasks/{task_domain}/task_config.yaml` for expected structure for a given task.
         config_dict: A pre-built config dictionary, following the expected structure from `discobench/tasks/{task_domain}/task_config.yaml`.
 
@@ -52,4 +54,4 @@ def create_task(
 
     train = not test
 
-    MakeFiles(task_domain).make_files(task_config, train=train, no_data=no_data)
+    MakeFiles(task_domain).make_files(task_config, train=train, use_base=use_base, no_data=no_data)
