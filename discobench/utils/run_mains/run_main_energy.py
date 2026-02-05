@@ -1,0 +1,80 @@
+import json
+import os
+import subprocess
+import sys
+from typing import Any
+
+from codecarbon import EmissionsTracker  # type: ignore[import-untyped]
+
+
+def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
+    """Run all main.py files in the given directory and its subdirectories.
+
+    Args:
+        start_dir: The directory to start the search for main.py files from.
+    """
+    results: dict[str, Any] = {}
+    for root, dirs, files in os.walk(start_dir):
+        dirs[:] = [d for d in dirs if d != "data"]
+
+        if "main.py" in files:
+            main_path = os.path.abspath(os.path.join(root, "main.py"))
+
+            baseline_path = os.path.abspath(os.path.join(root, "baseline_scores.json"))
+            with open(baseline_path) as f:
+                baseline_scores = json.load(f)
+
+            print(f"Running: {main_path}")
+            try:
+                with EmissionsTracker() as tracker:
+                    result = subprocess.run([sys.executable, main_path], check=True, capture_output=True, text=True)  # noqa: S603
+                co2 = tracker.final_emissions * 1000
+
+                output_lines = result.stdout.strip().split("\n")
+                metrics = None
+
+                for line in reversed(output_lines):
+                    if line.strip().startswith("{"):
+                        try:
+                            metrics = json.loads(line)
+                            break
+                        except json.JSONDecodeError:
+                            continue
+
+                if metrics:
+                    _extract_scores(baseline_scores, metrics, root, main_path, results, co2)
+                else:
+                    raise RuntimeError(
+                        f"Script {main_path} did not produce metrics.\n--- STDOUT ---\n{result.stdout}\n"
+                    )
+            except subprocess.CalledProcessError as e:
+                print(f"Error running {main_path}: {e}")
+                error_message = f"--- STDERR ---\n{e.stderr}\n"
+                raise RuntimeError(error_message) from e
+
+    print(json.dumps(results))
+    return results
+
+
+def _extract_scores(
+    baseline_scores: dict[str, Any],
+    metrics: dict[str, Any],
+    root: str,
+    main_path: str,
+    results: dict[str, Any],
+    co2: float,
+) -> dict[str, Any]:
+    for metric_name, baseline_score in baseline_scores.items():
+        if metric_name in metrics:
+            if metrics[metric_name] >= baseline_score:
+                metrics["g CO2e"] = co2
+            else:
+                raise RuntimeError(f"Script {main_path} did not reach the baseline score within the given tolerance!\n")
+        else:
+            raise RuntimeError(f"Script {main_path} did not produce any metric for {metric_name}!\n")
+    results[root] = metrics
+    return results
+
+
+if __name__ == "__main__":
+    run_all_main_py()
