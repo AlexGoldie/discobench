@@ -1,5 +1,6 @@
 import importlib
 import importlib.util
+import json
 import os
 import shutil
 from collections.abc import Callable
@@ -154,6 +155,8 @@ class MakeFiles:
         template_backend: str,
         train: bool,
         no_data: bool | None,
+        baselines: dict[str, float] | None,
+        baseline_scale: float,
     ) -> tuple[list[str], str, str]:
         """Process a single task: create files and return discovered files and description.
 
@@ -165,6 +168,8 @@ class MakeFiles:
             template_backend: The template backend to use.
             train: Whether this is for training.
             no_data: Whether to create the task without loading any data files.
+            baselines: A dictionary of baselines scores for this task_domain.
+            baseline_scale: A tolerance/scale factor to multiply the baseline by.
 
         Returns:
             Tuple of (discovered_files, data_description).
@@ -212,6 +217,11 @@ class MakeFiles:
 
         # Ensure dataset exists
         self._ensure_dataset_cached_and_copied(task_id=task_id, task_path=task_path, dest_loc=dest_loc, no_data=no_data)
+
+        if baselines is not None:
+            self._create_baseline_scores(
+                baselines, dest_loc, template_backend=template_backend, task_id=task_id, baseline_scale=baseline_scale
+            )
 
         return discovered_files, data_description, model_description
 
@@ -304,6 +314,27 @@ class MakeFiles:
         # Copy the template file to the source directory
         shutil.copy2(template, dest)
 
+    def _create_baseline_scores(
+        self, baselines: dict[str, Any], dest_loc: Path, template_backend: str, task_id: str, baseline_scale: float
+    ) -> None:
+        """Create a fixed file for a task.
+
+        Args:
+            baselines: A dictionary of baseline scores for this task domain.
+            dest_loc: The destination location of the file.
+            template_backend: The template backend to use.
+            task_id: The specific task domain id.
+            baseline_scale: The scale factor for the baseline score.
+        """
+        targets = {}
+        for metric_name, metrics in baselines.items():
+            mult_factor = -1 if metrics["objective"] == "min" else 1
+
+            targets.update({metric_name: metrics[template_backend][task_id] * mult_factor * baseline_scale})
+
+        dict_dest = dest_loc / "baseline_scores.json"
+        dict_dest.write_text(json.dumps(targets))
+
     def _create_sym_link(self, discovered_file: str, dest_loc: str) -> None:
         """Create sym link from discovered file to task directory."""
         master_file = self.source_path / "discovered" / discovered_file
@@ -357,9 +388,9 @@ class MakeFiles:
         output_file = self.source_path / "description.md"
         output_file.write_text(description, encoding="utf-8")
 
-    def load_run_main(self) -> None:
+    def _load_run_main(self, eval_type: str) -> None:
         """Load run_main.py."""
-        run_main_path = Path(__file__).parent / "run_main.py"
+        run_main_path = Path(__file__).parent / "run_mains" / f"run_main_{eval_type}.py"
 
         dest = self.source_path / "run_main.py"
         shutil.copy2(run_main_path, dest)
@@ -472,13 +503,17 @@ class MakeFiles:
             # For older python versions lacking dirs_exist_ok but we already removed dst
             shutil.copytree(src, dst)
 
-    def make_files(self, config: dict[str, Any], train: bool, no_data: bool | None) -> None:
+    def make_files(
+        self, config: dict[str, Any], train: bool, no_data: bool | None, eval_type: str, baseline_scale: float = 1.0
+    ) -> None:
         """Prepare the training and test files for a task.
 
         Args:
             config: The task configuration.
             train: Whether to create the training subset of the task.
             no_data: If True, will create the codebase without loading any data files.
+            eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy']
+            baseline_scale: When using 'time' or 'energy' eval_type, what relative scaling to apply to the baseline score. Default to 1.0 (i.e., match the baseline)
         """
         self.source_path = Path(config.get("source_path", "task_src"))
 
@@ -506,9 +541,16 @@ class MakeFiles:
         data_descriptions = []
         model_descriptions = []
 
+        if eval_type in ["time", "energy"]:
+            baseline_path = self.base_path / "utils" / "baseline_scores.yaml"
+            with open(baseline_path) as f:
+                baselines = yaml.safe_load(f)
+        else:
+            baselines = None
+
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
             discovered_files, data_description, model_description = self._process_single_task(
-                task_id, model_id, config, train_test, template_backend, train, no_data
+                task_id, model_id, config, train_test, template_backend, train, no_data, baselines, baseline_scale
             )
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
@@ -524,5 +566,5 @@ class MakeFiles:
         self._create_symlinks_for_discovered(unique_discovered_files, task_ids, model_ids)
 
         # Step 9: Copy run_main and requirements
-        self.load_run_main()
+        self._load_run_main(eval_type)
         self._save_requirements()

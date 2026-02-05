@@ -28,9 +28,37 @@ def cli() -> None:
     is_flag=True,
     help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
 )
-def create_task_cmd(task_domain: str, test: bool, example: bool, no_data: bool, config_path: str | None = None) -> None:
+@click.option(
+    "--eval-type",
+    type=str,
+    default="performance",
+    help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
+)
+@click.option(
+    "--baseline_scale",
+    type=float,
+    default=1.0,
+    help="If using 'time' or 'energy' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",
+)
+def create_task_cmd(
+    task_domain: str,
+    test: bool,
+    example: bool,
+    no_data: bool,
+    eval_type: str,
+    baseline_scale: float,
+    config_path: str | None = None,
+) -> None:
     """Create task source files for a specified task domain."""
-    create_task(task_domain=task_domain, test=test, config_path=config_path, example=example, no_data=no_data)
+    create_task(
+        task_domain=task_domain,
+        test=test,
+        config_path=config_path,
+        example=example,
+        no_data=no_data,
+        eval_type=eval_type,
+        baseline_scale=baseline_scale,
+    )
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} task for domain: {task_domain}.")
 
