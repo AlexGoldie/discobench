@@ -109,6 +109,23 @@ class MakeFiles:
         domain_description = self._load_domain_description(template_backend)
         return f"{discobench_description}\n\n{domain_description}"
 
+    def _get_eval_description(self, eval_type: str) -> str:
+        """Get the pre-written evaluation type description. This explains what the objective is for optimising the algorithm.
+
+        Args:
+            eval_type: The evaluation type which the algorithm will be measured for.
+
+        Returns:
+            A description of the evaluation type.
+        """
+        eval_description_path = Path(__file__).parent / "eval_descriptions.yaml"
+        with open(eval_description_path) as f:
+            eval_descriptions: dict[str, str] = yaml.safe_load(f)
+
+        eval_description = eval_descriptions[f"{eval_type}_description"]
+
+        return eval_description
+
     def _load_model_description(self, model_path: Path) -> str:
         """Load the model description from models/{model_id}/description.md.
 
@@ -228,6 +245,7 @@ class MakeFiles:
     def _build_full_description(
         self,
         base_description: str,
+        eval_description: str,
         all_discovered_files: list[str],
         data_descriptions: list[str],
         model_descriptions: list[str],
@@ -237,6 +255,7 @@ class MakeFiles:
 
         Args:
             base_description: The base discobench + domain description.
+            eval_description: A description of what the algorithm should be optimising for.
             all_discovered_files: List of all discovered files across tasks.
             data_descriptions: List of data descriptions from each task.
             model_descriptions: List of model descriptions from each task. These default to empty strings if pretrained models are not used.
@@ -261,6 +280,8 @@ class MakeFiles:
             full_description += f"\n\nProblem {idx}"
             full_description += f"\n\n{data_description}"
             full_description += f"\n\n{model_description}"
+
+        full_description += f"{eval_description}"
 
         return full_description
 
@@ -537,7 +558,10 @@ class MakeFiles:
         base_description = self._build_base_description(template_backend)
         task_information = self._load_domain_task_information(template_backend)
 
-        # Step 6: Process each task
+        # Step 6: Get evaluation type description
+        eval_description = self._get_eval_description(eval_type)
+
+        # Step 7: Process each task
         data_descriptions = []
         model_descriptions = []
 
@@ -555,16 +579,21 @@ class MakeFiles:
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
 
-        # Step 7: Build and save full description
+        # Step 8: Build and save full description
         full_description = self._build_full_description(
-            base_description, discovered_files, data_descriptions, model_descriptions, task_information
+            base_description,
+            eval_description,
+            discovered_files,
+            data_descriptions,
+            model_descriptions,
+            task_information,
         )
         self._save_description(full_description)
 
-        # Step 8: Create symlinks for discovered files
+        # Step 9: Create symlinks for discovered files
         unique_discovered_files = discovered_files
         self._create_symlinks_for_discovered(unique_discovered_files, task_ids, model_ids)
 
-        # Step 9: Copy run_main and requirements
+        # Step 10: Copy run_main and requirements
         self._load_run_main(eval_type)
         self._save_requirements()
