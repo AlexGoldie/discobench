@@ -23,8 +23,8 @@ def create_task(
         task_domain: The task domain to create the task for.
         test: Whether to create the train or test version of a task (as defined by the config).
         example: Whether to use the pre-built example task_config for the task_domain.
-        no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
         use_base: Whether to use the baseline implementations for each editable module. Defaults to False, meaning a default task will use an `edit` implementation (i.e., only the interface for a module is defined).
+        no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
         config_path: The path to the task configuration file. If not provided, the default task configuration file will be used. Check `discobench/tasks/{task_domain}/task_config.yaml` for expected structure for a given task.
         config_dict: A pre-built config dictionary, following the expected structure from `discobench/tasks/{task_domain}/task_config.yaml`.
 

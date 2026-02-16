@@ -26,7 +26,7 @@ def cli() -> None:
 @click.option(
     "--use-base",
     is_flag=True,
-    help="If passed, will initialise the task using the baseline implementation as discovered files rather than the less-structured interface-only `edit` implementations.",
+    help="If passed, will initialise editable modules with baseline implementations instead of interface-only `edit` implementations. Has no effect with --test.",
 )
 @click.option(
     "--no-data",
@@ -37,6 +37,8 @@ def create_task_cmd(
     task_domain: str, test: bool, example: bool, use_base: bool, no_data: bool, config_path: str | None = None
 ) -> None:
     """Create task source files for a specified task domain."""
+    if test and use_base:
+        click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
     create_task(
         task_domain=task_domain, test=test, config_path=config_path, example=example, use_base=use_base, no_data=no_data
     )

@@ -134,6 +134,13 @@ create_task(
     test=True,
     config_path="my_config.yaml"
 )
+
+# Create a task starting from baseline implementations
+create_task(
+    task_domain="OnPolicyRL",
+    test=False,
+    use_base=True
+)
 ```
 
 ### Getting Domain Information
