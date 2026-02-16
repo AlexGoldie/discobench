@@ -41,7 +41,7 @@ def sample_task(
 
     discobench_path = Path(__file__).parent / "tasks"
 
-    task_domains = [x for x in discobench_path.iterdir() if x.is_dir()]
+    task_domains = [x.name for x in discobench_path.iterdir() if x.is_dir()]
 
     total_edit = 0
     total_train = 0
@@ -72,7 +72,7 @@ def sample_task(
 
         else:
             templates_path = discobench_path.joinpath(f"{random_domain}/templates")
-            backends = [x for x in templates_path.iterdir() if x.is_dir()]
+            backends = [x.name for x in templates_path.iterdir() if x.is_dir()]
             random_backend = random.choice(backends)  # noqa: S311
             new_config.update({"template_backend": random_backend})
 
