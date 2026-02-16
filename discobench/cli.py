@@ -5,7 +5,7 @@ import os
 import click
 import yaml
 
-from discobench import create_config, create_task, get_domains, get_modules
+from discobench import create_config, create_task, get_domains, get_modules, sample_task
 
 
 @click.group()
@@ -90,6 +90,86 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
     os.makedirs(save_dir, exist_ok=True)
     with open(f"{save_dir}/task_config_{task_domain}.yml", "w") as outfile:
         yaml.dump(config, outfile, default_flow_style=False)
+
+
+@cli.command("sample-task")
+@click.option(
+    "--p-edit",
+    type=float,
+    default=0.3,
+    help="The probability a module is marked as editable. Must be between 0. and 1.",
+)
+@click.option(
+    "--p-data",
+    type=list[str],
+    default=[0.4, 0.4, 0.2],
+    help="A list of probabilities or weights for sampling. Supports either a list of 2 values, which must be [p_meta_train, p_meta_test], or a list of 3 values, which can be probabilities or weights [w_meta_train, w_meta_test, w_exclude].",
+)
+@click.option(
+    "--eval-type",
+    type=str,
+    required=False,
+    default="random",
+    help="What eval_type to use. Supports 'random', which will select a random eval_type, or one of ['performance', 'energy', 'time']. Defaults to 'random'.",
+)
+@click.option(
+    "--no-backends",
+    is_flag=True,
+    help="Whether to only use the default backend, or randomly sample from the supported backend for each domain. Defaults to True.",
+)
+@click.option(
+    "--source-path",
+    type=str,
+    required=False,
+    default="task_src",
+    help="Where the task code should be saved after calling create_task() on the returned config.",
+)
+@click.option(
+    "--max-attempts",
+    type=int,
+    required=False,
+    default=10,
+    help="The max number of attempts supported for sampling a task from DiscoGen. Prevents the risk of inifinite or very long loops, if probabilities are set in such a way that tasks are valid tasks are hard to sample. Defaults to 10.",
+)
+@click.option(
+    "--seed",
+    type=int,
+    required=False,
+    help="A random seed for reproducible task sampling. Defaults to None, in which case sampling will be non-deterministic.",
+)
+@click.option(
+    "--config_dest",
+    type=str,
+    required=False,
+    default="task_config.yaml",
+    help="Where the config should be saved after sampling.",
+)
+def sample_task_cmd(
+    p_edit: float,
+    p_data: list[float],
+    eval_type: str,
+    no_backends: bool,
+    source_path: str,
+    max_attempts: int,
+    seed: int | None,
+    config_dest: str,
+) -> None:
+    """Create task source files for a specified task domain."""
+    use_backends = not no_backends
+    task_domain, task_config = sample_task(
+        p_edit=p_edit,
+        p_data=p_data,
+        eval_type=eval_type,
+        use_backends=use_backends,
+        source_path=source_path,
+        max_attempts=max_attempts,
+        seed=seed,
+    )
+
+    with open(config_dest, "w") as outfile:
+        yaml.dump(task_config, outfile, default_flow_style=False)
+
+    click.echo(f"Successfully saved new task_config for the {task_domain} domain at {config_dest}.")
 
 
 if __name__ == "__main__":
