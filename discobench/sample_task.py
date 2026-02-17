@@ -34,8 +34,7 @@ def sample_task(
     """
     p_data = _check_args(p_edit, p_data, eval_type, use_backends, source_path, max_attempts, seed)
 
-    if seed:
-        rng = np.random.default_rng(seed)
+    rng = np.random.default_rng(seed) if seed else np.random.default_rng(None)
 
     discobench_path = Path(__file__).parent / "tasks"
 
