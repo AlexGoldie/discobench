@@ -48,7 +48,6 @@ def create_task(
     else:
         if config_path is None:
             raise ValueError("config_path cannot be None if config_dict is also None.")
-
         with open(config_path) as f:
             task_config = yaml.safe_load(f)
 
