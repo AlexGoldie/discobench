@@ -5,5 +5,4 @@ source_path: task_src/UnsupervisedEnvironmentDesign
 
 change_sample_levels: false
 change_train_step: false
-change_train_loop: false
-change_config: false
+change_variable_config: false

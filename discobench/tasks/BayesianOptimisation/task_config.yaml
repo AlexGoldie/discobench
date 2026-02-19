@@ -5,7 +5,7 @@ source_path: task_src/BayesianOptimisation
 
 change_acq_fn: false
 change_acq_optimizer: false
-change_domain: false
 change_next_queries: false
+change_sampler: false
 change_surrogate_optimizer: false
 change_surrogate: false
