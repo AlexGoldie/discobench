@@ -59,7 +59,7 @@ def test_create_task_example_path_resolution(mock_make_files: MagicMock, mock_ya
 
 def test_create_task_with_config_dict(mock_make_files: MagicMock) -> None:
     """Ensures that passing a dict bypasses file reading entirely."""
-    custom_config = {"layers": 5}
+    custom_config = {"train_task_id": ["Ackley1D", "Ackley2D"]}
 
     create_task("BayesianOptimisation", test=True, config_dict=custom_config)
 
