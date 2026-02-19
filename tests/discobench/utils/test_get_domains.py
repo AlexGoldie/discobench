@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 from discobench.utils import get_domains
 
 
@@ -20,5 +18,4 @@ def test_all_domains_valid_config() -> None:
         "UnsupervisedEnvironmentDesign",
     ]
 
-    case = TestCase()
-    case.assertCountEqual(domains_list, expected_domains)
+    assert sorted(domains_list) == sorted(expected_domains)
