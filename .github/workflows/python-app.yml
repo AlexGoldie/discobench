@@ -19,21 +19,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
+
+    - name: Install uv and set up Python
+      uses: astral-sh/setup-uv@v5
       with:
         python-version: "3.12"
-    - name: Install dependencies
+        enable-cache: true
+        cache-dependency-glob: "pyproject.toml"
+
+    - name: Install dependencies with uv
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install .[test]
-    - name: Install the code linting and formatting tool Ruff
-      run: pipx install ruff
+        uv sync --group dev
+
     - name: Lint code with Ruff
-      run: ruff check --output-format=github --target-version=py312
+      run: uv run ruff check --output-format=github --target-version=py312
+
     - name: Check code formatting with Ruff
-      run: ruff format --diff --target-version=py312
+      run: uv run ruff format --diff --target-version=py312
       continue-on-error: true
+
     - name: Test with pytest
-      run: |
-        pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+      run: uv run pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=discobench --cov-report=xml --cov-report=html
