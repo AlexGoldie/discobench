@@ -2,6 +2,7 @@ train_task_id: [MinAtar/Asterix, MinAtar/Breakout, MinAtar/Freeway, MinAtar/Spac
 test_task_id: [MinAtar/Asterix, MinAtar/Breakout, MinAtar/Freeway, MinAtar/SpaceInvaders]
 
 source_path: task_src/OffPolicyRL
+template_backend: default
 
 change_config: false
 change_networks: false
