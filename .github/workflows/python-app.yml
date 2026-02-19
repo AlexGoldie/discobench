@@ -39,4 +39,21 @@ jobs:
       continue-on-error: true
 
     - name: Test with pytest
-      run: uv run pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=discobench --cov-report=xml --cov-report=html
+      # Removed the useless HTML report flag
+      run: uv run pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=discobench --cov-report=xml
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      # always() ensures we get the report even if the tests fail
+      if: ${{ always() }}
+      with:
+        name: pytest-results
+        path: junit/test-results.xml
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        # Requires a secret to be set in your repository settings
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        fail_ci_if_error: false
