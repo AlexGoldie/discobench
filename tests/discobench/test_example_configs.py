@@ -26,3 +26,10 @@ def test_example_config_valid(domain: str) -> None:
     assert len(example_config["train_task_id"]) >= 1
     assert len(example_config["test_task_id"]) >= 1
     assert list(set(example_config["train_task_id"]) & set(example_config["test_task_id"])) == []
+
+    count_edit = 0
+    for k, v in example_config.items():
+        if "change_" in k:
+            count_edit += v
+
+    assert count_edit >= 1

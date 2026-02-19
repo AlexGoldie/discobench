@@ -67,6 +67,8 @@ def test_task_utils(domain: str) -> None:
 
     assert sorted(task_spec.keys()) == ["fixed_files", "module_files"]
 
+    assert "main.py" in task_spec["fixed_files"]
+
     with open(f"{utils_path}/task_information.yaml") as f:
         task_information = yaml.safe_load(f)
 
