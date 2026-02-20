@@ -24,6 +24,11 @@ def cli() -> None:
     help="The path to your task_config.yaml. If not provided, this will default to the DiscoBench task_config.yaml for your provided task_domain.",
 )
 @click.option(
+    "--use-base",
+    is_flag=True,
+    help="If passed, will initialise editable modules with baseline implementations instead of interface-only `edit` implementations. Has no effect with --test.",
+)
+@click.option(
     "--no-data",
     is_flag=True,
     help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
@@ -44,12 +49,15 @@ def create_task_cmd(
     task_domain: str,
     test: bool,
     example: bool,
+    use_base: bool,
     no_data: bool,
     eval_type: str,
     baseline_scale: float,
     config_path: str | None = None,
 ) -> None:
     """Create task source files for a specified task domain."""
+    if test and use_base:
+        click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
     create_task(
         task_domain=task_domain,
         test=test,
