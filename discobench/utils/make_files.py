@@ -517,13 +517,18 @@ class MakeFiles:
         # Step 6: Process each task
         data_descriptions = []
         model_descriptions = []
+        all_discovered_files = set()
 
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
-            discovered_files, data_description, model_description = self._process_single_task(
+            single_discovered_files, data_description, model_description = self._process_single_task(
                 task_id, model_id, config, train_test, template_backend, train, use_base, no_data
             )
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
+
+            # discovered_files is consistent in every task, but for clarity, track in a set.
+            all_discovered_files.update(single_discovered_files)
+        discovered_files = list(all_discovered_files)
 
         # Step 7: Build and save full description
         full_description = self._build_full_description(

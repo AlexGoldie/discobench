@@ -38,17 +38,14 @@ def create_task(
     if explicit_configs + example_flag > 1:
         raise ValueError("Provide only one of config_path, example=True, or config_dict.")
 
-    if config_path is None and config_dict is None:
-        if example is True:
-            config_path = str(Path(__file__).parent / f"example_configs/{task_domain}.yaml")
-        else:
-            config_path = str(Path(__file__).parent / f"tasks/{task_domain}/task_config.yaml")
     if config_dict is not None:
         task_config = config_dict
     else:
         if config_path is None:
-            raise ValueError("config_path cannot be None if config_dict is also None.")
-
+            if example is True:
+                config_path = str(Path(__file__).parent / f"example_configs/{task_domain}.yaml")
+            else:
+                config_path = str(Path(__file__).parent / f"tasks/{task_domain}/task_config.yaml")
         with open(config_path) as f:
             task_config = yaml.safe_load(f)
 

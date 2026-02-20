@@ -38,6 +38,7 @@ Documentation = "https://AlexGoldie.github.io/discobench/"
 [dependency-groups]
 dev = [
     "pytest>=7.2.0",
+    "pytest-cov>=4.1.0",
     "pre-commit>=2.20.0",
     "tox-uv>=1.11.3",
     "mypy>=0.991",
