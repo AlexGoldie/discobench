@@ -171,6 +171,7 @@ class MakeFiles:
         train_test: str,
         template_backend: str,
         train: bool,
+        use_base: bool,
         no_data: bool | None,
         baselines: dict[str, float] | None,
         baseline_scale: float,
@@ -184,6 +185,7 @@ class MakeFiles:
             train_test: Either "train" or "test".
             template_backend: The template backend to use.
             train: Whether this is for training.
+            use_base: Whether to create editable modules using the baseline implementation (if True) or interface-only implementation (if False).
             no_data: Whether to create the task without loading any data files.
             baselines: A dictionary of baselines scores for this task_domain.
             baseline_scale: A tolerance/scale factor to multiply the baseline by.
@@ -227,6 +229,7 @@ class MakeFiles:
                 change=change,
                 template_backend=template_backend,
                 train=train,
+                use_base=use_base,
             )
 
             if change:
@@ -321,12 +324,20 @@ class MakeFiles:
             shutil.copy2(template, dest)
 
     def _create_editable(
-        self, file_name: str, task_path: Path, dest_loc: Path, change: bool, template_backend: str, train: bool
+        self,
+        file_name: str,
+        task_path: Path,
+        dest_loc: Path,
+        change: bool,
+        template_backend: str,
+        train: bool,
+        use_base: bool,
     ) -> None:
         if change:
             if not train:
                 return
-            template = self._get_template(f"edit/{file_name}", task_path, template_backend)
+            module_path = f"base/{file_name}" if use_base else f"edit/{file_name}"
+            template = self._get_template(module_path, task_path, template_backend)
             dest = self.source_path / "discovered" / f"{file_name}"
         else:
             template = self._get_template(f"base/{file_name}", task_path, template_backend)
@@ -525,13 +536,20 @@ class MakeFiles:
             shutil.copytree(src, dst)
 
     def make_files(
-        self, config: dict[str, Any], train: bool, no_data: bool | None, eval_type: str, baseline_scale: float = 1.0
+        self,
+        config: dict[str, Any],
+        train: bool,
+        use_base: bool,
+        no_data: bool | None,
+        eval_type: str,
+        baseline_scale: float = 1.0,
     ) -> None:
         """Prepare the training and test files for a task.
 
         Args:
             config: The task configuration.
             train: Whether to create the training subset of the task.
+            use_base: If True, will use the baseline implementation for editable modules.
             no_data: If True, will create the codebase without loading any data files.
             eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy']
             baseline_scale: When using 'time' or 'energy' eval_type, what relative scaling to apply to the baseline score. Default to 1.0 (i.e., match the baseline)
@@ -574,7 +592,16 @@ class MakeFiles:
 
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
             discovered_files, data_description, model_description = self._process_single_task(
-                task_id, model_id, config, train_test, template_backend, train, no_data, baselines, baseline_scale
+                task_id,
+                model_id,
+                config,
+                train_test,
+                template_backend,
+                train,
+                use_base,
+                no_data,
+                baselines,
+                baseline_scale,
             )
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
