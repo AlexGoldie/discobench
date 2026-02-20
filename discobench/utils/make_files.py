@@ -518,6 +518,8 @@ class MakeFiles:
         data_descriptions = []
         model_descriptions = []
 
+        # TODO: BUG - discovered_files is overwritten each iteration; only the last task's
+        # discovered files are used for description building and symlink creation. Is this expected?
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
             discovered_files, data_description, model_description = self._process_single_task(
                 task_id, model_id, config, train_test, template_backend, train, use_base, no_data

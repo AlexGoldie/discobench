@@ -8,6 +8,7 @@ from discobench.utils import get_domains, get_modules
 def test_all_domains_valid_config(domain: str, modules: list[str]) -> None:
     """Ensure the modules loaded by get_modules matches the modules in the config file."""
     config = create_config(domain)
+    # TODO: Use k.startswith("change_") instead of `"change_" in k` to avoid false substring matches. But this is just a defensive pattern that i dont think is fully necessary.
     expected_modules = [k[7:] for k in config if "change_" in k]
 
     assert sorted(modules) == sorted(expected_modules)

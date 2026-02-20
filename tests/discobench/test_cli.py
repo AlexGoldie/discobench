@@ -100,7 +100,7 @@ def test_create_config_cmd(runner: CliRunner, tmp_path: Path) -> None:
         results = runner.invoke(cli, ["create-config", "--task-domain", task_domain, "--save-dir", save_dir])
 
     assert results.exit_code == 0
-    mock_create_config.assert_called_once_with(task_domain)
+    mock_create_config.assert_called_once_with(task_domain)  # TODO: This assertion is outside the `with patch(...)` block above.
 
     assert os.path.exists(save_dir)
     assert os.path.isfile(expected_file_path)
