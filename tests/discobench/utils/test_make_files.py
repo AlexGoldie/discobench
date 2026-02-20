@@ -800,8 +800,6 @@ class TestCopyDir:
 class TestMakeFilesEndToEnd:
     """End-to-end tests for the make_files entry point."""
 
-    # TODO: No test uses make_files with change_*=True i think?
-
     def test_make_files_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that a full train run completes and produces all expected outputs."""
         mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
