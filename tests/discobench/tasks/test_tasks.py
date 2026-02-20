@@ -10,7 +10,7 @@ from discobench.utils import get_domains
 
 @pytest.mark.parametrize("domain", get_domains())
 def test_task_datasets(domain: str) -> None:
-    """Ensure ever dataset has a description."""
+    """Ensure every dataset has a description."""
     task_path = f"discobench/tasks/{domain}"
     dataset_path = f"{task_path}/datasets"
 
@@ -53,7 +53,7 @@ def test_task_datasets(domain: str) -> None:
 
 @pytest.mark.parametrize("domain", get_domains())
 def test_task_utils(domain: str) -> None:
-    """Ensure ever dataset has a description."""
+    """Ensure every dataset has the correct files in its setup, including that all files are copied over."""
     task_path = f"discobench/tasks/{domain}"
     utils_path = f"{task_path}/utils"
 

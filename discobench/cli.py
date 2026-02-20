@@ -39,6 +39,9 @@ def create_task_cmd(
     """Create task source files for a specified task domain."""
     if test and use_base:
         click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
+    if example and config_path:
+        click.echo("Warning: passing example and config_path will cause an error.")
+
     create_task(
         task_domain=task_domain, test=test, config_path=config_path, example=example, use_base=use_base, no_data=no_data
     )
