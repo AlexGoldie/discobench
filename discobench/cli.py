@@ -62,6 +62,7 @@ def create_task_cmd(
         task_domain=task_domain,
         test=test,
         config_path=config_path,
+        use_base=use_base,
         example=example,
         no_data=no_data,
         eval_type=eval_type,
