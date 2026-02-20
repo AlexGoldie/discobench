@@ -68,6 +68,13 @@ def test_task_utils(domain: str) -> None:
     assert sorted(task_spec.keys()) == ["fixed_files", "module_files"]
 
     assert "main.py" in task_spec["fixed_files"]
+    assert list(set(task_spec["fixed_files"]) & set(task_spec["module_files"])) == []
+
+    for file in task_spec["fixed_files"]:
+        assert task_spec["fixed_files"].count(file) == 1
+
+    for file in task_spec["module_files"]:
+        assert task_spec["module_files"].count(file) == 1
 
     with open(f"{utils_path}/task_information.yaml") as f:
         task_information = yaml.safe_load(f)
