@@ -1,3 +1,4 @@
+# TODO: env_specific_config.py is listed 3 times is this intentional for some reason?
 fixed_files:
   - __init__.py
   - config.py

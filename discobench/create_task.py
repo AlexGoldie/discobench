@@ -46,7 +46,7 @@ def create_task(
     if config_dict is not None:
         task_config = config_dict
     else:
-        if config_path is None:
+        if config_path is None:  # TODO: Dead code — config_path is always set by the block above when config_dict is None.
             raise ValueError("config_path cannot be None if config_dict is also None.")
         with open(config_path) as f:
             task_config = yaml.safe_load(f)

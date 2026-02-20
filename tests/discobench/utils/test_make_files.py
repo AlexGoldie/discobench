@@ -114,6 +114,8 @@ class TestNormalizeTaskIds:
     @pytest.mark.parametrize("use_list", [True, False])
     def test_task_ids(self, mf: MakeFiles, example_config: dict[str, Any], train_test: str, use_list: bool) -> None:
         """Test that task_ids are always returned as a list, whether input is a list or scalar."""
+        # TODO: use_list=False still wraps in a list; never tests bare scalar input,
+        # so the `if not isinstance(task_ids, list)` branch in _normalize_task_ids is uncovered.
         if not use_list:
             example_config["train_task_id"] = [example_config["train_task_id"][0]]
             example_config["test_task_id"] = [example_config["test_task_id"][0]]
@@ -145,6 +147,8 @@ class TestNormalizeModelIds:
         self, mf: MakeFiles, example_config: dict[str, Any], train_test: str, use_list: bool
     ) -> None:
         """Test that model_id defaults to [None, ...] when not set in the config."""
+        # TODO: skips (and reports as passed) for domains that have model IDs
+        # (e.g. ModelUnlearning). Intentional?
         if f"{train_test}_model_id" not in example_config:
             model_ids = mf._normalize_model_ids(example_config, train_test, example_config[f"{train_test}_task_id"])
             assert model_ids == [None] * len(example_config[f"{train_test}_task_id"])
@@ -796,6 +800,8 @@ class TestCopyDir:
 
 class TestMakeFilesEndToEnd:
     """End-to-end tests for the make_files entry point."""
+
+    # TODO: No test uses make_files with change_*=True i think?
 
     def test_make_files_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that a full train run completes and produces all expected outputs."""

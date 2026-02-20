@@ -74,6 +74,7 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
     config = create_config(task_domain)
 
     os.makedirs(save_dir, exist_ok=True)
+    # TODO: Saves as .yml but all source configs use .yaml
     with open(f"{save_dir}/task_config_{task_domain}.yml", "w") as outfile:
         yaml.dump(config, outfile, default_flow_style=False)
 
