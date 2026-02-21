@@ -13,8 +13,9 @@ class ActorCritic(nn.Module):
     config: dict
 
     @nn.compact
-    def __call__(self, x):
+    def __call__(self, ac_in):
         """Insert your network logic here."""
+        obs, avail_actions = ac_in # avail_actions is a binary mask of the available actions
         # Input = x. x is the environment observation.
 
         # Some environments have continuous action spaces, and some have discrete action spaces. This is denoted by config["CONTINUOUS"]

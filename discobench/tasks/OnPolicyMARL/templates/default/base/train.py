@@ -23,6 +23,7 @@ class Transition(NamedTuple):
     log_prob: jnp.ndarray
     obs: jnp.ndarray
     info: jnp.ndarray
+    ac_in: tuple
 
 def batchify(x: dict, agent_list, num_actors):
     max_dim = max([x[a].shape[-1] for a in agent_list])
@@ -50,9 +51,11 @@ def make_train(config):
     )
 
 
-    def train(rng):
+
+
+    def train(rng, lr):
         # multiply lr by -1, since we focus on gradient *descent* and scale_by_optimizer is implemented for gradient *ascent*
-        lr = -1 * config["LR"]
+        lr = -1 * lr
 
         def linear_anneal(count):
             frac = (
@@ -70,15 +73,17 @@ def make_train(config):
             else:
                 raise ValueError(f"Unsupported action space type: {type(action_space)}")
 
+        action_dim = get_action_dim(env.action_space(env.agents[0]))
+        dummy_avail_actions = jnp.ones((config["NUM_ACTORS"], action_dim))
         # INIT NETWORK
         network = ActorCritic(
-            get_action_dim(env.action_space(env.agents[0])),
+            action_dim,
             config=config,
             activation=activation,
         )
 
         rng, rng_init = jax.random.split(rng)
-        network_params = network.init(rng_init, init_x)
+        network_params = network.init(rng_init, (init_x, dummy_avail_actions))
         schedule_fn = optax.linear_schedule(
             init_value=lr, end_value=lr, transition_steps=0
         )
@@ -112,13 +117,26 @@ def make_train(config):
                 train_state, env_state, last_obs, update_count, rng = runner_state
 
                 obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
+
+                if config.get("GET_AVAIL_ACTIONS", False):
+                    avail_actions = jax.vmap(env.get_avail_actions)(env_state.env_state)
+                    avail_actions = jax.lax.stop_gradient(
+                        batchify(avail_actions, env.agents, config["NUM_ACTORS"])
+                    )
+                    ac_in = (obs_batch, avail_actions)
+                else:
+                    ac_in = (obs_batch, dummy_avail_actions)
+
                 # SELECT ACTION
                 rng, _rng = jax.random.split(rng)
 
-                pi, value = network.apply(train_state.params, obs_batch)
+                pi, value = network.apply(train_state.params, ac_in)
                 action = pi.sample(seed=_rng)
                 log_prob = pi.log_prob(action)
                 env_act = unbatchify(action, env.agents, config["NUM_ENVS"], env.num_agents)
+                # unbatchify always adds a trailing dim; squeeze it for discrete (1D) actions
+                if action.ndim == 1:
+                    env_act = {k: v.squeeze(-1) for k, v in env_act.items()}
 
                 # STEP ENV
                 rng, _rng = jax.random.split(rng)
@@ -142,6 +160,7 @@ def make_train(config):
                     log_prob,
                     obs_batch,
                     info,
+                    ac_in,
                 )
                 runner_state = (train_state, env_state, obsv, update_count, rng)
                 return runner_state, transition
@@ -153,7 +172,8 @@ def make_train(config):
             # CALCULATE ADVANTAGE
             train_state, env_state, last_obs, update_count, rng = runner_state
             last_obs_batch = batchify(last_obs, env.agents, config["NUM_ACTORS"])
-            _, last_val = network.apply(train_state.params, last_obs_batch)
+            last_ac_in = (last_obs_batch, dummy_avail_actions)
+            _, last_val = network.apply(train_state.params, last_ac_in)
 
             advantages, targets = get_targets(traj_batch, last_val, config)
 
@@ -225,6 +245,9 @@ def make_train(config):
             r0 = {"ratio0": loss_info["ratio"][0,0].mean()}
             loss_info = jax.tree.map(lambda x: x.mean(), loss_info)
             metric = jax.tree.map(lambda x: x.mean(), metric)
+            # For LR tuner: use env return metric (jaxmarl often uses returned_episode_returns)
+            _ret = metric.get("returned_episode_returns", jnp.nan)
+            metric["mean_training_return"] = _ret["__all__"] if isinstance(_ret, dict) else _ret
             metric["update_step"] = update_count
             metric["env_step"] = update_count * config["NUM_STEPS"] * config["NUM_ENVS"]
             metric = {**metric, **loss_info, **r0}

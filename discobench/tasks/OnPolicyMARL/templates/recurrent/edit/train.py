@@ -1,21 +1,12 @@
-import json
-from pathlib import Path
-from typing import Any, NamedTuple, Sequence
-
-import flax.linen as nn
-import gymnax
 import jax
 import jax.numpy as jnp
-import numpy as np
 import optax
-from config import config
-from flax.linen.initializers import constant, orthogonal
 from flax.training.train_state import TrainState
 from loss import loss_actor_and_critic
 from make_env import make_env
 from networks import ActorCritic, RecurrentModule
 from optim import scale_by_optimizer
-from gymnax.environments import environment, spaces
+from gymnax.environments import spaces
 from activation import activation
 from targets import get_targets
 

@@ -12,14 +12,23 @@ Root height and orientation
 Root linear and angular velocities
 Contact forces with the ground
 
-Each agent's local observation vector is composed of the local state of the joints it controls, as well as the state of joints at distance 1 away in the body graph, and the state of the root body. State here refers to the position and velocity of the joint or body. All observations are continuous numbers in the range [-inf, inf].
+Each agent's local observation has shape (10,), equal for both agents. Each agent receives a subset of the global observation by selecting specific indices:
+
+Root height (shared, 1 index): the walker's torso height
+Own and neighbor joint states (7 indices): a subset of the 6 joint angles and velocities covering the agent's 3 controlled joints plus adjacent joints
+Root velocities and contact (shared, 5 indices): root linear/angular velocities and foot contact information
+
+All observations are continuous numbers in the range [-inf, inf].
 
 ACTION SPACE
 The combined action space of all agents consists of 6 continuous actions in the range [-1, 1]:
 
 Torques applied to thigh, leg, and foot joints for both legs
 
-Each agent's action space is the input torques to the joints it controls.
+Each agent controls 3 actions (thigh torque, leg torque, foot torque) for the joints of its assigned leg:
+
+agent_0 → right_thigh (joint 0), right_leg (joint 1), right_foot (joint 2)
+agent_1 → left_thigh (joint 3), left_leg (joint 4), left_foot (joint 5)
 
 TRANSITION DYNAMICS
 

@@ -11,7 +11,9 @@ config = {
     "ENT_COEF": 2e-6,
     "VF_COEF": 4.5,
     "MAX_GRAD_NORM": 0.5,
-    "ACTIVATION": "tanh",
     "HSIZE": 64,
     "ANNEAL_LR": True,
+    "DEBUG": False,
+    "GET_AVAIL_ACTIONS": True,
+    "VMAP": False,
 }

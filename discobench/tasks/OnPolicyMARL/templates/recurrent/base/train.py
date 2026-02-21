@@ -44,9 +44,9 @@ def make_train(config):
         config["NUM_ACTORS"] * config["NUM_STEPS"] // config["NUM_MINIBATCHES"]
     )
 
-    def train(rng):
+    def train(rng, lr):
         # multiply lr by -1, since we focus on gradient *descent* and scale_by_optimizer is implemented for gradient *ascent*
-        lr = -1 * config["LR"]
+        lr = -1 * lr
 
         def linear_anneal(count):
             frac = (
@@ -63,9 +63,9 @@ def make_train(config):
                 return action_space.shape[0]
             else:
                 raise ValueError(f"Unsupported action space type: {type(action_space)}")
-
-        # INIT NETWORK
-        network = ActorCritic(get_action_dim(env.action_space(env.agents[0])), config=config, activation=activation)
+        action_dim = get_action_dim(env.action_space(env.agents[0]))
+        network = ActorCritic(action_dim, config=config, activation=activation)
+        dummy_avail_actions = jnp.ones((config["NUM_ACTORS"], action_dim))
         rng, _rng = jax.random.split(rng)
         if config.get("GET_AVAIL_ACTIONS", False):
             init_x = (
@@ -134,9 +134,7 @@ def make_train(config):
                         avail_actions,
                     )
                 else:
-                    avail_actions = jnp.ones(
-                        (config["NUM_ACTORS"], env.action_space(env.agents[0]).n)
-                    )
+                    avail_actions = dummy_avail_actions
                     ac_in = (
                         obs_batch[np.newaxis, :],
                         last_done[np.newaxis, :],
@@ -149,7 +147,7 @@ def make_train(config):
                 env_act = unbatchify(
                     action, env.agents, config["NUM_ENVS"], env.num_agents
                 )
-                env_act = {k: v.squeeze() for k, v in env_act.items()}
+                env_act = {k: v.squeeze() if isinstance(env.action_space(k), spaces.Discrete) else v for k, v in env_act.items()}
 
                 # STEP ENV
                 rng, _rng = jax.random.split(rng)
@@ -157,12 +155,17 @@ def make_train(config):
                 obsv, env_state, reward, done, info = jax.vmap(
                     env.step, in_axes=(0, 0, 0)
                 )(rng_step, env_state, env_act)
-                info = jax.tree.map(lambda x: x.reshape((config["NUM_ACTORS"])), info)
+                _info = {}
+                _info["returned_episode_returns"] = info["returned_episode_returns"]
+                _info["returned_episode"] = info["returned_episode"]
+                if "returned_won_episode" in info:
+                    _info["returned_won_episode"] = info["returned_won_episode"]
+                info = jax.tree.map(lambda x: x.reshape((config["NUM_ACTORS"])), _info)
                 done_batch = batchify(done, env.agents, config["NUM_ACTORS"]).squeeze()
                 transition = Transition(
                     jnp.tile(done["__all__"], env.num_agents),
                     last_done,
-                    action.squeeze(),
+                    action.squeeze(0),
                     value.squeeze(),
                     batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
                     log_prob.squeeze(),
@@ -192,9 +195,7 @@ def make_train(config):
                     avail_actions,
                 )
             else:
-                avail_actions = jnp.ones(
-                    (config["NUM_ACTORS"], env.action_space(env.agents[0]).n)
-                )
+                avail_actions = dummy_avail_actions
                 ac_in = (
                     last_obs_batch[np.newaxis, :],
                     last_done[np.newaxis, :],
@@ -286,13 +287,20 @@ def make_train(config):
                 _update_epoch, update_state, None, config["UPDATE_EPOCHS"]
             )
             train_state = update_state[0]
-            metric = traj_batch.info
+
+
+            metric = {}
+            metric["returned_episode_returns"] = traj_batch.info["returned_episode_returns"]
+            metric["returned_episode"] = traj_batch.info["returned_episode"]
+            if "returned_won_episode" in traj_batch.info:
+                metric["returned_won_episode"] = traj_batch.info["returned_won_episode"]
             metric = jax.tree.map(
                 lambda x: x.reshape(
-                    (config["NUM_STEPS"], config["NUM_ENVS"], env.num_agents)
+                        (config["NUM_STEPS"], config["NUM_ENVS"], env.num_agents)
                 ),
-                traj_batch.info,
+                metric,
             )
+
             ratio_0 = loss_info[1][3].at[0,0].get().mean()
             loss_info = jax.tree.map(lambda x: x.mean(), loss_info)
             metric["loss"] = {
@@ -305,6 +313,11 @@ def make_train(config):
                 "approx_kl": loss_info[1][4],
                 "clip_frac": loss_info[1][5],
             }
+            # For LR tuner: use env return metric (jaxmarl often uses returned_episode_returns)
+            _ret = metric.get("returned_episode_returns", jnp.nan)
+            if isinstance(_ret, dict):
+                _ret = _ret.get("__all__", jnp.nan)
+            metric["mean_training_return"] = jnp.nanmean(_ret) if hasattr(_ret, "shape") else _ret
 
             rng = update_state[-1]
 

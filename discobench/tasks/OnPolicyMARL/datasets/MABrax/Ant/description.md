@@ -12,7 +12,12 @@ Position and orientation of the torso (x, y, z position and quaternion orientati
 Linear and angular velocities of the torso
 Contact forces at the feet
 
-Each agent's local observation vector is composed of the local state of the joints it controls, as well as the state of joints at distance 1 away in the body graph, and the state of the root body. State here refers to the position and velocity of the joint or body. All observations are continuous numbers in the range [-inf, inf].
+Each agent's local observation has shape (18,), uniform across all 4 agents. Each agent receives a subset of the global observation by selecting specific indices:
+
+Root/body state (shared, 15 indices): root body position, quaternion orientation, linear and angular velocities, plus angle and velocity of the 3 neighboring leg joints
+Own joint state (3 indices): hip joint angle+velocity and ankle joint angle+velocity for the controlled leg, plus 1 foot contact observation
+
+All observations are continuous numbers in the range [-inf, inf].
 
 ACTION SPACE
 The combined action space consists of 8 continuous actions in the range [-1, 1]:
@@ -20,7 +25,12 @@ The combined action space consists of 8 continuous actions in the range [-1, 1]:
 4 hip joint torques (one for each leg)
 4 ankle joint torques (one for each leg)
 
-Each agent's action space is the input torques to the joints it controls.
+Each agent controls 2 actions (hip torque, ankle torque) for the joints of its assigned leg:
+
+agent_0 → hip joint 0 + ankle joint 1 (leg 0)
+agent_1 → hip joint 2 + ankle joint 3 (leg 1)
+agent_2 → hip joint 4 + ankle joint 5 (leg 2)
+agent_3 → hip joint 6 + ankle joint 7 (leg 3)
 
 TRANSITION DYNAMICS
 

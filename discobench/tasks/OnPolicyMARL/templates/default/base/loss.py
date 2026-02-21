@@ -2,7 +2,7 @@ import jax.numpy as jnp
 
 def loss_actor_and_critic(params, traj_batch, gae, targets, network, config):
     # RERUN NETWORK
-    pi, value = network.apply(params, traj_batch.obs)
+    pi, value = network.apply(params, traj_batch.ac_in)
     log_prob = pi.log_prob(traj_batch.action)
 
     # CALCULATE VALUE LOSS

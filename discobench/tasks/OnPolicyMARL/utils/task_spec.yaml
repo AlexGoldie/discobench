@@ -2,9 +2,10 @@ fixed_files:
   - __init__.py
   - make_env.py
   - main.py
+  - config.py
+  - config_recurrent.py
 
 module_files:
-  - config.py
   - loss.py
   - networks.py
   - optim.py

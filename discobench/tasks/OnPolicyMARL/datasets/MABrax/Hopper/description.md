@@ -11,14 +11,26 @@ Joint angles and angular velocities of the 4 joints
 Root position (y-coordinate height and x-coordinate)
 Root orientation and angular velocity
 
-Each agent's local observation vector is composed of the local state of the joints it controls, as well as the state of joints at distance 1 away in the body graph, and the state of the root body. State here refers to the position and velocity of the joint or body. All observations are continuous numbers in the range [-inf, inf].
+Each agent's local observation has shape (9,) after homogenisation. Agents controlling end joints have 8 unique observations; the missing value is zero-padded to match the maximum of 9 (homogenisation_method="max"). Each agent receives a subset of the global observation by selecting specific indices:
+
+Root state (shared, 2 indices): root height and orientation
+Neighbor joint states: angle and velocity of adjacent joints in the proximal-to-distal chain
+Own joint state (2 indices): angle and velocity of the controlled joint
+Root body velocities (shared, 3 indices): global body velocities
+Own joint supplementary (1 index): an additional joint-specific value
+
+All observations are continuous numbers in the range [-inf, inf].
 
 ACTION SPACE
 The action space consists of 3 continuous actions in the range [-1, 1]:
 
 Torques applied to the thigh, leg, and foot joints
 
-Each agent's action space is the input torques to the joints it controls.
+Each agent controls 1 action (joint torque) for its assigned joint (in proximal-to-distal order):
+
+agent_0 → thigh_joint (joint 0)
+agent_1 → leg_joint (joint 1)
+agent_2 → foot_joint (joint 2)
 
 TRANSITION DYNAMICS
 2D physics simulation in the sagittal plane

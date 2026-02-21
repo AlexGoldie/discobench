@@ -15,9 +15,10 @@ class ActorCritic(nn.Module):
     activation: Callable
 
     @nn.compact
-    def __call__(self, x):
-        activation = self.config["ACTIVATION"]
+    def __call__(self, ac_in):
         hsize = self.config["HSIZE"]
+
+        x, avail_actions = ac_in
 
         actor_mean = nn.Dense(
             hsize, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
@@ -37,7 +38,9 @@ class ActorCritic(nn.Module):
             )
             pi = distrax.MultivariateNormalDiag(actor_mean, jnp.exp(actor_logtstd))
         else:
-            pi = distrax.Categorical(logits=actor_mean)
+            unavail_actions = 1 - avail_actions
+            logits = actor_mean - (unavail_actions * 1e10)
+            pi = distrax.Categorical(logits=logits)
 
         critic = nn.Dense(
             hsize, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)

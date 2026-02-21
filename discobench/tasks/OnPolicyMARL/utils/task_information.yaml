@@ -1,5 +1,5 @@
 optim_prompt: |-
-  You should change the optimizer file, which can be found in `optim.py`. In deep learning, optimization is used to descend the gradient of a loss function with respect to the parameters of a neural network. The correct functional form should implement a class, 'scale_by_optimizer', with functions 'init_fn' and 'update_fn'. Besides this, you are allowed to make make whatever changes you like. You will be using a fixed learning rate which is tuned to your algorithm.
+  You should change the optimizer file, which can be found in `optim.py`. In deep learning, optimization is used to descend the gradient of a loss function with respect to the parameters of a neural network. The correct functional form should implement a class, 'scale_by_optimizer', with functions 'init_fn' and 'update_fn'. The learning rate will be tuned to your optimizer.
 
 loss_prompt: |-
   You should change the loss file, which can be found in `loss.py`. In deep learning, the loss provides an objective to minimize; in reinforcement learning, minimizing this objective corresponds to maximising the return of an agent. You should not change the name of the function, `loss_actor_and_critic`, or its inputs.
