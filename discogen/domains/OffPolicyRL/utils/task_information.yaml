@@ -1,0 +1,20 @@
+config_prompt: |-
+  You should change the config file, which can be found in `config.py`. The goal of config is to provide the hyperparameters for the training loop. You should not change the name of the dict `config`. You are allowed to make whatever changes you like, but you should ensure that your config is compatible with the rest of the codebase.
+
+optim_prompt: |-
+  You should change the optimizer file, which can be found in `optim.py`. In deep learning, optimization is used to descend the gradient of a loss function with respect to the parameters of a neural network. The correct functional form should implement a class, 'scale_by_optimizer', with functions 'init_fn' and 'update_fn'. Besides this, you are allowed to make make whatever changes you like. You will be using a fixed learning rate which is tuned to your algorithm.
+
+q_update_prompt: |-
+  You should change the q update file, which can be found in `q_update.py`. The goal of q_loss_fn is to compute a scalar loss that guides learning of the Q-function—typically by comparing predicted and target action values—but it may represent any differentiable objective that drives the agent toward better value estimation and decision-making. You should not change the name or interface of the function `q_loss_fn`.
+
+networks_prompt: |-
+  You should change the network file, which can be found in `networks.py`. In deep learning, the network provides the architecture of the model, and specifies the number of parameters, width of layers, and type of connections that those layers should have. You should not change the name or interface of the function `ActorCritic`. The network takes at input an observation from the RL environment, and must output a policy and a value.
+
+policy_prompt: |-
+  You should change the policy file, which can be found in `policy.py`. The goal of policy is to select actions based on the current state of the environment and the Q-values. This involves balancing the exploration–exploitation tradeoff: deciding whether to explore new actions to gather more information about their potential rewards, or to exploit known actions that currently yield the highest estimated return. You should not change the name or interface of the function `explore` and `exploit`.
+
+rb_prompt: |-
+  You should change the replay buffer file, which can be found in `rb.py`. The goal of the replay buffer is to store and sample experience from the environment. You should not change the name or interface of the function `get_replay_buffer`.
+
+train_prompt: |-
+  You should change the train file, which can be found in `train.py`. In modern reinforcement learning, the train loop is responsible for collecting data from the environment, processing it (possibly multiple times), and then using it to update the parameters of the model. You should not change the name or interface of the function `train`. You are allowed to make whatever changes you like, but you should ensure that your training loop is compatible with the rest of the codebase. You should never change the logic for computing the return during or after training. Some useful function calls have been provided, though possibly not in the optimal place.

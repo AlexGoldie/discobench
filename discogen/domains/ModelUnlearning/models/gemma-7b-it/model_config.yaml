@@ -1,0 +1,12 @@
+model_args:
+  pretrained_model_name_or_path: "google/gemma-7b-it"
+  attn_implementation: 'flash_attention_2'
+  torch_dtype: bfloat16
+tokenizer_args:
+  pretrained_model_name_or_path: "google/gemma-7b-it"
+template_args:
+  apply_chat_template: True
+  user_start_tag: "<bos><start_of_turn>user\n"
+  user_end_tag: "<end_of_turn>\n"
+  asst_start_tag: "<start_of_turn>model\n"
+  asst_end_tag: "<end_of_turn>\n"

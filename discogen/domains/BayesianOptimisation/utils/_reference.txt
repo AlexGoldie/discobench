@@ -1,0 +1,5 @@
+References:
+bayex [https://bayex.readthedocs.io/en/latest/]
+botorch [https://botorch.org]
+sfu [https://www.sfu.ca/~ssurjano/index.html]
+tinygp [https://tinygp.readthedocs.io/en/stable/]

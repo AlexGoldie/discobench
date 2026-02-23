@@ -1,16 +1,16 @@
-# Using DiscoBench
+# Using DiscoGen
 
-This guide covers how to use DiscoBench for algorithm discovery tasks.
+This guide covers how to use DiscoGen for algorithm discovery tasks.
 
 ## Installation
 
-Install DiscoBench using pip (once published) or from source:
+Install DiscoGen using pip (once published) or from source:
 
 ### From Source
 
 ```bash
-git clone https://github.com/AlexGoldie/discobench.git
-cd discobench
+git clone https://github.com/AlexGoldie/discogen.git
+cd discogen
 make install
 ```
 
@@ -26,7 +26,7 @@ This will:
 See all available task domains:
 
 ```bash
-discobench get-domains
+discogen get-domains
 ```
 
 ### 2. View Modules for Each Domain
@@ -34,7 +34,7 @@ discobench get-domains
 See which modules are available for each domain:
 
 ```bash
-discobench get-modules
+discogen get-modules
 ```
 
 ### 3. Create a Task
@@ -42,14 +42,14 @@ discobench get-modules
 Create task files for a specific domain:
 
 ```bash
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 ```
 
 This creates a training task with default configuration. The generated files will appear in the `task_src/` directory.
 
 ## CLI Reference
 
-DiscoBench provides three main commands:
+DiscoGen provides three main commands:
 
 ### `create-task`
 
@@ -57,7 +57,7 @@ Create task source files for algorithm discovery.
 
 **Usage:**
 ```bash
-discobench create-task --task-domain DOMAIN [OPTIONS]
+discogen create-task --task-domain DOMAIN [OPTIONS]
 ```
 
 **Required Options:**
@@ -74,31 +74,31 @@ discobench create-task --task-domain DOMAIN [OPTIONS]
 
 Create a training task for OnPolicyRL:
 ```bash
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 ```
 
 Create a test task:
 ```bash
-discobench create-task --task-domain OnPolicyRL --test
+discogen create-task --task-domain OnPolicyRL --test
 ```
 
 Use a custom configuration:
 ```bash
-discobench create-task --task-domain LanguageModelling --config-path my_config.yaml
+discogen create-task --task-domain LanguageModelling --config-path my_config.yaml
 ```
 
 Use the example configuration:
 ```bash
-discobench create-task --task-domain LanguageModelling --example
+discogen create-task --task-domain LanguageModelling --example
 ```
 
 ### `get-domains`
 
-List all available task domains in DiscoBench.
+List all available task domains in DiscoGen.
 
 **Usage:**
 ```bash
-discobench get-domains
+discogen get-domains
 ```
 
 **Output:**
@@ -110,7 +110,7 @@ List all available modules for each domain.
 
 **Usage:**
 ```bash
-discobench get-modules
+discogen get-modules
 ```
 
 **Output:**
@@ -118,12 +118,12 @@ Shows which modular components are available in each domain (e.g., loss, network
 
 ## Python API
 
-You can also use DiscoBench programmatically from Python:
+You can also use DiscoGen programmatically from Python:
 
 ### Creating Tasks
 
 ```python
-from discobench import create_task
+from discogen import create_task
 
 # Create a training task
 create_task(task_domain="OnPolicyRL", test=False)
@@ -146,7 +146,7 @@ create_task(
 ### Getting Domain Information
 
 ```python
-from discobench import get_domains, get_modules
+from discogen import get_domains, get_modules
 
 # Get list of all domains
 domains = get_domains()
@@ -161,7 +161,7 @@ for domain, module_list in modules.items():
 ### Creating Custom Configurations
 
 ```python
-from discobench import create_config
+from discogen import create_config
 
 # Get default config for a domain
 config = create_config(task_domain="OnPolicyRL")
@@ -209,7 +209,7 @@ change_train: false
 
 ```bash
 # 1. Create the task
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 
 # 2. Navigate to the created task
 cd task_src/OnPolicyRL
@@ -224,7 +224,7 @@ python run_main.py
 
 ```bash
 # 1. Create the task
-discobench create-task --task-domain OnPolicyRL --example
+discogen create-task --task-domain OnPolicyRL --example
 
 # 2. Navigate to the created task
 cd task_src/OnPolicyRL
@@ -232,7 +232,7 @@ cd task_src/OnPolicyRL
 # 3. Run your agent to develop new algorithms
 
 # 4. Create the test task
-discobench create-task --task-domain OnPolicyRL --example --test
+discogen create-task --task-domain OnPolicyRL --example --test
 
 # 5. Run evaluation
 python run_main.py
@@ -242,7 +242,7 @@ python run_main.py
 
 1. Get the default config:
    ```python
-   from discobench import create_config
+   from discogen import create_config
    config = create_config("OnPolicyRL")
    ```
 
@@ -254,7 +254,7 @@ python run_main.py
 
 3. Create task with custom config:
    ```python
-   from discobench import create_task
+   from discogen import create_task
    create_task("OnPolicyRL", test=False, config_dict=config)
    ```
 
@@ -262,9 +262,9 @@ python run_main.py
 
 ```bash
 # Create tasks for different domains
-discobench create-task --task-domain OnPolicyRL
-discobench create-task --task-domain LanguageModelling
-discobench create-task --task-domain BayesianOptimisation
+discogen create-task --task-domain OnPolicyRL
+discogen create-task --task-domain LanguageModelling
+discogen create-task --task-domain BayesianOptimisation
 
 # Each creates files in task_src/{domain_specific_folder}/
 ```

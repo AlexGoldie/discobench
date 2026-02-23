@@ -1,0 +1,10 @@
+train_task_id: [MinAtar/Asterix, MinAtar/Breakout, MinAtar/Freeway, MinAtar/SpaceInvaders, Brax/Ant, Brax/HalfCheetah, Brax/Hopper, Brax/Humanoid, Brax/Pusher, Brax/Reacher, Brax/Walker2D, Craftax/Craftax, Craftax/Craftax-Classic]
+test_task_id: [MinAtar/Asterix, MinAtar/Breakout, MinAtar/Freeway, MinAtar/SpaceInvaders, Brax/Ant, Brax/HalfCheetah, Brax/Hopper, Brax/Humanoid, Brax/Pusher, Brax/Reacher, Brax/Walker2D, Craftax/Craftax, Craftax/Craftax-Classic]
+
+source_path: task_src/OnPolicyRL
+template_backend: default # default, transformer, recurrent
+
+change_optim: false
+change_loss: false
+change_networks: false
+change_train: false

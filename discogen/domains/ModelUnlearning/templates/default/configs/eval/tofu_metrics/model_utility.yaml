@@ -1,0 +1,13 @@
+# @package eval.tofu.metrics.model_utility
+defaults:
+  - .@pre_compute.retain_Q_A_Prob: retain_Q_A_Prob
+  - .@pre_compute.retain_Q_A_ROUGE: retain_Q_A_ROUGE
+  - .@pre_compute.retain_Truth_Ratio: retain_Truth_Ratio
+  - .@pre_compute.ra_Q_A_Prob_normalised: ra_Q_A_Prob_normalised
+  - .@pre_compute.ra_Q_A_ROUGE: ra_Q_A_ROUGE
+  - .@pre_compute.ra_Truth_Ratio: ra_Truth_Ratio
+  - .@pre_compute.wf_Q_A_Prob_normalised: wf_Q_A_Prob_normalised
+  - .@pre_compute.wf_Q_A_ROUGE: wf_Q_A_ROUGE
+  - .@pre_compute.wf_Truth_Ratio: wf_Truth_Ratio
+
+handler: hm_aggregate

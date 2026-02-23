@@ -1,0 +1,17 @@
+fixed_files:
+  - main.py
+  - train_loop.py
+  - data.py
+  - loss.py
+  - metrics.py
+  - network.py
+  - wrappers.py
+  - make_dataset.py
+  - data_transforms.py
+
+module_files:
+  - regularizer.py
+  - replay.py
+  - sampler.py
+  - scheduler.py
+  - optim.py

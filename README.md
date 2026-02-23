@@ -1,43 +1,43 @@
-<h1 align="center">DiscoBench: An Open-Ended Benchmark For Algorithm Discovery</h1>
+<h1 align="center">DiscoGen: An Open-Ended Benchmark For Algorithm Discovery</h1>
 
 <p align="center">
-  <img src="docs/assets/discobench.png" alt="DiscoBench Logo" width="100%">
+  <img src="docs/assets/discogen.png" alt="DiscoGen Logo" width="100%">
 </p>
 
-This repository contains code for the DiscoBench modular benchmark for automated algorithm discovery.
+This repository contains code for the DiscoGen modular benchmark for automated algorithm discovery.
 
-- **Github repository**: <https://github.com/AlexGoldie/discobench/>
-- **Documentation**: <https://AlexGoldie.github.io/discobench/>
-- **Blog**: <https://alexgoldie.github.io/discobench-blog/>
+- **Github repository**: <https://github.com/AlexGoldie/discogen/>
+- **Documentation**: <https://AlexGoldie.github.io/discogen/>
+- **Blog**: <https://alexgoldie.github.io/discogen-blog/>
 
 ## Quick Start
 
-Install DiscoBench:
+Install DiscoGen:
 
 ```bash
-pip install discobench
+pip install discogen
 ```
 
 List available domains:
 ```bash
-discobench get-domains
+discogen get-domains
 ```
 
 Create a task:
 ```bash
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 ```
 
-See the [full documentation](https://AlexGoldie.github.io/discobench/) for detailed usage. Please note that each task_domain has its own set of requirements which may need to be installed.
+See the [full documentation](https://AlexGoldie.github.io/discogen/) for detailed usage. Please note that each task_domain has its own set of requirements which may need to be installed.
 
-Every domain includes references in `discobench/tasks/<task_domain>/utils/_reference.txt`.
+Every domain includes references in `discogen/domains/<task_domain>/utils/_reference.txt`.
 
 ## Task Domains
 
 | Task Domain | Modules | Datasets | Description |
 | :--- | :--- | :--- | :--- |
 | **BayesianOptimisation** | acq_fn, acq_optimizer, domain, next_queries, surrogate, surrogate_optimizer | 11 synthetic functions (Ackley, Branin, Bukin, Cosine, DropWave, EggHolder, Griewank, Hartmann, HolderTable, Levy). | Optimization of black-box functions using surrogate models to find global minima/maxima. |
-| **BrainSpeechDetection** | loss, networks, optim | 7 LibriBrain tasks. | Detecting speech features directly from brain activity data. |
+| **BrainSpeechDetection** | loss, networks, optim | 7 LibriBrain datasets. | Detecting speech features directly from brain activity data. |
 | **ComputerVisionClassification** | loss, networks, optim, preprocess | CIFAR10, CIFAR10C, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StanfordCars, TinyImageNet. | Image classification on a range of datasets. |
 | **ContinualLearning** | optim, regularizer, replay, sampler, scheduler | PermutedMNIST, SplitCIFAR100, TinyImageNetSplit. | Training a model on continually changing data, such that it can adapt to new data without losing old capabilities. |
 | **GreenhouseGasPrediction** | data_processing, model | 4 Mauna Loa Time-series (CO2, N2O, SF6, CH4). | Time-series forecasting of atmospheric greenhouse gas concentrations. |
@@ -61,21 +61,21 @@ This will also generate your `uv.lock` file.
 
 ## Contributing
 
-We welcome contributions! DiscoBench grows stronger with more tasks and domains.
+We welcome contributions! DiscoGen grows stronger with more tasks!
 
-- **Found a bug?** [Open an issue](https://github.com/AlexGoldie/discobench/issues)
-- **Want to add a task?** See our [Contributing Guide](https://AlexGoldie.github.io/discobench/how_to/overview/)
-- **Adding datasets?** Check the [Dataset Integration Guide](https://AlexGoldie.github.io/discobench/how_to/dataset_integration/)
+- **Found a bug?** [Open an issue](https://github.com/AlexGoldie/discogen/issues)
+- **Want to add a task?** See our [Contributing Guide](https://AlexGoldie.github.io/discogen/how_to/overview/)
+- **Adding datasets?** Check the [Dataset Integration Guide](https://AlexGoldie.github.io/discogen/how_to/dataset_integration/)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
 
 ## Citation
 
-If you use DiscoBench in your research, please cite:
+If you use DiscoGen in your research, please cite:
 
 ```bibtex
-@article{goldie2025discobench,
-  title={DiscoBench: An Open-Ended Benchmark For Algorithm Discovery},
+@article{goldie2025discogen,
+  title={DiscoGen: An Open-Ended Benchmark For Algorithm Discovery},
   author={Alexander D. Goldie and Zilin Wang and Adrian Hayler and Deepak Nathani and Edan Toledo and Ken Thampiratwong and Aleksandra Kalisz and Michael Beukman and Alistair Letcher and Shashank Reddy and Clarisse Wibault and Theo Wolf and Charles O'Neill and Jakob N. Foerster and Shimon Whiteson and Roberta Raileanu},
   year={2025}
 }
@@ -83,4 +83,4 @@ If you use DiscoBench in your research, please cite:
 
 ## License
 
-DiscoBench is released under the [MIT License](LICENSE).
+DiscoGen is released under the [MIT License](LICENSE).

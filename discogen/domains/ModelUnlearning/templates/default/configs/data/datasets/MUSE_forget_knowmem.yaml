@@ -1,0 +1,14 @@
+MUSE_forget_knowmem:
+  handler: QADataset
+  args:
+    hf_args:
+      path: "muse-bench/MUSE-News"
+      name: "knowmem"
+      split: "forget_qa"
+    few_shot_dataset_hf_args:
+      path: "muse-bench/MUSE-News"
+      name: "knowmem"
+      split: "forget_qa_icl"
+    question_key: "question"
+    answer_key: "answer"
+    max_length: 512

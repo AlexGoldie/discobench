@@ -1,0 +1,5 @@
+model_prompt: |-
+  You should change the model file, which can be found in `model.py`. Try and choose a model that is appropriate for the task.
+
+data_processing_prompt: |-
+  You should change the data processing file, which can be found in `data_processing.py`. Try and choose a data processing that is appropriate for the task.

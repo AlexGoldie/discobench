@@ -1,0 +1,11 @@
+MUSE_forget_verbmem:
+  handler: CompletionDataset
+  args:
+    hf_args:
+      path: "muse-bench/MUSE-News"
+      name: "verbmem"
+      split: "forget"
+    prefix_key: "prompt"
+    text_key: "gt"
+    max_length: 2048
+    insert_space: True

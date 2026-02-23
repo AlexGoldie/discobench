@@ -1,0 +1,12 @@
+defaults:
+  - default
+
+run:
+  # dir: ${paths.save_dir}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  dir: ${paths.output_dir}
+
+job_logging:
+  handlers:
+    file:
+      # Incorporates fix from https://github.com/facebookresearch/hydra/pull/2242
+      filename: ${hydra.runtime.output_dir}/eval.log

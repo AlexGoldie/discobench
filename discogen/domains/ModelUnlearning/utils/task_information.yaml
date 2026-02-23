@@ -1,0 +1,2 @@
+loss_prompt: |-
+  You must modify the `loss.py` file in order to implement the loss logic for your unlearning method. In machine unlearning, the loss balances two objectives: unlearning specific knowledge from the forget set while preserving performance on the retain set. You should not change the name of the class, `CustomUnlearnTrainer`, or the signature of the `compute_loss` method, but you are allowed to define and use new parameters or methods provided you respect the logic.

@@ -1,0 +1,13 @@
+defaults:
+  - _self_
+  - model: model_conf
+  - trainer: CustomUnlearnTrainer
+  - data: default
+  - collator: DataCollatorForSupervisedDataset
+  - eval: tofu
+  - hydra: default
+  - paths: default
+  - experiment: null
+
+mode: default
+task_name: ???

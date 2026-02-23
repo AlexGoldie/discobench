@@ -1,0 +1,8 @@
+# @package eval.tofu.metrics.ra_Q_A_Prob
+defaults:
+  - ../../data/datasets@datasets: TOFU_QA_ra
+  - ../../collator@collators: DataCollatorForSupervisedDatasetwithIndex
+  # ^ get default dataset and generation config information
+
+handler: probability
+batch_size: ${eval.tofu.batch_size}

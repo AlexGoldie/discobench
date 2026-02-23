@@ -1,0 +1,13 @@
+# @package eval.tofu.metrics.ra_Truth_Ratio
+defaults:
+  - .@pre_compute.ra_Q_A_Prob: ra_Q_A_Prob
+  - .@pre_compute.ra_Q_A_PERT_Prob: ra_Q_A_PERT_Prob
+
+pre_compute:
+  ra_Q_A_Prob:
+    access_key: correct
+  ra_Q_A_PERT_Prob:
+    access_key: wrong
+
+handler: truth_ratio
+aggregator: true_better

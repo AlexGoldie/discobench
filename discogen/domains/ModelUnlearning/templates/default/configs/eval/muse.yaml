@@ -1,0 +1,25 @@
+# @package eval.muse
+# NOTE: the above line is not a comment, but sets the package for config. See https://hydra.cc/docs/upgrades/0.11_to_1.0/adding_a_package_directive/
+
+defaults:
+  - muse_metrics:
+    - forget_knowmem_ROUGE
+    - retain_knowmem_ROUGE
+    - forget_verbmem_ROUGE
+    - privleak
+    - extraction_strength
+    # - exact_memorization
+    # - mia_min_k_plus_plus
+    # - mia_min_k
+    # - mia_loss
+    # - mia_reference
+    # - mia_zlib
+    # - mia_gradnorm
+    # - forget_gibberish
+
+handler: MUSEEvaluator
+output_dir: ${paths.output_dir} # set to default eval directory
+metrics: {}
+overwrite: true
+data_split: News
+retain_logs_path: null

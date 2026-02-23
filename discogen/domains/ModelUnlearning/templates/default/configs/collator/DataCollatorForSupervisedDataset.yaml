@@ -1,0 +1,4 @@
+DataCollatorForSupervisedDataset:
+  handler: DataCollatorForSupervisedDataset
+  args:
+    padding_side: right # Usually right but for mistral and zephyr its left (https://github.com/hongshi97/CAD/issues/2)

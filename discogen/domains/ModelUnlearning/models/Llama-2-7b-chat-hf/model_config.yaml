@@ -1,0 +1,14 @@
+model_args:
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-chat-hf
+  attn_implementation: 'flash_attention_2'
+  torch_dtype: bfloat16
+tokenizer_args:
+  pretrained_model_name_or_path: meta-llama/Llama-2-7b-chat-hf
+template_args: # Used in creating prompts for the dataset. See src/data/utils.py#preprocess_chat_instance.
+# following https://www.reddit.com/r/LocalLLaMA/comments/1561vn5/here_is_a_practical_multiturn_llama2chat_prompt/
+  apply_chat_template: False
+  user_start_tag: "[INST] "
+  user_end_tag: " [/INST]"
+  asst_start_tag: ""
+  # ^the above link says this must be " ", but we observed this leads to very bad tokenization at the border which affects scores
+  asst_end_tag: " "

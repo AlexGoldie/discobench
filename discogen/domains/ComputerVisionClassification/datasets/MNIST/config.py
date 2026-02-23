@@ -1,0 +1,51 @@
+num_classes = 10
+num_channels = 1
+
+config = {
+    "train": {
+        "seed": 42,
+        "output_dir": "./results",
+        "num_train_epochs": 30,
+        "per_device_train_batch_size": 512,
+        "per_device_eval_batch_size": 512,
+        "weight_decay": 0.01,
+        "logging_strategy": "epoch",
+        "save_strategy": "epoch",
+        "load_best_model_at_end": True,
+        "disable_tqdm": True,
+        "remove_unused_columns": False,
+        "eval_strategy": "epoch",
+        "metric_for_best_model": "accuracy",
+        "greater_is_better": True,
+        "early_stopping_patience": 5,
+        "early_stopping_threshold": 0.0,
+        "lr_scheduler_type": "cosine",
+        "warmup_ratio": 0.05,
+        "max_grad_norm": 1.0,
+    },
+    "dataset": {
+        "name": "MNIST",
+        "raw_image_size": (28, 28),
+        "resized_image_size": (32, 32),
+        "input_image_size": (28, 28),
+        "norm_mean": [0.1307],
+        "norm_std": [0.3081],
+        "num_channels": num_channels,
+        "num_classes": num_classes,
+        "image_key": "image",
+        "label_key": "label",
+        "horizontal_flip_prob": 0.5,
+    },
+    "model": {
+        "num_classes": num_classes,
+        "num_channels": num_channels,
+        "dropout": 0.2,
+        "channels": [64, 128, 256],
+        "blocks_per_stage": 2,
+        "use_residual": True,
+    },
+    "optimizer": {
+        "learning_rate": 0.001,
+        "weight_decay": 0.01,
+    },
+}
