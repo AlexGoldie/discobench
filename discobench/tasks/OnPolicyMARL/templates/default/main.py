@@ -106,7 +106,7 @@ if __name__ == "__main__":
     use_vmap = config.get("VMAP", True)
 
     lrs = jnp.linspace(config["LR"], config["LR"] * 10, 10)
-    num_seeds = 3
+    num_seeds = 4
 
     def run_tuner(config, base_rng, lrs, seeds):
         """
