@@ -3,7 +3,7 @@
 import torch
 import torch.nn as nn
 import timm
-
+import torch.nn.functional as F
 
 class DynamicClassifier(nn.Module):
     def __init__(self, in_features: int):
@@ -38,6 +38,9 @@ class CLViT(nn.Module):
         self.head.ensure_num_classes(num_classes)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if x.shape[-2] != 224 or x.shape[-1] != 224:
+            x = F.interpolate(x, size=(224, 224), mode="bilinear", align_corners=False)
+        feats = self.backbone(x)
         feats = self.backbone(x)
         return self.head(feats)
 
