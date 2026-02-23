@@ -14,6 +14,7 @@ def test_all_domains_valid_config() -> None:
         "LanguageModelling",
         "ModelUnlearning",
         "OffPolicyRL",
+        "OnPolicyMARL",
         "OnPolicyRL",
         "UnsupervisedEnvironmentDesign",
     ]
