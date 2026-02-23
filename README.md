@@ -1,10 +1,10 @@
-<h1 align="center">DiscoGen: An Open-Ended Benchmark For Algorithm Discovery</h1>
+<h1 align="center">DiscoGen: Procedural Generation of Algorithm Discovery Tasks in Machine Learning</h1>
 
 <p align="center">
   <img src="docs/assets/discogen.png" alt="DiscoGen Logo" width="100%">
 </p>
 
-This repository contains code for the DiscoGen modular benchmark for automated algorithm discovery.
+This repository contains code for the DiscoGen procedural generator, for algorithm discovery tasks in machine learning.
 
 - **Github repository**: <https://github.com/AlexGoldie/discogen/>
 - **Documentation**: <https://AlexGoldie.github.io/discogen/>
@@ -44,7 +44,7 @@ Every domain includes references in `discogen/domains/<task_domain>/utils/_refer
 | **LanguageModelling** | loss, networks, optimizer | OPCFineWebCode, OPCFineWebMath, LMFineWeb, TinyStories. | Training transformer-based models on code, mathematics, and narrative text. |
 | **ModelUnlearning** | loss | MUSE, TOFU, WMDP_Cyber. | Fine-tuning pretrained models to remove specific knowledge or data points while retaining others. |
 | **OffPolicyRL** | q_update, policy, networks, optim, rb, train | 4 MinAtar games. | Value-based RL for training an agent in MinAtar. |
-| **OnPolicyRL** | loss, networks, optim, train | 4 MinAtar, 7 Brax, 2 Craftax. | Training an RL agent in a range of different RL environments using PPO-style algorithms. |
+| **OnPolicyRL** | loss, networks, optim, train, target, activation | 4 MinAtar, 7 Brax, 2 Craftax. | Training an RL agent in a range of different RL environments using PPO-style algorithms. |
 | **UnsupervisedEnvironmentDesign** | sample_levels, train_step, train_loop, config | 3 Kinetix sizes, Minigrid. | Generating and curating training environments/levels to improve RL agent generalization. |
 
 ## Development Setup
@@ -75,7 +75,7 @@ If you use DiscoGen in your research, please cite:
 
 ```bibtex
 @article{goldie2025discogen,
-  title={DiscoGen: An Open-Ended Benchmark For Algorithm Discovery},
+  title={DiscoGen: Procedural Generation of Algorithm Discovery Tasks in Machine Learning},
   author={Alexander D. Goldie and Zilin Wang and Adrian Hayler and Deepak Nathani and Edan Toledo and Ken Thampiratwong and Aleksandra Kalisz and Michael Beukman and Alistair Letcher and Shashank Reddy and Clarisse Wibault and Theo Wolf and Charles O'Neill and Jakob N. Foerster and Shimon Whiteson and Roberta Raileanu},
   year={2025}
 }

@@ -10,7 +10,7 @@ from discogen import create_config, create_task, get_domains, get_modules
 
 @click.group()
 def cli() -> None:
-    """DiscoGen - Modular Benchmark for Automated Algorithm Discovery."""
+    """DiscoGen: A Procedural Generator of Algorithm Discovery Tasks for Machine Learning."""
     pass
 
 

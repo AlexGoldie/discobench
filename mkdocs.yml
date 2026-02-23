@@ -1,7 +1,7 @@
 site_name: DiscoGen
 repo_url: https://github.com/AlexGoldie/discogen
 site_url: https://AlexGoldie.github.io/discogen
-site_description: This repository contains code for the DiscoGen modular benchmark for automated algorithm discovery.
+site_description: This repository contains code for the DiscoGen procedural generator of algorithm discovery tasks in machine learning.
 site_author: Alex Goldie
 edit_uri: edit/main/docs/
 repo_name: AlexGoldie/discogen

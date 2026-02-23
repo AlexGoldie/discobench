@@ -220,7 +220,7 @@ cd task_src/OnPolicyRL
 python run_main.py
 ```
 
-### Workflow 2: Using the example config
+### Workflow 2: Using an example config
 
 ```bash
 # 1. Create the task
