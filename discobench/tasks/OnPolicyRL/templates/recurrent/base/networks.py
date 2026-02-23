@@ -70,7 +70,13 @@ class ActorCritic(nn.Module):
             self.action_dim, kernel_init=orthogonal(0.01), bias_init=constant(0.0)
         )(actor_mean)
 
-        pi = distrax.Categorical(logits=actor_mean)
+        if self.config.get("CONTINUOUS", False):
+            actor_logtstd = self.param(
+                "log_std", nn.initializers.zeros, (self.action_dim,)
+            )
+            pi = distrax.MultivariateNormalDiag(actor_mean, jnp.exp(actor_logtstd))
+        else:
+            pi = distrax.Categorical(logits=actor_mean)
 
         critic = nn.Dense(hsize, kernel_init=orthogonal(2), bias_init=constant(0.0))(
             embedding
