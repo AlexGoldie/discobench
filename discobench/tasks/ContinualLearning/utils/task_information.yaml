@@ -22,7 +22,7 @@ scheduler_prompt: |
   - For cosine: linear warmup to base LR, then cosine to zero.
   - For step: linear warmup, then decay LR by gamma every step_size.
 
-optimizer_prompt: |
+optim_prompt: |
   Build a torch optimizer from config.
   - Support {"name": "sgd"|"adam"|"adamw"}; use momentum/nesterov for SGD; betas/eps for Adam/AdamW.
   - Respect weight_decay and lr; return a ready-to-use optimizer over model parameters.

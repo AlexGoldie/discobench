@@ -24,19 +24,27 @@ def cli() -> None:
     help="The path to your task_config.yaml. If not provided, this will default to the DiscoBench task_config.yaml for your provided task_domain.",
 )
 @click.option(
+    "--use-base",
+    is_flag=True,
+    help="If passed, will initialise editable modules with baseline implementations instead of interface-only `edit` implementations. Has no effect with --test.",
+)
+@click.option(
     "--no-data",
     is_flag=True,
     help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
 )
 def create_task_cmd(
-    task_domain: str,
-    test: bool,
-    config_path: str | None = None,
-    example: bool | None = None,
-    no_data: bool | None = None,
+    task_domain: str, test: bool, example: bool, use_base: bool, no_data: bool, config_path: str | None = None
 ) -> None:
     """Create task source files for a specified task domain."""
-    create_task(task_domain=task_domain, test=test, config_path=config_path, example=example, no_data=no_data)
+    if test and use_base:
+        click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
+    if example and config_path:
+        click.echo("Warning: passing example and config_path will cause an error.")
+
+    create_task(
+        task_domain=task_domain, test=test, config_path=config_path, example=example, use_base=use_base, no_data=no_data
+    )
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} task for domain: {task_domain}.")
 
@@ -66,7 +74,8 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
     config = create_config(task_domain)
 
     os.makedirs(save_dir, exist_ok=True)
-    with open(f"{save_dir}/task_config_{task_domain}.yml", "w") as outfile:
+
+    with open(f"{save_dir}/task_config_{task_domain}.yaml", "w") as outfile:
         yaml.dump(config, outfile, default_flow_style=False)
 
 

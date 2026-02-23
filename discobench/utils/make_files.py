@@ -153,6 +153,7 @@ class MakeFiles:
         train_test: str,
         template_backend: str,
         train: bool,
+        use_base: bool,
         no_data: bool | None,
     ) -> tuple[list[str], str, str]:
         """Process a single task: create files and return discovered files and description.
@@ -164,6 +165,7 @@ class MakeFiles:
             train_test: Either "train" or "test".
             template_backend: The template backend to use.
             train: Whether this is for training.
+            use_base: Whether to create editable modules using the baseline implementation (if True) or interface-only implementation (if False).
             no_data: Whether to create the task without loading any data files.
 
         Returns:
@@ -205,6 +207,7 @@ class MakeFiles:
                 change=change,
                 template_backend=template_backend,
                 train=train,
+                use_base=use_base,
             )
 
             if change:
@@ -290,12 +293,20 @@ class MakeFiles:
             shutil.copy2(template, dest)
 
     def _create_editable(
-        self, file_name: str, task_path: Path, dest_loc: Path, change: bool, template_backend: str, train: bool
+        self,
+        file_name: str,
+        task_path: Path,
+        dest_loc: Path,
+        change: bool,
+        template_backend: str,
+        train: bool,
+        use_base: bool,
     ) -> None:
         if change:
             if not train:
                 return
-            template = self._get_template(f"edit/{file_name}", task_path, template_backend)
+            module_path = f"base/{file_name}" if use_base else f"edit/{file_name}"
+            template = self._get_template(module_path, task_path, template_backend)
             dest = self.source_path / "discovered" / f"{file_name}"
         else:
             template = self._get_template(f"base/{file_name}", task_path, template_backend)
@@ -472,12 +483,13 @@ class MakeFiles:
             # For older python versions lacking dirs_exist_ok but we already removed dst
             shutil.copytree(src, dst)
 
-    def make_files(self, config: dict[str, Any], train: bool, no_data: bool | None) -> None:
+    def make_files(self, config: dict[str, Any], train: bool, use_base: bool, no_data: bool | None) -> None:
         """Prepare the training and test files for a task.
 
         Args:
             config: The task configuration.
             train: Whether to create the training subset of the task.
+            use_base: If True, will use the baseline implementation for editable modules.
             no_data: If True, will create the codebase without loading any data files.
         """
         self.source_path = Path(config.get("source_path", "task_src"))
@@ -505,13 +517,18 @@ class MakeFiles:
         # Step 6: Process each task
         data_descriptions = []
         model_descriptions = []
+        all_discovered_files = set()
 
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
-            discovered_files, data_description, model_description = self._process_single_task(
-                task_id, model_id, config, train_test, template_backend, train, no_data
+            single_discovered_files, data_description, model_description = self._process_single_task(
+                task_id, model_id, config, train_test, template_backend, train, use_base, no_data
             )
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
+
+            # discovered_files is consistent in every task, but for clarity, track in a set.
+            all_discovered_files.update(single_discovered_files)
+        discovered_files = list(all_discovered_files)
 
         # Step 7: Build and save full description
         full_description = self._build_full_description(
