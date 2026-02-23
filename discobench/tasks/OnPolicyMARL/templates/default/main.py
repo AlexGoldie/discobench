@@ -204,19 +204,31 @@ if __name__ == "__main__":
     )
 
     # Select only the params corresponding to the best LR across all seeds.
+    # Select only the params corresponding to the best LR across all seeds.
     all_params = metrics["runner_state"][0].params  # shape: [num_seeds, num_lrs, ...]
 
-    if jax.local_device_count() > 1:
+    if jax.local_device_count() > 1 and use_vmap:
         all_params = jax.tree_util.tree_map(
             lambda p: p.reshape((num_seeds, len(lrs)) + p.shape[3:]),
             all_params,
         )
 
+    best_lr_params = jax.tree_util.tree_map(
+        lambda p: p[:, best_idx],
+        all_params
+    )
+
     evaluate_policy = make_eval(config, 16)
 
-    if jax.local_device_count() > 1:
+    if jax.local_device_count() > 1 and use_vmap:
         evaluate_policy = jax.vmap(evaluate_policy, in_axes=(0, None))
         evaluate_policy = jax.pmap(evaluate_policy, in_axes=(0, None))
+
+        # Reshape best params for pmap(vmap(...)): (num_devices, seeds_per_device, ...)
+        best_lr_params = jax.tree_util.tree_map(
+            lambda p: p.reshape((jax.local_device_count(), -1) + p.shape[1:]),
+            best_lr_params
+        )
     else:
         evaluate_policy = jax.vmap(evaluate_policy, in_axes=(0, None))
 
@@ -224,7 +236,8 @@ if __name__ == "__main__":
 
     # Evaluate only the best LR params across seeds.
     eval_returns = evaluate_policy(best_lr_params, eval_rng)
-    # eval_returns shape: [num_seeds]
+    # eval_returns shape: [num_seeds] or [num_devices, seeds_per_device]
+
     best_eval_mean = float(eval_returns.mean())
     best_eval_std = float(eval_returns.std())
 
@@ -233,4 +246,3 @@ if __name__ == "__main__":
     )
     return_out = {"return_mean": best_eval_mean, "return_std": best_eval_std}
     print(json.dumps(return_out))
-    print()

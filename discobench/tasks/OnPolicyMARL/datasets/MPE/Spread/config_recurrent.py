@@ -18,5 +18,5 @@ config = {
     "GET_AVAIL_ACTIONS": False,
     "HSIZE": 64,
     "CONTINUOUS": False,
-    "VMAP": False
+    "VMAP": True
 }

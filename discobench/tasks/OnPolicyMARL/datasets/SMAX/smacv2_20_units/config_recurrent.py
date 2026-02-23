@@ -17,5 +17,5 @@ config = {
     "ANNEAL_LR": True,
     "DEBUG": False,
     "GET_AVAIL_ACTIONS": True,
-    "VMAP": False
+    "VMAP": True
 }

@@ -18,5 +18,5 @@ config = {
     "GRU_HIDDEN_DIM": 128,
     "FC_DIM_SIZE": 128,
     "GET_AVAIL_ACTIONS": False,
-    "VMAP": False,
+    "VMAP": True,
 }

@@ -245,7 +245,7 @@ def make_train(config):
             r0 = {"ratio0": loss_info["ratio"][0,0].mean()}
             loss_info = jax.tree.map(lambda x: x.mean(), loss_info)
             metric = jax.tree.map(lambda x: x.mean(), metric)
-            # For LR tuner: use env return metric (jaxmarl often uses returned_episode_returns)
+            # For LR tuner: use env return metric
             _ret = metric.get("returned_episode_returns", jnp.nan)
             metric["mean_training_return"] = _ret["__all__"] if isinstance(_ret, dict) else _ret
             metric["update_step"] = update_count
@@ -253,6 +253,7 @@ def make_train(config):
             metric = {**metric, **loss_info, **r0}
             if config.get("DEBUG", False):
                 jax.experimental.io_callback(callback, None, metric)
+            metric = {"mean_training_return": metric["mean_training_return"]}
             runner_state = (train_state, env_state, last_obs, update_count, rng)
             return runner_state, metric
 
