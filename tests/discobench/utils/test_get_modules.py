@@ -8,7 +8,7 @@ from discobench.utils import get_domains, get_modules
 def test_all_domains_valid_config(domain: str, modules: list[str]) -> None:
     """Ensure the modules loaded by get_modules matches the modules in the config file."""
     config = create_config(domain)
-    expected_modules = [k[7:] for k in config if "change_" in k]
+    expected_modules = [k[7:] for k in config if k.startswith("change_")]
 
     assert sorted(modules) == sorted(expected_modules)
 

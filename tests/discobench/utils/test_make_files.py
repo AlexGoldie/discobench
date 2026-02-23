@@ -55,9 +55,9 @@ def source_path(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def config_with_tmp(config: dict[str, Any], tmp_path: Path) -> dict[str, Any]:
+def config_with_tmp(example_config: dict[str, Any], tmp_path: Path) -> dict[str, Any]:
     """Return a config whose source_path points to tmp_path."""
-    cfg = dict(config)
+    cfg = dict(example_config)
     cfg["source_path"] = str(tmp_path / "task_src")
     return cfg
 
@@ -114,16 +114,19 @@ class TestNormalizeTaskIds:
     @pytest.mark.parametrize("use_list", [True, False])
     def test_task_ids(self, mf: MakeFiles, example_config: dict[str, Any], train_test: str, use_list: bool) -> None:
         """Test that task_ids are always returned as a list, whether input is a list or scalar."""
+        expected_task_ids = {}
         if not use_list:
-            example_config["train_task_id"] = [example_config["train_task_id"][0]]
-            example_config["test_task_id"] = [example_config["test_task_id"][0]]
+            expected_task_ids["train"] = [example_config["train_task_id"][0]]
+            expected_task_ids["test"] = [example_config["test_task_id"][0]]
+            example_config["train_task_id"] = example_config["train_task_id"][0]
+            example_config["test_task_id"] = example_config["test_task_id"][0]
+        else:
+            expected_task_ids["train"] = example_config["train_task_id"]
+            expected_task_ids["test"] = example_config["test_task_id"]
 
         task_ids = mf._normalize_task_ids(example_config, train_test)
 
-        if train_test == "train":
-            assert task_ids == example_config["train_task_id"]
-        elif train_test == "test":
-            assert task_ids == example_config["test_task_id"]
+        assert task_ids == expected_task_ids[train_test]
 
     def test_missing_key_raises(self, mf: MakeFiles) -> None:
         """Test that a missing task_id key raises KeyError."""
@@ -814,8 +817,44 @@ class TestMakeFilesEndToEnd:
             dest = sp / f"{task_id}_{model_id}" if model_id else sp / task_id
             assert dest.exists(), f"Task directory '{dest}' missing after train make_files."
 
+        for train_task_id in config_with_tmp["train_task_id"]:
+            train_dir = train_task_id
+            if "train_model_id" in config_with_tmp:
+                train_dir = train_dir + f"_{config_with_tmp['train_model_id'][0]}"
+
+            assert (sp / train_dir).is_dir()
+
+        for test_task_id in config_with_tmp["test_task_id"]:
+            test_dir = test_task_id
+            if "test_model_id" in config_with_tmp:
+                test_dir = test_dir + f"_{config_with_tmp['test_model_id'][0]}"
+
+            assert not (sp / test_dir).is_dir()
+
+        for k, v in config_with_tmp.items():
+            if k.startswith("change_"):
+                if v:
+                    assert (sp / "discovered" / f"{k[7:]}.py").exists()
+                else:
+                    assert not (sp / "discovered" / f"{k[7:]}.py").exists()
+
     def test_make_files_test_after_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that a test run after train completes and preserves discovered/."""
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+
+        sp = Path(config_with_tmp["source_path"])
+        for k, v in config_with_tmp.items():
+            if k.startswith("change_") and v:
+                (sp / "discovered" / f"{k[7:]}.py").write_text("abc123")
+
+        mf.make_files(config_with_tmp, train=False, use_base=True, no_data=True)
+
+        for k, v in config_with_tmp.items():
+            if k.startswith("change_") and v:
+                assert (sp / "discovered" / f"{k[7:]}.py").read_text() == "abc123"
+
+    def test_make_files_test_discovered_preserved(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
+        """Test that any files written after train in discovered/ are preserved."""
         mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
         mf.make_files(config_with_tmp, train=False, use_base=True, no_data=True)
 
@@ -823,6 +862,20 @@ class TestMakeFilesEndToEnd:
         assert sp.exists()
         assert (sp / "description.md").exists()
         assert (sp / "discovered").is_dir()
+
+        for train_task_id in config_with_tmp["train_task_id"]:
+            train_dir = train_task_id
+            if "train_model_id" in config_with_tmp:
+                train_dir = train_dir + f"_{config_with_tmp['train_model_id'][0]}"
+
+            assert not (sp / train_dir).is_dir()
+
+        for test_task_id in config_with_tmp["test_task_id"]:
+            test_dir = test_task_id
+            if "test_model_id" in config_with_tmp:
+                test_dir = test_dir + f"_{config_with_tmp['test_model_id'][0]}"
+
+            assert (sp / test_dir).is_dir()
 
     def test_make_files_train_use_base_false(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that train with use_base=False (edit templates) completes without error."""
@@ -832,7 +885,7 @@ class TestMakeFilesEndToEnd:
         assert sp.exists()
         assert (sp / "description.md").exists()
 
-    def test_make_files_idempotent_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
+    def test_make_files_twice_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that running train twice produces an identical description."""
         mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
         sp = Path(config_with_tmp["source_path"])
