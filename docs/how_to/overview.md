@@ -9,7 +9,7 @@ Your contribution is *hugely appreciated* and will help unlock new research in *
 
 ## 🎯 Goal
 
-The goal of **DiscoGen** is to develop a series of **modular tasks**, where an ML codebase is broken into its constituent components, for LLMs to use when discovering new algorithms. Through configs, we can choose which modules should use **default code** (the original implementation) and which should be **LLM-generated**. We want to ensure that LLMs can produce **performant, generalisable** algorithms for AI research.
+The goal of **DiscoGen** is to develop a procedural task generator for algorithm discovery tasks. To do so, we break an ML codebase down into its constituent components, for LLMs to use when discovering new algorithms. Through configs, we can choose which modules should use **default code** (the original implementation) and which should be **LLM-generated**. We can also randomly sample new tasks, potentially allowing us to train agents for algorithm discovery, and expanding the possibility of curriculum research. We want to ensure that LLMs can produce **performant, generalisable** algorithms for AI research.
 
 ---
 
@@ -30,7 +30,6 @@ OnPolicyRL/
 ├── datasets/
 │   ├── Brax/
 │   ├── Craftax/
-│   ├── GridWorld/
 │   └── MinAtar/
 │
 ├── templates/
@@ -162,7 +161,7 @@ See `discogen/domains/ModelUnlearning` for an example of how `models` can be use
 
 ---
 
-## 🧱 How to Make a New Task
+## 🧱 How to Make a New Task (Or Add New Modules)
 
 1. **Choose a codebase**
 
@@ -281,6 +280,12 @@ See `discogen/domains/ModelUnlearning` for an example of how `models` can be use
 
     * The main performance metric should not be computed *inside* a module (we don't want it to be possible to cheat)!
 
+15. **Add your task domain to `tests/discogen/utils/test_get_domains.py`**
+    Here, we track all domains that *should* exist.
+
+16. **Document your contribution!**
+    Add any edits you have made to the domain documentation in `docs/domains.md` and `README.MD`.
+
 ✅ Done! Your task is ready for integration.
 
 ---
@@ -291,12 +296,14 @@ For detailed instructions on adding new datasets to your tasks, see our [Dataset
 
 ## 🧪 Verifying Your Task
 
+The should be covered by running `pytest`, but can help to make sure a task builds as you expected.
+
 1. **Generate the LLM-facing file system**
 
 To test whether your task is runnable, try creating the file system as it would be used in `discogen` with the command:
 
    ```bash
-   python3 -m discogen.create_task --task_domain <TASK_NAME>
+   discogen create-task --task-domain <TASK_NAME>
    ```
 
    This will populate:
