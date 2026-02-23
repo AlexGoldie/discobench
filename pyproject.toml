@@ -92,7 +92,6 @@ typeCheckingMode = "off"
 ignore = ["*"]
 
 
-# TODO: Add integration tests for new tasks
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
