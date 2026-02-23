@@ -102,7 +102,7 @@ This folder **always** contains:
 
 * **`description.md`** — general task-domain description (e.g., what RL is).
 
-* **`requirements.txt`** — dependencies required to run the benchmark.
+* **`requirements.txt`** — dependencies required to run the task.
 
 * **`task_information.yaml`** — describes per-module prompts for `edit` codebases.
   Each `{module}_prompt` must match the corresponding filename.
@@ -125,7 +125,7 @@ Example:
 ### 🧾 `task_config.yaml`
 
 Defines which modules use **base** or **edit** code.
-This is what anyone running the benchmark can use to configure the task.
+This is what anyone running the task can use to configure the modules, meta-train and meta-test sets.
 
 It also:
 
@@ -326,7 +326,7 @@ There are some files that are needed to generate the LLM Agent prompts, which cu
 
 
 * **`description.md`** — general task-domain description (e.g., what RL is).
-* **`requirements.txt`** — dependencies required to run the benchmark.
+* **`requirements.txt`** — dependencies required to run the task.
 * **`task_information.yaml`** — describes per-module prompts for `edit` codebases.
   Each `{module}_prompt` must match the corresponding filename.
 * **`_reference.txt`** — original codebase citation or source link for attribution and reproducibility.

@@ -6,7 +6,7 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/AlexGoldie/discogen)](https://img.shields.io/github/commit-activity/m/AlexGoldie/discogen)
 [![License](https://img.shields.io/github/license/AlexGoldie/discogen)](https://img.shields.io/github/license/AlexGoldie/discogen) -->
 
-**DiscoGen** is a modular benchmark for automated algorithm discovery in machine learning.
+**DiscoGen** is a procedural general for automated algorithm discovery tasks in machine learning.
 
 ## What is DiscoGen?
 
