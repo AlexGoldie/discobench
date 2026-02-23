@@ -1,5 +1,0 @@
-defaults:
-  - datasets@forget: MUSE_forget
-  - datasets@retain: MUSE_retain
-
-anchor: forget

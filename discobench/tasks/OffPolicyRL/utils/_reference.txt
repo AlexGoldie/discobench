@@ -1,2 +1,0 @@
-- PureJaxRL (https://github.com/luchris429/purejaxrl)
-- Gymnax (https://github.com/RobertTLange/gymnax)

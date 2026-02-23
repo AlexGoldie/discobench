@@ -1,1 +1,0 @@
-"""ContinualLearning default template package."""

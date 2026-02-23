@@ -1,6 +1,0 @@
-defaults:
-  - DataCollatorForSupervisedDataset
-
-DataCollatorForSupervisedDataset:
-  args:
-    index: index

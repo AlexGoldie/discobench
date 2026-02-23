@@ -1,4 +1,0 @@
-- PureJaxRL (https://github.com/luchris429/purejaxrl)
-- Craftax (https://github.com/MichaelTMatthews/Craftax)
-- Gymnax (https://github.com/RobertTLange/gymnax)
-- Brax (https://github.com/google/brax)
