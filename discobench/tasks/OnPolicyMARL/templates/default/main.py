@@ -205,7 +205,12 @@ if __name__ == "__main__":
 
     # Select only the params corresponding to the best LR across all seeds.
     all_params = metrics["runner_state"][0].params  # shape: [num_seeds, num_lrs, ...]
-    best_lr_params = jax.tree_util.tree_map(lambda p: p[:, best_idx, ...], all_params)
+
+    if jax.local_device_count() > 1:
+        all_params = jax.tree_util.tree_map(
+            lambda p: p.reshape((num_seeds, len(lrs)) + p.shape[3:]),
+            all_params,
+        )
 
     evaluate_policy = make_eval(config, 16)
 

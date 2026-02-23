@@ -211,6 +211,12 @@ if __name__ == "__main__":
     )
     agent_params = metrics["runner_state"][0].params
 
+    if jax.local_device_count() > 1:
+        agent_params = jax.tree_util.tree_map(
+            lambda p: p.reshape((num_seeds, len(lrs)) + p.shape[3:]),
+            agent_params,
+        )
+
     # Evaluate all seeds of the best LR only (from training)
     best_lr_params = jax.tree_util.tree_map(
         lambda leaf: leaf[:, best_idx], agent_params
