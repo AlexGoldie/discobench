@@ -253,9 +253,11 @@ def make_train(config):
             metric = {**metric, **loss_info, **r0}
             if config.get("DEBUG", False):
                 jax.experimental.io_callback(callback, None, metric)
-            metric = {"mean_training_return": metric["mean_training_return"]}
+            metric_return = {"mean_training_return": metric["mean_training_return"]}
+            if "returned_won_episode" in metric:
+                metric_return.update({"returned_won_episode": metric["returned_won_episode"]})
             runner_state = (train_state, env_state, last_obs, update_count, rng)
-            return runner_state, metric
+            return runner_state, metric_return
 
         rng, _rng = jax.random.split(rng)
         runner_state = (train_state, env_state, obsv, 0, _rng)
