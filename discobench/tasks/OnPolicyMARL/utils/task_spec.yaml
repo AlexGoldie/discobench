@@ -3,7 +3,6 @@ fixed_files:
   - make_env.py
   - main.py
   - config.py
-  - config_recurrent.py
 
 module_files:
   - loss.py

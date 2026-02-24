@@ -9,6 +9,9 @@ import numpy as np
 from flax.linen.initializers import constant, orthogonal
 from typing import Callable
 
+GRU_HIDDEN_DIM = 128
+FC_DIM_SIZE = 128
+
 class RecurrentModule(nn.Module):
     @functools.partial(
         nn.scan,
@@ -49,14 +52,14 @@ class ActorCritic(nn.Module):
         else:
             obs, dones = x
         embedding = nn.Dense(
-            self.config["FC_DIM_SIZE"], kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
+            FC_DIM_SIZE, kernel_init=orthogonal(np.sqrt(2)), bias_init=constant(0.0)
         )(obs)
         embedding = self.activation(embedding)
 
         rnn_in = (embedding, dones)
         hidden, embedding = RecurrentModule()(hidden, rnn_in)
 
-        actor_mean = nn.Dense(self.config["GRU_HIDDEN_DIM"], kernel_init=orthogonal(2), bias_init=constant(0.0))(
+        actor_mean = nn.Dense(GRU_HIDDEN_DIM, kernel_init=orthogonal(2), bias_init=constant(0.0))(
             embedding
         )
         actor_mean = self.activation(actor_mean)
@@ -75,7 +78,7 @@ class ActorCritic(nn.Module):
         else:
             pi = distrax.Categorical(logits=action_logits)
 
-        critic = nn.Dense(self.config["FC_DIM_SIZE"], kernel_init=orthogonal(2), bias_init=constant(0.0))(
+        critic = nn.Dense(FC_DIM_SIZE, kernel_init=orthogonal(2), bias_init=constant(0.0))(
             embedding
         )
         critic = self.activation(critic)

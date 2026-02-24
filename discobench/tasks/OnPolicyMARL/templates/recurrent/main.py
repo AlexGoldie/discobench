@@ -6,7 +6,7 @@ from jaxmarl.environments import spaces
 from make_env import make_env
 from networks import RecurrentModule, ActorCritic
 from train import make_train, batchify, unbatchify
-from config_recurrent import config
+from config import config
 
 # Evaluation loop
 def make_eval(config, num_episodes):
