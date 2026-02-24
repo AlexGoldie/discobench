@@ -5,7 +5,7 @@ Here, we describe the various task domains available in DiscoBench. We expect th
 The agent must maximise randomly sampled variables using Bayesian Optimisation.
 
 ### Modules
-`acq_fn`, `acq_optimizer`, `domain`, `next_queries`, `surrogate`, `surrogate_optimizer`
+`acq_fn`, `acq_optimizer`, `sampler`, `next_queries`, `surrogate`, `surrogate_optimizer`
 
 ### Datasets
 `Ackley1d`, `Ackley2d`, `Branin2d`, `Bukin2d`, `Cosine8d`, `DropWave2d`, `EggHolder2d`, `Griewank5d`, `Hartmann6d`, `HolderTable2d`, `Levy6d`
@@ -50,7 +50,7 @@ The agent must train a model to predict the changing concentrations of different
 The agent must pre-train a language model on different small-scale pretraining datasets.
 
 ### Modules
-`loss`, `networks`, `optimizer`
+`loss`, `networks`, `optim`
 
 ### Datasets
 `LMFineWeb`, `OPCFineWebCode`, `OPCFineWebMath`, `TinyStories`
@@ -80,16 +80,16 @@ The agent must train a value-based RL agent in game environments.
 `config`, `networks`, `optim`, `policy`, `q_update`, `rb`, `train`
 
 ### Datasets
-`MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freewar`, `MinAtar/SpaceInvaders`
+`MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freeway`, `MinAtar/SpaceInvaders`
 
 ## OnPolicyRL
 The agent must train an on-policy RL agent in game and robotics environments.
 
 ### Modules
-`config`, `networks`, `optim`, `train`
+`loss`, `networks`, `optim`, `train`
 
 ### Datasets
-`Brax/Ant`, `Brax/HalfCheetag`, `Brax/Hopper`, `Brax/Humanoid`, `Brax/Pusher`, `Brax/Reacher`, `Brax/Walker2D`, `Craftax/Craftax`, `Craftax/Craftax-Classic`, `MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freewar`, `MinAtar/SpaceInvaders`
+`Brax/Ant`, `Brax/HalfCheetah`, `Brax/Hopper`, `Brax/Humanoid`, `Brax/Pusher`, `Brax/Reacher`, `Brax/Walker2D`, `Craftax/Craftax`, `Craftax/Craftax-Classic`, `MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freeway`, `MinAtar/SpaceInvaders`
 
 ## UnsupervisedEnvironmentDesign
 The agent must develop level sampling methods for an on-policy RL agent.
