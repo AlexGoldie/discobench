@@ -23,6 +23,7 @@ return_mean:
     Brax/Reacher: -93.46138
     Brax/Walker2D: 395.156982
     Craftax/Craftax-Classic: 17.777344
+    Craftax/Craftax: 21.428123
   transformer:
     Brax/Humanoid: 6130.256836
     Brax/Pusher: -392.628418
