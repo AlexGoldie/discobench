@@ -25,7 +25,7 @@ class RecurrentModule(nn.Module):
         pass
 
     @staticmethod
-    def initialize_carry(batch_size, hidden_size):
+    def initialize_carry(batch_size):
         # Add initialize_carry function.
         # return initialized_carry
         pass

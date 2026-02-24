@@ -34,7 +34,7 @@ class RecurrentModule(nn.Module):
         return new_rnn_state, y
 
     @staticmethod
-    def initialize_carry(batch_size, hidden_size):
+    def initialize_carry(batch_size, hidden_size=GRU_HIDDEN_DIM):
         # Use a dummy key since the default state init fn is just zeros.
         cell = nn.GRUCell(features=hidden_size)
         return cell.initialize_carry(jax.random.PRNGKey(0), (batch_size, hidden_size))

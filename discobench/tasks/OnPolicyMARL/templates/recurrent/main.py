@@ -30,7 +30,7 @@ def make_eval(config, num_episodes):
         def single_episode(rng):
             rng, rng_reset = jax.random.split(rng)
             obs, env_state = env.reset(rng_reset)
-            init_hstate = RecurrentModule.initialize_carry(env.num_agents, config["GRU_HIDDEN_DIM"])
+            init_hstate = RecurrentModule.initialize_carry(env.num_agents)
 
             def _cond_fn(runner_state):
                 _, _, _, _, _, done = runner_state

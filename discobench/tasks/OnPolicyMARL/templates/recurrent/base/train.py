@@ -82,7 +82,7 @@ def make_train(config):
                 ),
                 jnp.zeros((1, config["NUM_ENVS"])),
             )
-        init_hstate = RecurrentModule.initialize_carry(config["NUM_ENVS"], config["GRU_HIDDEN_DIM"])
+        init_hstate = RecurrentModule.initialize_carry(config["NUM_ENVS"])
         network_params = network.init(_rng, init_hstate, init_x)
         schedule_fn = optax.linear_schedule(
             init_value=lr, end_value=lr, transition_steps=0
@@ -109,7 +109,7 @@ def make_train(config):
         rng, _rng = jax.random.split(rng)
         reset_rng = jax.random.split(_rng, config["NUM_ENVS"])
         obsv, env_state = jax.vmap(env.reset, in_axes=(0,))(reset_rng)
-        init_hstate = RecurrentModule.initialize_carry(config["NUM_ACTORS"], config["GRU_HIDDEN_DIM"])
+        init_hstate = RecurrentModule.initialize_carry(config["NUM_ACTORS"])
         # TRAIN LOOP
         def _update_step(update_runner_state, unused):
             # COLLECT TRAJECTORIES
