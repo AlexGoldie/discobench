@@ -361,8 +361,9 @@ class MakeFiles:
         targets = {}
         for metric_name, metrics in baselines.items():
             mult_factor = -1 if metrics["objective"] == "min" else 1
-
-            targets.update({metric_name: metrics[template_backend][task_id] * mult_factor * baseline_scale})
+            metric_backend = metrics[template_backend]
+            if task_id in metric_backend:
+                targets.update({metric_name: metric_backend[task_id] * mult_factor * baseline_scale})
 
         dict_dest = dest_loc / "baseline_scores.json"
         dict_dest.write_text(json.dumps(targets))
