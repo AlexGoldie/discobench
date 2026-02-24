@@ -67,7 +67,10 @@ def make_eval(config, num_episodes):
                 if '__all__' in reward:
                     reward = reward['__all__']
                 else:
-                    reward = reward[env.agents[0]]
+                    _reward = 0
+                    for agent in env.agents:
+                        _reward = _reward + reward[agent]
+                    reward = _reward
 
                 total_reward = total_reward + reward
                 done = done['__all__']
