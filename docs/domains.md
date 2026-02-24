@@ -82,6 +82,16 @@ The agent must train a value-based RL agent in game environments.
 ### Datasets
 `MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freeway`, `MinAtar/SpaceInvaders`
 
+## OnPolicyMARL
+The agent must train multiple RL agents in cooperative and competitive multi-agent RL environments.
+
+### Modules
+`loss`, `networks`, `optim`, `train`, `activation`, `targets`
+
+### Datasets
+`MABrax/Ant`, `MABrax/HalfCheetah`, `MABrax/Hopper`, `MABrax/Humanoid`, `MABrax/Walker`, `MPE/Spread`, `SMAX/2s3z`, `SMAX/3s_vs_5z`, `SMAX/3s5z`, `SMAX/3s5z_vs_3s6z`, `SMAX/5m_vs_6m`, `SMAX/6h_vs_8z`, `SMAX/10m_vs_11m`, `SMAX/27m_vs_30m`, `SMAX/smacv2_5_units`, `SMAX/smacv2_10_units`, `SMAX/smacv2_20_units`
+
+
 ## OnPolicyRL
 The agent must train an on-policy RL agent in game and robotics environments.
 

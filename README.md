@@ -44,6 +44,7 @@ Every domain includes references in `discobench/tasks/<task_domain>/utils/_refer
 | **LanguageModelling** | loss, networks, optim | OPCFineWebCode, OPCFineWebMath, LMFineWeb, TinyStories. | Training transformer-based models on code, mathematics, and narrative text. |
 | **ModelUnlearning** | loss | MUSE, TOFU, WMDP_Cyber. | Fine-tuning pretrained models to remove specific knowledge or data points while retaining others. |
 | **OffPolicyRL** | q_update, policy, networks, optim, rb, train, config | 4 MinAtar. | Value-based RL for training an agent in MinAtar. |
+| **OnPolicyMARL** | activation, loss, networks, optim, targets, train | 5 MABrax, MPE Spread, 11 SMAX | Training multiple on-policy RL agents in different multi-agent environments. |
 | **OnPolicyRL** | loss, networks, optim, train | 4 MinAtar, 7 Brax, 2 Craftax. | Training an RL agent in a range of different RL environments using PPO-style algorithms. |
 | **UnsupervisedEnvironmentDesign** | sample_levels, train_step, variable_config | 3 Kinetix sizes, Minigrid. | Generating and curating training environments/levels to improve RL agent generalization. |
 
