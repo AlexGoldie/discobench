@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import subprocess
 import sys
@@ -28,7 +29,7 @@ def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
             try:
                 with EmissionsTracker() as tracker:
                     result = subprocess.run([sys.executable, main_path], check=True, capture_output=True, text=True)  # noqa: S603
-                co2 = tracker.final_emissions * 1000
+                energy = tracker._total_energy.kWh
 
                 output_lines = result.stdout.strip().split("\n")
                 metrics = None
@@ -42,7 +43,7 @@ def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
                             continue
 
                 if metrics:
-                    _extract_scores(baseline_scores, metrics, root, main_path, results, co2)
+                    _extract_scores(baseline_scores, metrics, root, main_path, results, energy)
                 else:
                     raise RuntimeError(
                         f"Script {main_path} did not produce metrics.\n--- STDOUT ---\n{result.stdout}\n"
@@ -62,14 +63,16 @@ def _extract_scores(
     root: str,
     main_path: str,
     results: dict[str, Any],
-    co2: float,
+    energy: float,
 ) -> dict[str, Any]:
     for metric_name, baseline_score in baseline_scores.items():
         if metric_name in metrics:
             if metrics[metric_name] >= baseline_score:
-                metrics["g CO2e"] = co2
+                metrics["kWh Energy"] = energy
+                metrics["Exceeded Threshold"] = True
             else:
-                raise RuntimeError(f"Script {main_path} did not reach the baseline score within the given tolerance!\n")
+                metrics["kWh Energy"] = math.inf  # (inf if failed to be within baseline)
+                metrics["Exceeded Threshold"] = False
         else:
             raise RuntimeError(f"Script {main_path} did not produce any metric for {metric_name}!\n")
     results[root] = metrics

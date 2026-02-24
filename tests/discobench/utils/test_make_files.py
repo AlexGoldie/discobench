@@ -617,12 +617,15 @@ class TestSaveDescription:
 class TestSaveRequirements:
     """All tests for _save_requirements."""
 
-    def test_copies_requirements(self, mf: MakeFiles, source_path: Path) -> None:
+    @pytest.mark.parametrize("eval_type", ["time", "energy", "performance"])
+    def test_copies_requirements(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that requirements.txt is copied to the source directory."""
         mf.source_path = source_path
-        mf._save_requirements()
+        mf._save_requirements(eval_type)
         result = (mf.source_path / "requirements.txt").read_text()
         assert len(result) > 0
+        if eval_type == "energy":
+            assert "codecarbon" in result
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

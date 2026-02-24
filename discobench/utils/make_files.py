@@ -427,12 +427,16 @@ class MakeFiles:
         dest = self.source_path / "run_main.py"
         shutil.copy2(run_main_path, dest)
 
-    def _save_requirements(self) -> None:
+    def _save_requirements(self, eval_type: str) -> None:
         requirements = self.base_path / "utils" / "requirements.txt"
         dest = self.source_path / "requirements.txt"
 
         # Copy the template file to the source directory
         shutil.copy2(requirements, dest)
+
+        if eval_type == "energy":
+            with dest.open("a", encoding="utf-8") as f:
+                f.write("\ncodecarbon\n")
 
     def _get_template(self, file: str, task_path: Path, template_backend: str) -> Path:
         data_template = task_path / file
@@ -628,4 +632,4 @@ class MakeFiles:
 
         # Step 10: Copy run_main and requirements
         self._load_run_main(eval_type)
-        self._save_requirements()
+        self._save_requirements(eval_type)
