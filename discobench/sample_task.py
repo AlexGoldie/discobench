@@ -68,12 +68,12 @@ def _generate_config(
 
     new_config: dict[str, Any] = {"train_task_id": [], "test_task_id": []}
 
-    if use_backends:
+    if not use_backends:
         new_config["template_backend"] = "default"
     else:
         templates_path = base_path.joinpath(f"{random_domain}/templates")
         backends = sorted([x.name for x in templates_path.iterdir() if x.is_dir()])
-        new_config["template_backend"] = rng.choice(backends)
+        new_config["template_backend"] = str(rng.choice(backends))
 
     datasets = domain_config["train_task_id"]
     # 0=Train, 1=Test, 2=Exclude
