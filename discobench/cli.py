@@ -40,7 +40,7 @@ def cli() -> None:
     help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
 )
 @click.option(
-    "--baseline_scale",
+    "--baseline-scale",
     type=float,
     default=1.0,
     help="If using 'time' or 'energy' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",

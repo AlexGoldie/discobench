@@ -57,26 +57,38 @@ def test_create_task_example_path_resolution(mock_make_files: MagicMock, mock_ya
     assert kwargs["train"] is True
 
 
-def test_create_task_with_config_dict(mock_make_files: MagicMock) -> None:
+@pytest.mark.parametrize("eval_type", ["performance", "energy", "time"])
+@pytest.mark.parametrize("baseline_scale", [0.5, 1.0, 1.5])
+def test_create_task_with_config_dict(mock_make_files: MagicMock, eval_type: str, baseline_scale: float) -> None:
     """Ensures that passing a dict bypasses file reading entirely."""
     custom_config = {"train_task_id": ["Ackley1D", "Ackley2D"]}
 
-    create_task("BayesianOptimisation", test=True, config_dict=custom_config)
+    create_task(
+        "BayesianOptimisation", test=True, config_dict=custom_config, baseline_scale=baseline_scale, eval_type=eval_type
+    )
 
     mock_make_files.return_value.make_files.assert_called_once_with(
-        custom_config, train=False, use_base=False, no_data=False
+        custom_config, train=False, use_base=False, no_data=False, baseline_scale=baseline_scale, eval_type=eval_type
     )
 
 
 @pytest.mark.parametrize("test_mode, expected_train", [(True, False), (False, True)])
+@pytest.mark.parametrize("eval_type", ["performance", "energy", "time"])
+@pytest.mark.parametrize("baseline_scale", [0.5, 1.0, 1.5])
 def test_create_task_train_test_toggle(
-    mock_make_files: MagicMock, mock_yaml: None, test_mode: bool, expected_train: bool
+    mock_make_files: MagicMock,
+    mock_yaml: None,
+    test_mode: bool,
+    expected_train: bool,
+    eval_type: str,
+    baseline_scale: float,
 ) -> None:
     """Verifies the boolean inversion logic for the 'train' parameter."""
-    create_task("GreenhouseGasPrediction", test=test_mode)
+    create_task("GreenhouseGasPrediction", test=test_mode, baseline_scale=baseline_scale, eval_type=eval_type)
 
-    # Use ANY instead of unittest.mock.any
-    mock_make_files.return_value.make_files.assert_called_with(ANY, train=expected_train, use_base=False, no_data=False)
+    mock_make_files.return_value.make_files.assert_called_with(
+        ANY, train=expected_train, use_base=False, no_data=False, baseline_scale=baseline_scale, eval_type=eval_type
+    )
 
 
 @pytest.mark.parametrize(

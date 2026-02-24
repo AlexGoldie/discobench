@@ -173,7 +173,7 @@ class MakeFiles:
         train: bool,
         use_base: bool,
         no_data: bool | None,
-        baselines: dict[str, float] | None,
+        baselines: dict[str, Any] | None,
         baseline_scale: float,
     ) -> tuple[list[str], str, str]:
         """Process a single task: create files and return discovered files and description.

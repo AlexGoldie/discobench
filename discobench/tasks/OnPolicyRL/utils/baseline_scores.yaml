@@ -8,12 +8,21 @@ return_mean:
     MinAtar/Breakout: 61.078125
     MinAtar/Freeway: 62.171875
     MinAtar/SpaceInvaders: 182.125
-  objective: max
+    Brax/Ant: 6957.005371
+    Brax/HalfCheetah: 5039.06543
+    Brax/Hopper: 2398.254395
+    Craftax/Craftax: 23.217186
+    Craftax/Craftax-Classic: 16.857029
   recurrent:
     MinAtar/Asterix: 15.96875
     MinAtar/Breakout: 61.078125
     MinAtar/Freeway: 61.953125
     MinAtar/SpaceInvaders: 182.125
+    Brax/Humanoid: 3362.309082
+    Brax/Pusher: -447.263306
+    Brax/Reacher: -93.46138
+    Brax/Walker2D: 395.156982
+    Craftax/Craftax-Classic: 17.777344
   transformer:
     Brax/Humanoid: 6130.256836
     Brax/Pusher: -392.628418
@@ -23,3 +32,8 @@ return_mean:
     MinAtar/Breakout: 61.078125
     MinAtar/Freeway: 61.953125
     MinAtar/SpaceInvaders: 182.125
+    Brax/Ant: 6387.042969
+    Brax/HalfCheetah: 5086.751953
+    Brax/Hopper: 2067.533203
+    Craftax/Craftax-Classic: 16.740623
+  objective: max

@@ -295,6 +295,8 @@ class TestProcessSingleTask:
             train=True,
             use_base=True,
             no_data=True,
+            baselines={"return_mean": {"objective": "min", template_backend: {task_ids[0]: 1}}},
+            baseline_scale=1.0,
         )
 
         assert isinstance(discovered, list)
@@ -324,12 +326,14 @@ class TestBuildFullDescription:
             data_descriptions=["Data desc 0"],
             model_descriptions=["Model desc 0"],
             task_information={"model_prompt": "Improve it."},
+            eval_description="Eval desc 0",
         )
         assert "Base." in result
         assert "Improve it." in result
         assert "Data desc 0" in result
         assert "Model desc 0" in result
         assert "Problem 0" in result
+        assert "Eval desc 0" in result
 
     def test_no_prompt_for_unknown_file(self, mf: MakeFiles) -> None:
         """Test that a discovered file without a matching prompt key adds nothing."""
@@ -339,6 +343,7 @@ class TestBuildFullDescription:
             data_descriptions=["Data"],
             model_descriptions=[""],
             task_information={"model_prompt": "Only for model."},
+            eval_description="",
         )
         assert "Only for model." not in result
 
@@ -350,6 +355,7 @@ class TestBuildFullDescription:
             data_descriptions=["Desc A", "Desc B"],
             model_descriptions=["", ""],
             task_information={},
+            eval_description="",
         )
         assert "Problem 0" in result
         assert "Problem 1" in result
@@ -802,7 +808,7 @@ class TestMakeFilesEndToEnd:
 
     def test_make_files_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that a full train run completes and produces all expected outputs."""
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
 
         sp = Path(config_with_tmp["source_path"])
         assert sp.exists()
@@ -840,14 +846,14 @@ class TestMakeFilesEndToEnd:
 
     def test_make_files_test_after_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that a test run after train completes and preserves discovered/."""
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
 
         sp = Path(config_with_tmp["source_path"])
         for k, v in config_with_tmp.items():
             if k.startswith("change_") and v:
                 (sp / "discovered" / f"{k[7:]}.py").write_text("abc123")
 
-        mf.make_files(config_with_tmp, train=False, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=False, use_base=True, no_data=True, eval_type="performance")
 
         for k, v in config_with_tmp.items():
             if k.startswith("change_") and v:
@@ -855,8 +861,8 @@ class TestMakeFilesEndToEnd:
 
     def test_make_files_test_discovered_preserved(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that any files written after train in discovered/ are preserved."""
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
-        mf.make_files(config_with_tmp, train=False, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
+        mf.make_files(config_with_tmp, train=False, use_base=True, no_data=True, eval_type="performance")
 
         sp = Path(config_with_tmp["source_path"])
         assert sp.exists()
@@ -879,7 +885,7 @@ class TestMakeFilesEndToEnd:
 
     def test_make_files_train_use_base_false(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that train with use_base=False (edit templates) completes without error."""
-        mf.make_files(config_with_tmp, train=True, use_base=False, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=False, no_data=True, eval_type="performance")
 
         sp = Path(config_with_tmp["source_path"])
         assert sp.exists()
@@ -887,25 +893,25 @@ class TestMakeFilesEndToEnd:
 
     def test_make_files_twice_train(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that running train twice produces an identical description."""
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
         sp = Path(config_with_tmp["source_path"])
         first_desc = (sp / "description.md").read_text()
 
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
         second_desc = (sp / "description.md").read_text()
 
         assert first_desc == second_desc
 
     def test_description_is_nonempty(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that the generated description has substantial content."""
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
         sp = Path(config_with_tmp["source_path"])
         desc = (sp / "description.md").read_text()
         assert len(desc) > 50
 
     def test_symlinks_resolve(self, mf: MakeFiles, config_with_tmp: dict[str, Any]) -> None:
         """Test that all symlinks in task directories resolve to existing files."""
-        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True)
+        mf.make_files(config_with_tmp, train=True, use_base=True, no_data=True, eval_type="performance")
 
         sp = Path(config_with_tmp["source_path"])
         task_ids = mf._normalize_task_ids(config_with_tmp, "train")
