@@ -8,3 +8,4 @@ change_regularizer: false
 change_replay: false
 change_sampler: false
 change_scheduler: false
+change_optim: false

@@ -541,7 +541,7 @@ class MakeFiles:
         train: bool,
         use_base: bool,
         no_data: bool | None,
-        eval_type: str,
+        eval_type: str = "performance",
         baseline_scale: float = 1.0,
     ) -> None:
         """Prepare the training and test files for a task.
@@ -582,6 +582,7 @@ class MakeFiles:
         # Step 7: Process each task
         data_descriptions = []
         model_descriptions = []
+        all_discovered_files = set()
 
         if eval_type in ["time", "energy"]:
             baseline_path = self.base_path / "utils" / "baseline_scores.yaml"
@@ -591,7 +592,7 @@ class MakeFiles:
             baselines = None
 
         for task_id, model_id in zip(task_ids, model_ids, strict=False):
-            discovered_files, data_description, model_description = self._process_single_task(
+            single_discovered_files, data_description, model_description = self._process_single_task(
                 task_id,
                 model_id,
                 config,
@@ -606,7 +607,11 @@ class MakeFiles:
             data_descriptions.append(data_description)
             model_descriptions.append(model_description)
 
-        # Step 8: Build and save full description
+            # discovered_files is consistent in every task, but for clarity, track in a set.
+            all_discovered_files.update(single_discovered_files)
+        discovered_files = list(all_discovered_files)
+
+        # Step 7: Build and save full description
         full_description = self._build_full_description(
             base_description,
             eval_description,
@@ -617,10 +622,10 @@ class MakeFiles:
         )
         self._save_description(full_description)
 
-        # Step 9: Create symlinks for discovered files
+        # Step 8: Create symlinks for discovered files
         unique_discovered_files = discovered_files
         self._create_symlinks_for_discovered(unique_discovered_files, task_ids, model_ids)
 
-        # Step 10: Copy run_main and requirements
+        # Step 9: Copy run_main and requirements
         self._load_run_main(eval_type)
         self._save_requirements()

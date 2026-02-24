@@ -2,6 +2,7 @@ train_task_id: [OPCFineWebMath, LMFineWeb]
 test_task_id: [OPCFineWebCode, TinyStories]
 
 source_path: task_src/LanguageModelling
+template_backend: default
 
 change_optim: false
 change_loss: true

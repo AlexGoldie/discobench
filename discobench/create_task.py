@@ -16,7 +16,7 @@ def create_task(
     no_data: bool = False,
     config_path: str | None = None,
     config_dict: dict[str, Any] | None = None,
-    eval_type: str | None = "performance",
+    eval_type: str = "performance",
     baseline_scale: float = 1.0,
 ) -> None:
     """Prepare files for the training or testing subset of the task.
@@ -42,23 +42,14 @@ def create_task(
     if explicit_configs + example_flag > 1:
         raise ValueError("Provide only one of config_path, example=True, or config_dict.")
 
-    if eval_type not in ["performance", "time", "energy"]:
-        raise ValueError("Ensure eval_type is one of ['performance', 'time', 'energy'].")
-
-    if baseline_scale <= 0.0:
-        raise ValueError("Relative tolerance must be greater than 0.")
-
-    if config_path is None and config_dict is None:
-        if example is True:
-            config_path = str(Path(__file__).parent / f"example_configs/{task_domain}.yaml")
-        else:
-            config_path = str(Path(__file__).parent / f"tasks/{task_domain}/task_config.yaml")
     if config_dict is not None:
         task_config = config_dict
     else:
         if config_path is None:
-            raise ValueError("config_path cannot be None if config_dict is also None.")
-
+            if example is True:
+                config_path = str(Path(__file__).parent / f"example_configs/{task_domain}.yaml")
+            else:
+                config_path = str(Path(__file__).parent / f"tasks/{task_domain}/task_config.yaml")
         with open(config_path) as f:
             task_config = yaml.safe_load(f)
 
