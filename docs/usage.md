@@ -203,7 +203,7 @@ change_train: false
 - `template_backend`: Which template variant to use (e.g., default, transformer, recurrent)
 - `change_*`: Set to `true` to use editable module versions, `false` for baseline implementations
 
-## Common Workflows
+## Creating Tasks
 
 ### Workflow 1: Running a Default Task
 
@@ -258,15 +258,23 @@ python run_main.py
    create_task("OnPolicyRL", test=False, config_dict=config)
    ```
 
-### Workflow 4: Testing Across Multiple Domains
+## Running DiscoBench
 
-```bash
-# Create tasks for different domains
-discogen create-task --task-domain OnPolicyRL
-discogen create-task --task-domain LanguageModelling
-discogen create-task --task-domain BayesianOptimisation
+We provide all DiscoBench configs in `discogen/discobench_configs`.
 
-# Each creates files in task_src/{domain_specific_folder}/
+To run all DiscoBench tasks:
+1. Get the list of DiscoBench tasks:
+```python
+from discogen.utils import get_discobench_tasks
+discobench_task_list = get_discobench_tasks()
+```
+
+2. Loop through creating all tasks:
+```python
+from discogen import create_discobench
+for task in discobench_task_list:
+    create_discobench(task)
+    # Run agent on discobench task and report score
 ```
 
 ## Next Steps
