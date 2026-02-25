@@ -277,7 +277,13 @@ See `discobench/tasks/ModelUnlearning` for an example of how `models` can be use
     change_train: false
     ```
 
-14. **Keep metrics outside modules**
+13. **Create discobench configs in `discobench_configs/<task_domain>.yaml`**
+
+    * This will create all the discobench tasks for people to evaluate their algorithm discovery agents.
+    * There should be one discobench config *per* module (`change_x: true`), and one where all modules are true.
+    * All discobench tasks should use the same (mutually exclusive) meta-train and meta-test datasets.
+
+15. **Keep metrics outside modules**
 
     * The main performance metric should not be computed *inside* a module (we don't want it to be possible to cheat)!
 
