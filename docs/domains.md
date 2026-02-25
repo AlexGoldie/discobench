@@ -5,7 +5,7 @@ Here, we describe the various task domains available in DiscoGen. We expect this
 The agent must maximise randomly sampled variables using Bayesian Optimisation.
 
 ### Modules
-`acq_fn`, `acq_optimizer`, `domain`, `next_queries`, `surrogate`, `surrogate_optimizer`
+`acq_fn`, `acq_optimizer`, `sampler`, `next_queries`, `surrogate`, `surrogate_optimizer`
 
 ### Datasets
 `Ackley1d`, `Ackley2d`, `Branin2d`, `Bukin2d`, `Cosine8d`, `DropWave2d`, `EggHolder2d`, `Griewank5d`, `Hartmann6d`, `HolderTable2d`, `Levy6d`
@@ -50,7 +50,7 @@ The agent must train a model to predict the changing concentrations of different
 The agent must pre-train a language model on different small-scale pretraining datasets.
 
 ### Modules
-`loss`, `networks`, `optimizer`
+`loss`, `networks`, `optim`
 
 ### Datasets
 `LMFineWeb`, `OPCFineWebCode`, `OPCFineWebMath`, `TinyStories`
@@ -80,16 +80,26 @@ The agent must train a value-based RL agent in game environments.
 `config`, `networks`, `optim`, `policy`, `q_update`, `rb`, `train`
 
 ### Datasets
-`MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freewar`, `MinAtar/SpaceInvaders`
+`MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freeway`, `MinAtar/SpaceInvaders`
+
+## OnPolicyMARL
+The agent must train multiple RL agents in cooperative and competitive multi-agent RL environments.
+
+### Modules
+`loss`, `networks`, `optim`, `train`, `activation`, `targets`
+
+### Datasets
+`MABrax/Ant`, `MABrax/HalfCheetah`, `MABrax/Hopper`, `MABrax/Humanoid`, `MABrax/Walker`, `MPE/Spread`, `SMAX/2s3z`, `SMAX/3s_vs_5z`, `SMAX/3s5z`, `SMAX/3s5z_vs_3s6z`, `SMAX/5m_vs_6m`, `SMAX/6h_vs_8z`, `SMAX/10m_vs_11m`, `SMAX/27m_vs_30m`, `SMAX/smacv2_5_units`, `SMAX/smacv2_10_units`, `SMAX/smacv2_20_units`
+
 
 ## OnPolicyRL
 The agent must train an on-policy RL agent in game and robotics environments.
 
 ### Modules
-`config`, `networks`, `optim`, `train`
+`loss`, `networks`, `optim`, `train`
 
 ### Datasets
-`Brax/Ant`, `Brax/HalfCheetag`, `Brax/Hopper`, `Brax/Humanoid`, `Brax/Pusher`, `Brax/Reacher`, `Brax/Walker2D`, `Craftax/Craftax`, `Craftax/Craftax-Classic`, `MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freewar`, `MinAtar/SpaceInvaders`
+`Brax/Ant`, `Brax/HalfCheetah`, `Brax/Hopper`, `Brax/Humanoid`, `Brax/Pusher`, `Brax/Reacher`, `Brax/Walker2D`, `Craftax/Craftax`, `Craftax/Craftax-Classic`, `MinAtar/Asterix`, `MinAtar/Breakout`, `MinAtar/Freeway`, `MinAtar/SpaceInvaders`
 
 ## UnsupervisedEnvironmentDesign
 The agent must develop level sampling methods for an on-policy RL agent.
