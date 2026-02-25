@@ -1,16 +1,16 @@
-# DiscoBench
+# DiscoGen
 
-<!-- [![Release](https://img.shields.io/github/v/release/AlexGoldie/discobench)](https://img.shields.io/github/v/release/AlexGoldie/discobench)
-[![Build status](https://img.shields.io/github/actions/workflow/status/AlexGoldie/discobench/main.yml?branch=main)](https://github.com/AlexGoldie/discobench/actions/workflows/main.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/AlexGoldie/discobench/branch/main/graph/badge.svg)](https://codecov.io/gh/AlexGoldie/discobench)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/AlexGoldie/discobench)](https://img.shields.io/github/commit-activity/m/AlexGoldie/discobench)
-[![License](https://img.shields.io/github/license/AlexGoldie/discobench)](https://img.shields.io/github/license/AlexGoldie/discobench) -->
+<!-- [![Release](https://img.shields.io/github/v/release/AlexGoldie/discogen)](https://img.shields.io/github/v/release/AlexGoldie/discogen)
+[![Build status](https://img.shields.io/github/actions/workflow/status/AlexGoldie/discogen/main.yml?branch=main)](https://github.com/AlexGoldie/discogen/actions/workflows/main.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/AlexGoldie/discogen/branch/main/graph/badge.svg)](https://codecov.io/gh/AlexGoldie/discogen)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/AlexGoldie/discogen)](https://img.shields.io/github/commit-activity/m/AlexGoldie/discogen)
+[![License](https://img.shields.io/github/license/AlexGoldie/discogen)](https://img.shields.io/github/license/AlexGoldie/discogen) -->
 
-**DiscoBench** is a modular benchmark for automated algorithm discovery in machine learning.
+**DiscoGen** is a modular benchmark for automated algorithm discovery in machine learning.
 
-## What is DiscoBench?
+## What is DiscoGen?
 
-DiscoBench is a new, open-ended benchmark and research playground for developing automated algorithm discovery and AI scientist systems. DiscoBench has a modular setup, an emphasis on discovering algorithms that transfer, and a huge diversity of tasks! We hope DiscoBench helps drive the frontier of research in algorithm discovery by providing a large-scale, open-ended landscape for evaluating AI research agents!
+DiscoGen is a new, open-ended benchmark and research playground for developing automated algorithm discovery and AI scientist systems. DiscoGen has a modular setup, an emphasis on discovering algorithms that transfer, and a huge diversity of tasks! We hope DiscoGen helps drive the frontier of research in algorithm discovery by providing a large-scale, open-ended landscape for evaluating AI research agents!
 
 ### Key Features
 
@@ -27,36 +27,36 @@ DiscoBench is a new, open-ended benchmark and research playground for developing
 Install from source:
 
 ```bash
-git clone git@github.com:AlexGoldie/discobench.git
-cd discobench
+git clone git@github.com:AlexGoldie/discogen.git
+cd discogen
 make install
 ```
 or install from pip:
 ```bash
-pip install discobench
+pip install discogen
 ```
 ### Basic Usage
 
 List available domains:
 ```bash
-uv run discobench get-domains
+uv run discogen get-domains
 ```
 
 Create a full task-domain codebase (with baseline implementations):
 ```bash
-uv run discobench create-task --task-domain OnPolicyRL
+uv run discogen create-task --task-domain OnPolicyRL
 ```
 
 Create an example task for algorithm discovery:
 ```bash
-uv run discobench create-task --task-domain OnPolicyRL --example
+uv run discogen create-task --task-domain OnPolicyRL --example
 ```
 
 See the full [Usage Guide](usage.md) for detailed instructions.
 
 ## Available Domains
 
-DiscoBench currently supports the following task domains:
+DiscoGen currently supports the following task domains:
 
 - **[OnPolicyRL](domains.md#onpolicyrl)**: On-policy reinforcement learning (PPO-style algorithms)
 - **[OffPolicyRL](domains.md#offpolicyrl)**: Off-policy reinforcement learning (DQN-style algorithms)
@@ -100,10 +100,10 @@ change_train: false
 
 ### 4. Task Generation
 
-DiscoBench assembles the configured modules into a complete, runnable task in `task_src/`:
+DiscoGen assembles the configured modules into a complete, runnable task in `task_src/`:
 
 ```bash
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 cd task_src/OnPolicyRL
 python run_main.py
 ```
@@ -115,14 +115,14 @@ python run_main.py
 - **[Domains](domains.md)**: Available task domains and their modules
 
 ### For Contributors
-- **[Contributing Overview](how_to/overview.md)**: How to add new tasks to DiscoBench
+- **[Contributing Overview](how_to/overview.md)**: How to add new tasks to DiscoGen
 - **[Dataset Integration](how_to/dataset_integration.md)**: Adding new datasets to tasks
 
 ## Example Use Cases
 
 ### Algorithm Discovery with LLMs
 
-Use DiscoBench to have AI agents discover new ML algorithms:
+Use DiscoGen to have AI agents discover new ML algorithms:
 1. Configure which modules should be generated by the LLM
 2. LLM writes implementations for those modules
 3. Evaluate performance across multiple tasks
@@ -138,7 +138,7 @@ Test if components discovered on one task generalize to others:
 ## Project Structure
 
 ```
-discobench/
+discogen/
 ├── tasks/              # Task domain implementations
 │   ├── OnPolicyRL/
 │   ├── LanguageModelling/
@@ -153,19 +153,19 @@ task_src/               # Generated task files (after running create-task)
 
 ## Contributing
 
-We welcome contributions! DiscoBench grows stronger with more tasks and domains.
+We welcome contributions! DiscoGen grows stronger with more tasks and domains.
 
-- Found a bug? [Open an issue](https://github.com/AlexGoldie/discobench/issues)
+- Found a bug? [Open an issue](https://github.com/AlexGoldie/discogen/issues)
 - Want to add a task? See the [Contributing Guide](how_to/overview.md)
 - Adding datasets? Check the [Dataset Integration Guide](how_to/dataset_integration.md)
 
 ## Citation
 
-If you use DiscoBench in your research, please cite:
+If you use DiscoGen in your research, please cite:
 
 ```bibtex
-    @article{goldie2025discobench,
-      title={DiscoBench: An Open-Ended Benchmark For Algorithm Discovery},
+    @article{goldie2025discogen,
+      title={DiscoGen: An Open-Ended Benchmark For Algorithm Discovery},
       author={Alexander D. Goldie and Zilin Wang and Adrian Hayler and Deepak Nathani and Edan Toledo and Ken Thampiratwong and Aleksandra Kalisz and Michael Beukman and Alistair Letcher and Shashank Reddy and Clarisse Wibault and Theo Wolf and Charles O'Neill and Jakob N. Foerster and Shimon Whiteson and Roberta Raileanu},
       year={2025}
     }
@@ -173,11 +173,11 @@ If you use DiscoBench in your research, please cite:
 
 ## Links
 
-- **GitHub Repository**: [https://github.com/AlexGoldie/discobench](https://github.com/AlexGoldie/discobench)
-- **Documentation**: [https://AlexGoldie.github.io/discobench](https://AlexGoldie.github.io/discobench)
-- **Blog**: [https://alexgoldie.github.io/discobench-blog/](https://alexgoldie.github.io/discobench-blog/)
+- **GitHub Repository**: [https://github.com/AlexGoldie/discogen](https://github.com/AlexGoldie/discogen)
+- **Documentation**: [https://AlexGoldie.github.io/discogen](https://AlexGoldie.github.io/discogen)
+- **Blog**: [https://alexgoldie.github.io/discogen-blog/](https://alexgoldie.github.io/discogen-blog/)
 - **PyPI Package**: Coming soon
 
 ## License
 
-This project is licensed under the terms specified in the [LICENSE](https://github.com/AlexGoldie/discobench/blob/main/LICENSE) file.
+This project is licensed under the terms specified in the [LICENSE](https://github.com/AlexGoldie/discogen/blob/main/LICENSE) file.
