@@ -6,7 +6,7 @@ import yaml
 from discogen import create_config
 from discogen.utils import get_domains
 
-DISCOBENCH_CONFIG_PATH = "discobench/discobench_configs/"
+DISCOBENCH_CONFIG_PATH = "discogen/discobench_configs/"
 
 
 @pytest.mark.parametrize("domain", get_domains())
