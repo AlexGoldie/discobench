@@ -2,6 +2,7 @@ train_task_id: [CIFAR10C, CIFAR10, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, Oxf
 test_task_id: [CIFAR10C, CIFAR10, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StanfordCars, TinyImageNet]
 
 source_path: task_src/ComputerVisionClassification
+template_backend: default
 
 change_optim: false
 change_loss: false

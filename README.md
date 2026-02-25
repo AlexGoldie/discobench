@@ -36,16 +36,17 @@ Every domain includes references in `discobench/tasks/<task_domain>/utils/_refer
 
 | Task Domain | Modules | Datasets | Description |
 | :--- | :--- | :--- | :--- |
-| **BayesianOptimisation** | acq_fn, acq_optimizer, domain, next_queries, surrogate, surrogate_optimizer | 11 synthetic functions (Ackley, Branin, Bukin, Cosine, DropWave, EggHolder, Griewank, Hartmann, HolderTable, Levy). | Optimization of black-box functions using surrogate models to find global minima/maxima. |
-| **BrainSpeechDetection** | loss, networks, optim | 7 LibriBrain tasks. | Detecting speech features directly from brain activity data. |
+| **BayesianOptimisation** | acq_fn, acq_optimizer, sampler, next_queries, surrogate, surrogate_optimizer | Ackley1D, Ackley2D, Branin2d, Bukin2d, Cosine8d, DropWave2d, EggHolder2d, Griewank5d, Hartmann6d, HolderTable2d, Levy6d. | Optimization of black-box functions using surrogate models to find global minima/maxima. |
+| **BrainSpeechDetection** | loss, networks, optim | 7 LibriBrainSherlock tasks. | Detecting speech features directly from brain activity data. |
 | **ComputerVisionClassification** | loss, networks, optim, preprocess | CIFAR10, CIFAR10C, CIFAR10LT, CIFAR100, FashionMNIST, MNIST, OxfordFlowers, StanfordCars, TinyImageNet. | Image classification on a range of datasets. |
 | **ContinualLearning** | optim, regularizer, replay, sampler, scheduler | PermutedMNIST, SplitCIFAR100, TinyImageNetSplit. | Training a model on continually changing data, such that it can adapt to new data without losing old capabilities. |
 | **GreenhouseGasPrediction** | data_processing, model | 4 Mauna Loa Time-series (CO2, N2O, SF6, CH4). | Time-series forecasting of atmospheric greenhouse gas concentrations. |
-| **LanguageModelling** | loss, networks, optimizer | OPCFineWebCode, OPCFineWebMath, LMFineWeb, TinyStories. | Training transformer-based models on code, mathematics, and narrative text. |
+| **LanguageModelling** | loss, networks, optim | OPCFineWebCode, OPCFineWebMath, LMFineWeb, TinyStories. | Training transformer-based models on code, mathematics, and narrative text. |
 | **ModelUnlearning** | loss | MUSE, TOFU, WMDP_Cyber. | Fine-tuning pretrained models to remove specific knowledge or data points while retaining others. |
-| **OffPolicyRL** | q_update, policy, networks, optim, rb, train | 4 MinAtar games. | Value-based RL for training an agent in MinAtar. |
+| **OffPolicyRL** | q_update, policy, networks, optim, rb, train, config | 4 MinAtar. | Value-based RL for training an agent in MinAtar. |
+| **OnPolicyMARL** | activation, loss, networks, optim, targets, train | 5 MABrax, MPE Spread, 11 SMAX | Training multiple on-policy RL agents in different multi-agent environments. |
 | **OnPolicyRL** | loss, networks, optim, train | 4 MinAtar, 7 Brax, 2 Craftax. | Training an RL agent in a range of different RL environments using PPO-style algorithms. |
-| **UnsupervisedEnvironmentDesign** | sample_levels, train_step, train_loop, config | 3 Kinetix sizes, Minigrid. | Generating and curating training environments/levels to improve RL agent generalization. |
+| **UnsupervisedEnvironmentDesign** | sample_levels, train_step, variable_config | 3 Kinetix sizes, Minigrid. | Generating and curating training environments/levels to improve RL agent generalization. |
 
 ## Development Setup
 

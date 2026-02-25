@@ -5,5 +5,6 @@ train_model_id: [Qwen2.5-1.5B-Instruct]
 test_model_id: [Qwen2.5-1.5B-Instruct]
 
 source_path: task_src/ModelUnlearning
+template_backend: default
 
 change_loss: false
