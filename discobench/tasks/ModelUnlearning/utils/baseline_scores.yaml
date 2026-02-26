@@ -25,5 +25,5 @@ model_utility:
 
 forget_Q_A_Prob:
   default:
-    tofu: 0.0062759
+    tofu: 0.15958
   objective: min

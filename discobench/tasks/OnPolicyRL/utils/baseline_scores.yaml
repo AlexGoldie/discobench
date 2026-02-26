@@ -24,6 +24,9 @@ return_mean:
     Brax/Walker2D: 395.156982
     Craftax/Craftax-Classic: 17.777344
     Craftax/Craftax: 21.428123
+    Brax/Ant: 5102.885742
+    Brax/HalfCheetah: 4621.578125
+    Brax/Hopper: 1344.781738
   transformer:
     Brax/Humanoid: 6130.256836
     Brax/Pusher: -392.628418
@@ -37,4 +40,5 @@ return_mean:
     Brax/HalfCheetah: 5086.751953
     Brax/Hopper: 2067.533203
     Craftax/Craftax-Classic: 16.740623
+    Craftax/Craftax: 18.006248
   objective: max
