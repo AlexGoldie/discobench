@@ -69,15 +69,16 @@ discobench create-task --task-domain DOMAIN [OPTIONS]
 - `--example`: Create example task using prebuilt example configs
 - `--use-base`: Initialises modules in codebase to baseline implementations, rather than using the less structured `edit` files. Using this may make exploration harder, but will start the task from a reasonably performant and working implementation.
 - `--no-data`: Creates codebase without downloading or copying any data. This will not run in a production setting, but can be useful for quickly understanding how a codebase looks before running experiments (without having to wait for data download).
+- `--eval-type EVAL_TYPE`: The type of evaluation to use. This defaults to `performance`, meaning the agent must maximise the performance of the algorithm. We also support `energy`, where the agent must minimise the energy used to train a model with the algorithm, and `time`, where the agent must minimise the time used to train a model with the algorithm.
 
 **Examples:**
 
-Create a training task for OnPolicyRL:
+Create a meta-training task for OnPolicyRL (note, this will use the baseline codebase which does *not* include editable modules):
 ```bash
 discobench create-task --task-domain OnPolicyRL
 ```
 
-Create a test task:
+Create a meta-test task (note, this will use the baseline codebase which does *not* include editable modules):
 ```bash
 discobench create-task --task-domain OnPolicyRL --test
 ```
@@ -203,7 +204,7 @@ change_train: false
 - `template_backend`: Which template variant to use (e.g., default, transformer, recurrent)
 - `change_*`: Set to `true` to use editable module versions, `false` for baseline implementations
 
-## Common Workflows
+## Creating Tasks
 
 ### Workflow 1: Running a Default Task
 
@@ -258,16 +259,26 @@ python run_main.py
    create_task("OnPolicyRL", test=False, config_dict=config)
    ```
 
-### Workflow 4: Testing Across Multiple Domains
+## Running DiscoBench
 
-```bash
-# Create tasks for different domains
-discobench create-task --task-domain OnPolicyRL
-discobench create-task --task-domain LanguageModelling
-discobench create-task --task-domain BayesianOptimisation
+We provide all DiscoBench configs in `discobench/discobench_configs`. DiscoBench is a set of specific, hand-designed tasks for meta-meta-evaluation of algorithm discovery agents; in other words, these are tasks that exist within the support of DiscoGen, but should not be directly optimised on.
 
-# Each creates files in task_src/{domain_specific_folder}/
+To run all DiscoBench tasks:
+1. Get the list of discobench tasks:
+```python
+from discobench.utils import get_discobench_tasks
+discobench_task_list = get_discobench_tasks()
 ```
+
+2. Loop through creating all tasks:
+```python
+from discobench import create_discobench
+for task in discobench_task_list:
+    create_discobench(task, eval_type='performance')
+    # Run agent on discobench task and report score
+```
+
+It is also possible to use different `eval_type`s for DiscoBench. For example, to benchmark algorithm discovery agents for developing energy efficient algorithms, use `create_discobench(task, eval_type='energy')`.
 
 ## Next Steps
 

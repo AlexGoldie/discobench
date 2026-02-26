@@ -5,7 +5,15 @@ import os
 import click
 import yaml
 
-from discobench import create_config, create_task, get_domains, get_modules, sample_task
+from discobench import (
+    create_config,
+    create_discobench,
+    create_task,
+    get_discobench_tasks,
+    get_domains,
+    get_modules,
+    sample_task,
+)
 
 
 @click.group()
@@ -40,7 +48,7 @@ def cli() -> None:
     help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
 )
 @click.option(
-    "--baseline_scale",
+    "--baseline-scale",
     type=float,
     default=1.0,
     help="If using 'time' or 'energy' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",
@@ -88,6 +96,13 @@ def get_modules_cmd() -> None:
     module_dict = get_modules()
     for domain, modules in module_dict.items():
         click.echo(f"{domain}: {', '.join(modules)}")
+
+
+@cli.command("get-discobench")
+def get_discobench_tasks_cmd() -> None:
+    """List all available modules for a specified task domain."""
+    discobench_list = get_discobench_tasks()
+    click.echo("\n".join(discobench_list))
 
 
 @cli.command("create-config")
@@ -183,6 +198,35 @@ def sample_task_cmd(
         yaml.dump(task_config, outfile, default_flow_style=False)
 
     click.echo(f"Successfully saved new task_config for the {task_domain} domain at {config_dest}.")
+
+
+@cli.command("create-discobench")
+@click.option("--task-name", type=str, required=True, help="The name of the discobench task to create.")
+@click.option("--test", is_flag=True, help="If passed, create test task instead of training task.")
+@click.option(
+    "--use-base",
+    is_flag=True,
+    help="If passed, will initialise editable modules with baseline implementations instead of interface-only `edit` implementations. Has no effect with --test.",
+)
+@click.option(
+    "--no-data",
+    is_flag=True,
+    help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
+)
+@click.option(
+    "--eval-type",
+    type=str,
+    default="performance",
+    help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
+)
+def create_discobench_task_cmd(task_name: str, test: bool, use_base: bool, no_data: bool, eval_type: str) -> None:
+    """Create task source files for a specified task domain."""
+    if test and use_base:
+        click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
+
+    create_discobench(task_name=task_name, test=test, use_base=use_base, no_data=no_data, eval_type=eval_type)
+    mode = "test" if test else "training"
+    click.echo(f"Successfully created {mode} discobench task: {task_name}.")
 
 
 if __name__ == "__main__":

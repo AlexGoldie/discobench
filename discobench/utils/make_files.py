@@ -173,7 +173,7 @@ class MakeFiles:
         train: bool,
         use_base: bool,
         no_data: bool | None,
-        baselines: dict[str, float] | None,
+        baselines: dict[str, Any] | None,
         baseline_scale: float,
     ) -> tuple[list[str], str, str]:
         """Process a single task: create files and return discovered files and description.
@@ -361,8 +361,9 @@ class MakeFiles:
         targets = {}
         for metric_name, metrics in baselines.items():
             mult_factor = -1 if metrics["objective"] == "min" else 1
-
-            targets.update({metric_name: metrics[template_backend][task_id] * mult_factor * baseline_scale})
+            metric_backend = metrics[template_backend]
+            if task_id in metric_backend:
+                targets.update({metric_name: metric_backend[task_id] * mult_factor * baseline_scale})
 
         dict_dest = dest_loc / "baseline_scores.json"
         dict_dest.write_text(json.dumps(targets))
@@ -427,12 +428,16 @@ class MakeFiles:
         dest = self.source_path / "run_main.py"
         shutil.copy2(run_main_path, dest)
 
-    def _save_requirements(self) -> None:
+    def _save_requirements(self, eval_type: str) -> None:
         requirements = self.base_path / "utils" / "requirements.txt"
         dest = self.source_path / "requirements.txt"
 
         # Copy the template file to the source directory
         shutil.copy2(requirements, dest)
+
+        if eval_type == "energy":
+            with dest.open("a", encoding="utf-8") as f:
+                f.write("\ncodecarbon\n")
 
     def _get_template(self, file: str, task_path: Path, template_backend: str) -> Path:
         data_template = task_path / file
@@ -541,7 +546,7 @@ class MakeFiles:
         train: bool,
         use_base: bool,
         no_data: bool | None,
-        eval_type: str = "performance",
+        eval_type: str,
         baseline_scale: float = 1.0,
     ) -> None:
         """Prepare the training and test files for a task.
@@ -628,4 +633,4 @@ class MakeFiles:
 
         # Step 9: Copy run_main and requirements
         self._load_run_main(eval_type)
-        self._save_requirements()
+        self._save_requirements(eval_type)

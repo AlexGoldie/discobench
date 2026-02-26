@@ -21,21 +21,45 @@ def runner() -> CliRunner:
 @pytest.mark.parametrize("example", [True, False])
 @pytest.mark.parametrize("use_base", [True, False])
 @pytest.mark.parametrize("no_data", [True, False])
+@pytest.mark.parametrize("eval_type", ["performance", "time", "energy"])
+@pytest.mark.parametrize("baseline_scale", [0.5, 1.5, 1.0])
 def test_create_task_cli(
-    runner: CliRunner, task_domain: str, test: bool, example: bool, use_base: bool, no_data: bool
+    runner: CliRunner,
+    task_domain: str,
+    test: bool,
+    example: bool,
+    use_base: bool,
+    no_data: bool,
+    eval_type: str,
+    baseline_scale: float,
 ) -> None:
     """Test that create_task called correctly. We already test create_task separately, so we just want to check echos."""
     with patch("discobench.cli.create_task") as mock_create:
 
         def mock_behavior_error(
-            task_domain: str, test: bool, config_path: str | None, example: bool, use_base: bool, no_data: bool
+            task_domain: str,
+            test: bool,
+            config_path: str | None,
+            example: bool,
+            use_base: bool,
+            no_data: bool,
+            eval_type: str,
+            baseline_scale: float,
         ) -> None:
             if task_domain not in discobench.get_domains():
                 raise ValueError("Invalid domain")
 
         mock_create.side_effect = mock_behavior_error
 
-        args = ["create-task", "--task-domain", task_domain]
+        args = [
+            "create-task",
+            "--task-domain",
+            task_domain,
+            "--eval-type",
+            eval_type,
+            "--baseline-scale",
+            str(baseline_scale),
+        ]
         if test:
             args.append("--test")
         if example:
@@ -51,7 +75,14 @@ def test_create_task_cli(
             assert "--use-base has no effect" in results.output
 
         mock_create.assert_called_once_with(
-            task_domain=task_domain, test=test, config_path=None, example=example, use_base=use_base, no_data=no_data
+            task_domain=task_domain,
+            test=test,
+            config_path=None,
+            example=example,
+            use_base=use_base,
+            no_data=no_data,
+            eval_type=eval_type,
+            baseline_scale=baseline_scale,
         )
         mode = "test" if test else "training"
 
