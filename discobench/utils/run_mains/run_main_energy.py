@@ -1,5 +1,4 @@
 import json
-import math
 import os
 import subprocess
 import sys
@@ -27,7 +26,7 @@ def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
 
             print(f"Running: {main_path}")
             try:
-                with EmissionsTracker() as tracker:
+                with EmissionsTracker(log_level="error", save_to_file=False) as tracker:
                     result = subprocess.run([sys.executable, main_path], check=True, capture_output=True, text=True)  # noqa: S603
                 energy = tracker._total_energy.kWh
 
@@ -65,14 +64,13 @@ def _extract_scores(
     results: dict[str, Any],
     energy: float,
 ) -> dict[str, Any]:
+    metrics["Energy (kWh)"] = energy
+    metrics["Exceeded Threshold"] = True
     for metric_name, baseline_score in baseline_scores.items():
         if metric_name in metrics:
-            if metrics[metric_name] >= baseline_score:
-                metrics["kWh Energy"] = energy
-                metrics["Exceeded Threshold"] = True
-            else:
-                metrics["kWh Energy"] = math.inf  # (inf if failed to be within baseline)
+            if metrics[metric_name] < baseline_score:
                 metrics["Exceeded Threshold"] = False
+                break
         else:
             raise RuntimeError(f"Script {main_path} did not produce any metric for {metric_name}!\n")
     results[root] = metrics

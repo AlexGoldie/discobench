@@ -44,7 +44,7 @@ def test_create_task_too_many_configs() -> None:
 
 def test_create_task_example_path_resolution(mock_make_files: MagicMock, mock_yaml: None) -> None:
     """Verifies that setting example=True points to the correct subdirectory."""
-    task_domain = "LanguageModelling"
+    task_domain = "Languagodelling"
     create_task(task_domain, test=False, example=True)
 
     # Verify MakeFiles was instantiated with the correct domain using the fixture
@@ -110,3 +110,50 @@ def test_create_task_config_path_selection(mock_make_files: MagicMock, example: 
 
         assert str(actual_path_called).endswith(expected_path)
         assert "discobench" in str(actual_path_called)
+
+
+def test_create_task_invalid_eval_type(mock_make_files: MagicMock) -> None:
+    """Ensure invalid eval_type raises ValueError."""
+    with pytest.raises(ValueError, match="eval_type"):
+        create_task("OnPolicyRL", test=False, config_dict={"a": 1}, eval_type="invalid")
+
+
+@pytest.mark.parametrize("scale", [0.0, -1.0, -0.001])
+def test_create_task_invalid_baseline_scale(mock_make_files: MagicMock, scale: float) -> None:
+    """Ensure non-positive baseline_scale raises ValueError."""
+    with pytest.raises(ValueError, match="greater than 0"):
+        create_task("OnPolicyRL", test=False, config_dict={"a": 1}, baseline_scale=scale)
+
+
+def test_create_task_no_data_and_use_base_forwarded(mock_make_files: MagicMock) -> None:
+    """Ensure no_data and use_base are passed through to make_files."""
+    config = {"train_task_id": ["t1"]}
+    create_task("OnPolicyRL", test=False, config_dict=config, no_data=True, use_base=True)
+
+    mock_make_files.return_value.make_files.assert_called_once_with(
+        config, train=True, use_base=True, no_data=True, eval_type="performance", baseline_scale=1.0
+    )
+
+
+def test_create_task_default_eval_type(mock_make_files: MagicMock) -> None:
+    """Ensure eval_type defaults to 'performance' when not specified."""
+    config = {"train_task_id": ["t1"]}
+    create_task("OnPolicyRL", test=False, config_dict=config)
+
+    _, kwargs = mock_make_files.return_value.make_files.call_args
+    assert kwargs["eval_type"] == "performance"
+    assert kwargs["baseline_scale"] == 1.0
+
+
+def test_create_task_with_config_path(mock_make_files: MagicMock) -> None:
+    """Ensure passing config_path reads from that path."""
+    with (
+        patch("builtins.open", mock_open(read_data="key: val")) as mocked_file,
+        patch("yaml.safe_load", return_value={"key": "val"}),
+    ):
+        create_task("OnPolicyRL", test=False, config_path="/some/custom/path.yaml")
+
+        mocked_file.assert_called_once_with("/some/custom/path.yaml")
+        mock_make_files.return_value.make_files.assert_called_once_with(
+            {"key": "val"}, train=True, use_base=False, no_data=False, eval_type="performance", baseline_scale=1.0
+        )

@@ -1,5 +1,4 @@
 import json
-import math
 import os
 import subprocess
 import sys
@@ -65,14 +64,13 @@ def _extract_scores(
     start: float,
     end: float,
 ) -> dict[str, Any]:
+    metrics["time_to_completion (s)"] = end - start
+    metrics["Exceeded Threshold"] = True
     for metric_name, baseline_score in baseline_scores.items():
         if metric_name in metrics:
-            if metrics[metric_name] >= baseline_score:
-                metrics["time_to_completion (s)"] = end - start
-                metrics["Exceeded Threshold"] = True
-            else:
-                metrics["time_to_completion (s)"] = math.inf  # (inf if failed to be within baseline)
+            if metrics[metric_name] < baseline_score:
                 metrics["Exceeded Threshold"] = False
+                break
         else:
             raise RuntimeError(f"Script {main_path} did not produce any metric for {metric_name}!\n")
     results[root] = metrics
