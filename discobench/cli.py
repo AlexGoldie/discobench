@@ -5,7 +5,7 @@ import os
 import click
 import yaml
 
-from discobench import create_config, create_task, get_domains, get_modules
+from discobench import create_config, create_discobench, create_task, get_discobench_tasks, get_domains, get_modules
 
 
 @click.group()
@@ -90,6 +90,13 @@ def get_modules_cmd() -> None:
         click.echo(f"{domain}: {', '.join(modules)}")
 
 
+@cli.command("get-discobench")
+def get_discobench_tasks_cmd() -> None:
+    """List all available modules for a specified task domain."""
+    discobench_list = get_discobench_tasks()
+    click.echo("\n".join(discobench_list))
+
+
 @cli.command("create-config")
 @click.option("--task-domain", type=str, required=True, help="The task domain to create the task for.")
 @click.option(
@@ -103,6 +110,29 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
 
     with open(f"{save_dir}/task_config_{task_domain}.yaml", "w") as outfile:
         yaml.dump(config, outfile, default_flow_style=False)
+
+
+@cli.command("create-discobench")
+@click.option("--task-name", type=str, required=True, help="The name of the discobench task to create.")
+@click.option("--test", is_flag=True, help="If passed, create test task instead of training task.")
+@click.option(
+    "--use-base",
+    is_flag=True,
+    help="If passed, will initialise editable modules with baseline implementations instead of interface-only `edit` implementations. Has no effect with --test.",
+)
+@click.option(
+    "--no-data",
+    is_flag=True,
+    help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
+)
+def create_discobench_task_cmd(task_name: str, test: bool, use_base: bool, no_data: bool) -> None:
+    """Create task source files for a specified task domain."""
+    if test and use_base:
+        click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
+
+    create_discobench(task_name=task_name, test=test, use_base=use_base, no_data=no_data)
+    mode = "test" if test else "training"
+    click.echo(f"Successfully created {mode} discobench task: {task_name}.")
 
 
 if __name__ == "__main__":

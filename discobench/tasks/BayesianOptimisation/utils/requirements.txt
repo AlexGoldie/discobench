@@ -3,8 +3,7 @@
 --find-links https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
 # === Core Dependencies ===
-jax==0.4.29
-jaxlib==0.4.29+cuda12.cudnn91
+jax[cuda12]
 flax
 optax
 chex
