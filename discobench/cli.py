@@ -125,12 +125,18 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
     is_flag=True,
     help="If passed, will create the task without downloading the data. The task code will generally not be able to run, but this will allow you to see how the code looks for a specific task.",
 )
-def create_discobench_task_cmd(task_name: str, test: bool, use_base: bool, no_data: bool) -> None:
+@click.option(
+    "--eval-type",
+    type=str,
+    default="performance",
+    help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
+)
+def create_discobench_task_cmd(task_name: str, test: bool, use_base: bool, no_data: bool, eval_type: str) -> None:
     """Create task source files for a specified task domain."""
     if test and use_base:
         click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
 
-    create_discobench(task_name=task_name, test=test, use_base=use_base, no_data=no_data)
+    create_discobench(task_name=task_name, test=test, use_base=use_base, no_data=no_data, eval_type=eval_type)
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} discobench task: {task_name}.")
 

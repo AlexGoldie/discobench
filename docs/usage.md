@@ -274,9 +274,11 @@ discobench_task_list = get_discobench_tasks()
 ```python
 from discobench import create_discobench
 for task in discobench_task_list:
-    create_discobench(task)
+    create_discobench(task, eval_type='performance')
     # Run agent on discobench task and report score
 ```
+
+It is also possible to use different `eval_type`s for DiscoBench. For example, to benchmark algorithm discovery agents for developing energy efficient algorithms, use `create_discobench(task, eval_type='energy')`.
 
 ## Next Steps
 
