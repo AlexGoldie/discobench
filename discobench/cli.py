@@ -15,7 +15,12 @@ def cli() -> None:
 
 
 @cli.command("create-task")
-@click.option("--task-domain", type=str, required=True, help="The task domain to create the task for.")
+@click.option(
+    "--task-domain",
+    type=click.Choice(get_domains(), case_sensitive=False),
+    required=True,
+    help="The task domain to create the task for.",
+)
 @click.option("--test", is_flag=True, help="If passed, create test task instead of training task.")
 @click.option("--example", is_flag=True, help="If passed, use example task config rather than your own.")
 @click.option(
@@ -35,7 +40,7 @@ def cli() -> None:
 )
 @click.option(
     "--eval-type",
-    type=str,
+    type=click.Choice(["performance", "time", "energy"], case_sensitive=False),
     default="performance",
     help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
 )
@@ -113,7 +118,12 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
 
 
 @cli.command("create-discobench")
-@click.option("--task-name", type=str, required=True, help="The name of the discobench task to create.")
+@click.option(
+    "--task-name",
+    type=click.Choice(get_discobench_tasks(), case_sensitive=False),
+    required=True,
+    help="The name of the discobench task to create.",
+)
 @click.option("--test", is_flag=True, help="If passed, create test task instead of training task.")
 @click.option(
     "--use-base",
@@ -127,7 +137,7 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
 )
 @click.option(
     "--eval-type",
-    type=str,
+    type=click.Choice(["performance", "time", "energy"], case_sensitive=False),
     default="performance",
     help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
 )
