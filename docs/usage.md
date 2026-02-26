@@ -261,7 +261,7 @@ python run_main.py
 
 ## Running DiscoBench
 
-We provide all DiscoBench configs in `discobench/discobench_configs`.
+We provide all DiscoBench configs in `discobench/discobench_configs`. DiscoBench is a set of specific, hand-designed tasks for meta-meta-evaluation of algorithm discovery agents; in other words, these are tasks that exist within the support of DiscoGen, but should not be directly optimised on.
 
 To run all DiscoBench tasks:
 1. Get the list of discobench tasks:
