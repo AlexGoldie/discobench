@@ -23,7 +23,7 @@ def mock_make_files() -> Iterator[MagicMock]:
 def test_create_discobench_task(
     mock_make_files: MagicMock, test_mode: bool, expected_train: bool, eval_type: str, task_name: str
 ) -> None:
-    """Verifies the boolean inversion logic for the 'train' parameter."""
+    """Tests that each discobench task can be created."""
     create_discobench(task_name, test=test_mode, eval_type=eval_type, no_data=True)
 
     with open(f"discobench/discobench_configs/{task_name}.yaml") as f:
