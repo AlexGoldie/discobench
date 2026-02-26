@@ -69,15 +69,16 @@ discobench create-task --task-domain DOMAIN [OPTIONS]
 - `--example`: Create example task using prebuilt example configs
 - `--use-base`: Initialises modules in codebase to baseline implementations, rather than using the less structured `edit` files. Using this may make exploration harder, but will start the task from a reasonably performant and working implementation.
 - `--no-data`: Creates codebase without downloading or copying any data. This will not run in a production setting, but can be useful for quickly understanding how a codebase looks before running experiments (without having to wait for data download).
+- `--eval-type EVAL_TYPE`: The type of evaluation to use. This defaults to `performance`, meaning the agent must maximise the performance of the algorithm. We also support `energy`, where the agent must minimise the energy used to train a model with the algorithm, and `time`, where the agent must minimise the time used to train a model with the algorithm.
 
 **Examples:**
 
-Create a training task for OnPolicyRL:
+Create a meta-training task for OnPolicyRL (note, this will use the baseline codebase which does *not* include editable modules):
 ```bash
 discobench create-task --task-domain OnPolicyRL
 ```
 
-Create a test task:
+Create a meta-test task (note, this will use the baseline codebase which does *not* include editable modules):
 ```bash
 discobench create-task --task-domain OnPolicyRL --test
 ```
