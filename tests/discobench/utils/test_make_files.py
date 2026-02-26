@@ -297,7 +297,11 @@ class TestLoadRunMain:
 
     @pytest.mark.parametrize(
         ("eval_type", "expected_substring"),
-        [("performance", "baseline_path"), ("time", "time.perf_counter()"), ("energy", "EmissionsTracker()")],
+        [
+            ("performance", "baseline_path"),
+            ("time", "time.perf_counter()"),
+            ("energy", """EmissionsTracker(log_level="error", save_to_file=False)"""),
+        ],
     )
     def test_run_main_has_eval_specific_content(
         self, mf: MakeFiles, source_path: Path, eval_type: str, expected_substring: str
