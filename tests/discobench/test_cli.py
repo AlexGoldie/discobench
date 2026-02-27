@@ -26,6 +26,7 @@ def runner() -> CliRunner:
 @pytest.mark.parametrize("no_data", [True, False])
 @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "abcdef"])
 @pytest.mark.parametrize("baseline_scale", [0.5, 1.5, 1.0])
+@pytest.mark.parametrize("cache_root", ["cache1", "cache2"])
 def test_create_task_cli(
     runner: CliRunner,
     task_domain: str,
@@ -36,6 +37,7 @@ def test_create_task_cli(
     no_data: bool,
     eval_type: str,
     baseline_scale: float,
+    cache_root: str,
 ) -> None:
     """Test that create_task called correctly. We already test create_task separately, so we just want to check echos."""
     with patch("discobench.cli.create_task") as mock_create:
@@ -47,6 +49,8 @@ def test_create_task_cli(
             eval_type,
             "--baseline-scale",
             str(baseline_scale),
+            "--cache-root",
+            cache_root,
         ]
         if test:
             args.append("--test")
@@ -82,6 +86,7 @@ def test_create_task_cli(
                 no_data=no_data,
                 eval_type=eval_type,
                 baseline_scale=baseline_scale,
+                cache_root=cache_root,
             )
             assert results.exit_code == 0
             assert f"Successfully created {mode} task for domain: {expected_task_domain}" in results.output
@@ -152,6 +157,7 @@ def test_create_config_cmd(runner: CliRunner, tmp_path: Path) -> None:
 @pytest.mark.parametrize("use_base", [True, False])
 @pytest.mark.parametrize("no_data", [True, False])
 @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "abcdef"])
+@pytest.mark.parametrize("cache_root", ["cache1", "cache2"])
 def test_create_discobench_cli(
     runner: CliRunner,
     task_name: str,
@@ -160,10 +166,11 @@ def test_create_discobench_cli(
     use_base: bool,
     no_data: bool,
     eval_type: str,
+    cache_root: str,
 ) -> None:
     """Test that create_discobench called correctly."""
     with patch("discobench.cli.create_discobench") as mock_create:
-        args = ["create-discobench", "--task-name", task_name, "--eval-type", eval_type]
+        args = ["create-discobench", "--task-name", task_name, "--eval-type", eval_type, "--cache-root", cache_root]
         if test:
             args.append("--test")
         if use_base:
@@ -188,7 +195,12 @@ def test_create_discobench_cli(
         else:
             # Click passes, so the mock MUST be called
             mock_create.assert_called_once_with(
-                task_name=expected_task_name, test=test, use_base=use_base, no_data=no_data, eval_type=eval_type
+                task_name=expected_task_name,
+                test=test,
+                use_base=use_base,
+                no_data=no_data,
+                eval_type=eval_type,
+                cache_root=cache_root,
             )
             assert results.exit_code == 0
             assert f"Successfully created {mode} discobench task: {expected_task_name}" in results.output

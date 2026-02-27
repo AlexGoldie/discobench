@@ -41,7 +41,7 @@ def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
                             continue
 
                 if metrics:
-                    results = _extract_scores(baseline_scores, metrics, root, main_path, results, start, end)
+                    results[root] = _extract_scores(baseline_scores, metrics, root, main_path, results, start, end)
                 else:
                     raise RuntimeError(
                         f"Script {main_path} did not produce metrics.\n--- STDOUT ---\n{result.stdout}\n"
@@ -73,8 +73,7 @@ def _extract_scores(
                 break
         else:
             raise RuntimeError(f"Script {main_path} did not produce any metric for {metric_name}!\n")
-    results[root] = metrics
-    return results
+    return metrics
 
 
 if __name__ == "__main__":

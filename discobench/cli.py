@@ -58,6 +58,7 @@ def cli() -> None:
     default=1.0,
     help="If using 'time' or 'energy' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",
 )
+@click.option("--cache-root", type=str, default="cache", help="A directory to which data can be downloaded and cached.")
 def create_task_cmd(
     task_domain: str,
     test: bool,
@@ -66,6 +67,7 @@ def create_task_cmd(
     no_data: bool,
     eval_type: str,
     baseline_scale: float,
+    cache_root: str,
     config_path: str | None = None,
 ) -> None:
     """Create task source files for a specified task domain."""
@@ -83,6 +85,7 @@ def create_task_cmd(
         no_data=no_data,
         eval_type=eval_type,
         baseline_scale=baseline_scale,
+        cache_root=cache_root,
     )
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} task for domain: {task_domain}.")
@@ -229,12 +232,17 @@ def sample_task_cmd(
     default="performance",
     help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
 )
-def create_discobench_task_cmd(task_name: str, test: bool, use_base: bool, no_data: bool, eval_type: str) -> None:
+@click.option("--cache-root", type=str, default="cache", help="A directory to which data can be downloaded and cached.")
+def create_discobench_task_cmd(
+    task_name: str, test: bool, use_base: bool, no_data: bool, eval_type: str, cache_root: str
+) -> None:
     """Create task source files for a specified task domain."""
     if test and use_base:
         click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
 
-    create_discobench(task_name=task_name, test=test, use_base=use_base, no_data=no_data, eval_type=eval_type)
+    create_discobench(
+        task_name=task_name, test=test, use_base=use_base, no_data=no_data, eval_type=eval_type, cache_root=cache_root
+    )
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} discobench task: {task_name}.")
 

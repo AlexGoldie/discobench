@@ -133,5 +133,9 @@ def evaluate_model():
     # log val loss to console and to logfile
     if master_process:
         # Create and print the result dictionary
-        result = {"val_loss": val_loss.item()}
+        result = {
+                    "val_loss": val_loss.item(),
+                    "val_accuracy": val_accuracy.item(),
+                    "perplexity": perplexity.item()
+                }
         print(json.dumps(result))

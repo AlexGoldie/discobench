@@ -382,7 +382,6 @@ class TestLoadRunMain:
         with patch("subprocess.run", return_value=mock_result):
             results = run_fn(start_dir=str(source_path))
 
-        print(results)
         assert len(results) > 0, "run_all_main_py returned no results"
         for _dir, metrics in results.items():
             for key in expected_keys[eval_type]:
@@ -1291,7 +1290,7 @@ class TestMakeFilesEndToEnd:
         eval_desc = mf._get_eval_description(eval_type)
         assert eval_desc in desc
 
-    @pytest.mark.parametrize("eval_type", ["time", "energy"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy"])
     def test_make_files_energy_requirements(
         self, mf: MakeFiles, config_with_tmp: dict[str, Any], eval_type: str
     ) -> None:

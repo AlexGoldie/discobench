@@ -18,6 +18,7 @@ def create_task(
     config_dict: dict[str, Any] | None = None,
     eval_type: str = "performance",
     baseline_scale: float = 1.0,
+    cache_root: str = "cache",
 ) -> None:
     """Prepare files for the training or testing subset of the task.
 
@@ -31,6 +32,7 @@ def create_task(
         config_dict: A pre-built config dictionary, following the expected structure from `discobench/tasks/{task_domain}/task_config.yaml`.
         eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy']. In 'performance', the goal is to discover algorithms which maximise performance. In 'time', the goal is to discover algorithms that match the baseline performance in the shortest length of time. In 'energy', the objective is to discover algorithms which match the baseline performance using the least amount of estimate emissions.
         baseline_scale: What relative scale to allow compared to the baseline when using either the 'time' or 'energy' eval_type. If not provided, this will default to 1.0. Must be greater than 0.
+        cache_root: A directory which data can be cached in.
 
     Notes:
         Only one of config_path, example OR config_dict (not more than one) should be passed as an argument here, to avoid any conflict.
@@ -67,6 +69,6 @@ def create_task(
 
     train = not test
 
-    MakeFiles(task_domain).make_files(
+    MakeFiles(task_domain, cache_root=cache_root).make_files(
         task_config, train=train, no_data=no_data, use_base=use_base, eval_type=eval_type, baseline_scale=baseline_scale
     )
