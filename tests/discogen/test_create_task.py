@@ -75,7 +75,6 @@ def test_create_task_train_test_toggle(
     """Verifies the boolean inversion logic for the 'train' parameter."""
     create_task("GreenhouseGasPrediction", test=test_mode)
 
-    # Use ANY instead of unittest.mock.any
     mock_make_files.return_value.make_files.assert_called_with(ANY, train=expected_train, use_base=False, no_data=False)
 
 
