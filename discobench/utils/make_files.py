@@ -13,17 +13,19 @@ import yaml
 class MakeFiles:
     """A class to prepare the training and test files for a task."""
 
-    def __init__(self, task_domain: str) -> None:
+    def __init__(self, task_domain: str, cache_root: str = "cache") -> None:
         """Initialize the MakeFiles class.
 
         Args:
             task_domain: The task domain to create the task for.
+            cache_root: A cache directory to store data in.
         """
         self.base_path = Path(__file__).parent.parent / "tasks" / task_domain
         task_spec_path = self.base_path / "utils" / "task_spec.yaml"
         with open(task_spec_path) as f:
             self.task_spec = yaml.safe_load(f)
         self.template_path = self.base_path / "templates"  # will make this /default too
+        self.cache_root = cache_root
 
     def _setup_source_directory(self, train: bool) -> None:
         """Setup the source directory by cleaning it appropriately.
@@ -490,7 +492,7 @@ class MakeFiles:
         - If cache for task is missing/empty and a download_dataset(task_dir) exists, populate cache.
         - Copy cache into task's data directory each run.
         """
-        cache_root = Path("cache").resolve()
+        cache_root = Path(self.cache_root).resolve()
         cache_dir = cache_root / task_id
 
         download_dataset = self._get_download_dataset(task_id, task_path)

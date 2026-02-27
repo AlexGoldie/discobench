@@ -44,11 +44,11 @@ def test_create_task_too_many_configs() -> None:
 
 def test_create_task_example_path_resolution(mock_make_files: MagicMock, mock_yaml: None) -> None:
     """Verifies that setting example=True points to the correct subdirectory."""
-    task_domain = "Languagodelling"
-    create_task(task_domain, test=False, example=True)
+    task_domain = "LanguageModelling"
+    create_task(task_domain, test=False, example=True, cache_root="abc")
 
     # Verify MakeFiles was instantiated with the correct domain using the fixture
-    mock_make_files.assert_called_once_with(task_domain)
+    mock_make_files.assert_called_once_with(task_domain, cache_root="abc")
 
     # Check if make_files was called with the 'train' flag correctly (test=False -> train=True)
     # Note: We access .return_value because mock_make_files is the Class Mock
