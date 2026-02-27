@@ -135,7 +135,7 @@ create_task(
     config_path="my_config.yaml"
 )
 
-# Create a task starting from baseline implementations
+# Create a task starting from baseline implementations rather than empty files
 create_task(
     task_domain="OnPolicyRL",
     test=False,
