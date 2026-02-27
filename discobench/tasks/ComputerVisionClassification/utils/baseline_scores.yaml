@@ -1,4 +1,4 @@
-eval_accuracy:
+eval_metrics.eval_accuracy:
   default:
     CIFAR10: 0.841
     CIFAR100: 0.6854
