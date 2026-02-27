@@ -1,21 +1,21 @@
 
 
-# 🪩 **How to Contribute a Task for DiscoBench**
+# 🪩 **How to Contribute a Task for DiscoGen**
 
-Thank you for your interest in making a task for **DiscoBench**!
+Thank you for your interest in making a task for **DiscoGen**!
 Your contribution is *hugely appreciated* and will help unlock new research in **automated research** and **algorithm discovery** using agentic LLMs.
 
 ---
 
 ## 🎯 Goal
 
-The goal of **DiscoBench** is to develop a series of **modular tasks**, where an ML codebase is broken into its constituent components, for LLMs to use when discovering new algorithms. Through configs, we can choose which modules should use **default code** (the original implementation) and which should be **LLM-generated**. We want to ensure that LLMs can produce **performant, generalisable** algorithms for AI research.
+The goal of **DiscoGen** is to develop a procedural task generator for algorithm discovery tasks. To do so, we break an ML codebase down into its constituent components, for LLMs to use when discovering new algorithms. Through configs, we can choose which modules should use **default code** (the original implementation) and which should be **LLM-generated**. We can also randomly sample new tasks, potentially allowing us to train agents for algorithm discovery, and expanding the possibility of curriculum research. We want to ensure that LLMs can produce **performant, generalisable** algorithms for AI research.
 
 ---
 
 ## ⚙️ Getting Started
 
-1. Follow the setup instructions from the [DiscoBench repository](https://github.com/AlexGoldie/discobench/) to prepare your environment.
+1. Follow the setup instructions from the [DiscoGen repository](https://github.com/AlexGoldie/discogen/) to prepare your environment.
 2. Clone the repo and ensure everything runs correctly.
 3. Follow the guide below to create your own task.
 
@@ -30,7 +30,6 @@ OnPolicyRL/
 ├── datasets/
 │   ├── Brax/
 │   ├── Craftax/
-│   ├── GridWorld/
 │   └── MinAtar/
 │
 ├── templates/
@@ -65,7 +64,7 @@ Contains each dataset (or environment) that your code can run with.
 Each dataset folder should include:
 
 * **`description.md`** — explains what the dataset/environment is (e.g., “This is Breakout!”).
-* **`make_env.py` / `make_dataset.py`** — loads and returns the dataset or environment. See `dataset_integration.md` for a more thorough explanation of how to handle datasets in your new DiscoBench task!
+* **`make_env.py` / `make_dataset.py`** — loads and returns the dataset or environment. See `dataset_integration.md` for a more thorough explanation of how to handle datasets in your new DiscoGen task!
 * Any **dataset-specific configs** or helper files.
 
 ---
@@ -103,7 +102,7 @@ This folder **always** contains:
 
 * **`description.md`** — general task-domain description (e.g., what RL is).
 
-* **`requirements.txt`** — dependencies required to run the benchmark.
+* **`requirements.txt`** — dependencies required to run the task.
 
 * **`task_information.yaml`** — describes per-module prompts for `edit` codebases.
   Each `{module}_prompt` must match the corresponding filename.
@@ -126,7 +125,7 @@ Example:
 ### 🧾 `task_config.yaml`
 
 Defines which modules use **base** or **edit** code.
-This is what anyone running the benchmark can use to configure the task.
+This is what anyone running the task can use to configure the modules, meta-train and meta-test sets.
 
 It also:
 
@@ -157,12 +156,12 @@ Each model folder should include:
 * **`description.md`** - an explanation of that model
 * **`model_config.yaml`** - everything needed to download the model from HuggingFace.
 
-See `discobench/tasks/ModelUnlearning` for an example of how `models` can be used!
+See `discogen/domains/ModelUnlearning` for an example of how `models` can be used!
 
 
 ---
 
-## 🧱 How to Make a New Task
+## 🧱 How to Make a New Task (Or Add New Modules)
 
 1. **Choose a codebase**
 
@@ -287,6 +286,12 @@ See `discobench/tasks/ModelUnlearning` for an example of how `models` can be use
 
     * The main performance metric should not be computed *inside* a module (we don't want it to be possible to cheat)!
 
+15. **Add your task domain to `tests/discogen/utils/test_get_domains.py`**
+    Here, we track all domains that *should* exist.
+
+16. **Document your contribution!**
+    Add any edits you have made to the domain documentation in `docs/domains.md` and `README.MD`.
+
 ✅ Done! Your task is ready for integration.
 
 ---
@@ -297,12 +302,14 @@ For detailed instructions on adding new datasets to your tasks, see our [Dataset
 
 ## 🧪 Verifying Your Task
 
+The should be covered by running `pytest`, but can help to make sure a task builds as you expected.
+
 1. **Generate the LLM-facing file system**
 
-To test whether your task is runnable, try creating the file system as it would be used in `discobench` with the command:
+To test whether your task is runnable, try creating the file system as it would be used in `discogen` with the command:
 
    ```bash
-   python3 -m discobench.create_task --task_domain <TASK_NAME>
+   discogen create-task --task-domain <TASK_NAME>
    ```
 
    This will populate:
@@ -325,7 +332,7 @@ There are some files that are needed to generate the LLM Agent prompts, which cu
 
 
 * **`description.md`** — general task-domain description (e.g., what RL is).
-* **`requirements.txt`** — dependencies required to run the benchmark.
+* **`requirements.txt`** — dependencies required to run the task.
 * **`task_information.yaml`** — describes per-module prompts for `edit` codebases.
   Each `{module}_prompt` must match the corresponding filename.
 * **`_reference.txt`** — original codebase citation or source link for attribution and reproducibility.
@@ -355,7 +362,7 @@ There are some files that are needed to generate the LLM Agent prompts, which cu
 
 ## 🧭 Summary
 
-Creating a DiscoBench task involves:
+Creating a DiscoGen task involves:
 
 1. Structuring your files (`datasets`, `templates`, `utils`).
 2. Separating full (`base`) and empty (`edit`) implementations.

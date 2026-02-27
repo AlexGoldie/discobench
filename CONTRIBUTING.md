@@ -1,18 +1,26 @@
-# Contributing to `DiscoBench`
+# Contributing to `DiscoGen`
 
-The utility of DiscoBench dramatically increases as we improve the number and diversity of tasks available within the repository. As such, there are three types of contributions to DiscoBench:
+The utility of DiscoGen dramatically increases as we improve the number and diversity of tasks supported by the generator. There are *five* main types of contributions to DiscoGen:
 
-## New Tasks
+## New Domains
 
-If you have an interesting idea for a new task that can fit the DiscoBench style, please add it (following the guidance in /). We will endeavour to add all well-implemented tasks to make sure DiscoBench remains a live and fresh benchmark with significant open-source contribution.
+If you have an interesting idea for a new task that can fit the DiscoGen style, please add it (following the guidance in /). We will endeavour to add all well-implemented domains to make sure DiscoGen remains a live and fresh tool with significant open-source contribution.
 
-## Improvements To Tasks
+## Improvements To Domains
 
-Have you noticed more interesting modules in a pre-existing task than the original author? Great! Please feel free to separate out that module from the original codebase into a `base` and `edit` implementation! Simply increasing the number of modules in a codebase from 3 -> 4 increases the number of module combinations from 5 -> 23!
+Have you noticed more interesting modules in a pre-existing task than the original author? Great! Please feel free to separate out that module from the original codebase into a `base` and `edit` implementation! Simply increasing the number of modules in a codebase by one almost doubles the number of tasks supported in that domain! Improvements could also come through adding new backends, which can completely change the search space of a task without requiring significant edits.
+
+## Adding New Datasets
+
+Machine learning isn't static, and as our algorithms get better our datasets get bigger and harder! To ensure DiscoGen stays relevant, it needs to be regularly updated to support more cutting edge benchmarks and dataset. As well as ensuring we can be discovering algorithms at the frontier of human knowledge, adding a new dataset almost triples the number of tasks supported by a domain!
+
+## New Evaluation Methods
+
+Currently, DiscoGen supports three types of evaluation/objectives for ADAs: maximising performance, minimising energy usage of algorithms and minimise algorithm runtime. There are, undoubtedly, other things to focus on though; discovering memory-efficient algorithms, for instance!
 
 ## Bug-Fixes
 
-If you spot any bugs in DiscoBench, please raise an issue and we will see to fix it as soon as possible!
+If you spot any bugs in DiscoGen, please raise an issue and we will see to fix it as soon as possible!
 
 
 # New to using Ruff and Mypy?
@@ -53,22 +61,22 @@ These settings are meant to disable the annoying and redundant pyright/pylance e
 
 # Get Started!
 
-Ready to contribute? Here's how to set up `discobench` for local development.
+Ready to contribute? Here's how to set up `discogen` for local development.
 Please note this documentation assumes you already have `uv` and `Git` installed and ready to go.
 
-1. Fork the `discobench` repo on GitHub.
+1. Fork the `discogen` repo on GitHub.
 
 2. Clone your fork locally:
 
 ```bash
 cd <directory_in_which_repo_should_be_created>
-git clone git@github.com:YOUR_NAME/discobench.git
+git clone git@github.com:YOUR_NAME/discogen.git
 ```
 
 3. Now we need to install the environment. Navigate into the directory
 
 ```bash
-cd discobench
+cd discogen
 ```
 
 Then, install and activate the environment with:
@@ -133,3 +141,6 @@ Before you submit a pull request, check that it meets these guidelines:
 
 2. If the pull request adds functionality, the docs should be updated.
    Put your new functionality into a function with a docstring, and add the feature to the list in `README.md`.
+
+
+For more detailed guidance, please follow the instructions from our [documentation](https://AlexGoldie.github.io/discogen/how_to/overview/).

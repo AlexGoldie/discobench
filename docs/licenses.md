@@ -1,4 +1,4 @@
-We provide relevant references for all work in `discobench/tasks/<task_domain>/utils/_reference.txt`. Unless otherwise specified, all referenced work ahs been used under the MIT license.
+We provide relevant references for all work in `discogen/domains/<task_domain>/utils/_reference.txt`. Unless otherwise specified, all referenced work has been used under the MIT license.
 
 ## BrainSpeechDetection
 
@@ -7,7 +7,6 @@ pnpl uses the BSD 3-Clause "New" or "Revised" License
 ## ComputerVisionClassification
 
 MLGym uses the Attribution-NonCommercial 4.0 International License. HuggingFace Transformers uses the Apache License. CFIAR10LT uses the Apache2.0 License.
-
 
 ## LanguageModelPretraining
 
