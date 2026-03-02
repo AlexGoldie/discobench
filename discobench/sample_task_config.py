@@ -7,13 +7,14 @@ import numpy as np
 import yaml
 
 
-def sample_task(
+def sample_task_config(
     p_edit: float,
     p_data: list[float],
     eval_type: str = "random",
     use_backends: bool = True,
     source_path: str = "task_src",
     max_attempts: int = 10,
+    rng: np.random.Generator | None = None,
     seed: int | None = None,
 ) -> tuple[str, dict[str, Any]]:
     """Sample a random task using user defined variables.
@@ -25,16 +26,20 @@ def sample_task(
         use_backends: Whether to only use the default backend, or randomly sample from the supported backend for each domain. Defaults to True.
         source_path: Where the task code should be saved after calling create_task() on the returned config.
         max_attempts: The max number of attempts supported for sampling a task from DiscoGen. Prevents the risk of inifinite or very long loops, if probabilities are set in such a way that tasks are valid tasks are hard to sample. Defaults to 10.
-        seed: A random seed for reproducible task sampling. Defaults to None, in which case sampling will be non-deterministic.
+        rng (optional): An np random generator for deterministic stochasticity.
+        seed (optional): A random seed which can be used instead of rng.
 
     Returns:
         random_domain: The randomly sampled domain.
         new_config: A DiscoGen configuration dictionary.
 
-    """
-    p_data = _check_args(p_edit, p_data, eval_type, use_backends, source_path, max_attempts, seed)
+    Notes:
+        At most one of seed and rng should be set. If both are set, an error will be returned.
 
-    rng = np.random.default_rng(seed) if seed else np.random.default_rng(None)
+    """
+    p_data = _check_args(p_edit, p_data, eval_type, use_backends, source_path, max_attempts, rng, seed)
+
+    rng = np.random.default_rng(seed) if seed is not None else np.random.default_rng(None)
 
     discobench_path = Path(__file__).parent / "tasks"
 
@@ -114,6 +119,7 @@ def _check_args(
     use_backends: bool,
     source_path: str,
     max_attempts: int,
+    rng: np.random.Generator | None,
     seed: int | None,
 ) -> list[float]:
     if not (0 < p_edit <= 1):
@@ -123,6 +129,9 @@ def _check_args(
 
     if eval_type not in ["random", "performance", "energy", "time"]:
         raise ValueError("eval_type must be one of  ['random', 'performance', 'energy', 'time].")
+
+    if seed is not None and rng is not None:
+        raise ValueError("When sampling a task, at most only one of seed and rng can be set.")
 
     return p_data
 

@@ -1,4 +1,4 @@
-# Using DiscoBench
+# Using DiscoGen
 
 This guide covers how to use DiscoBench for algorithm discovery tasks.
 
@@ -45,7 +45,7 @@ Create task files for a specific domain:
 discobench create-task --task-domain OnPolicyRL
 ```
 
-This creates a training task with default configuration. The generated files will appear in the `task_src/` directory.
+This creates a training task with default configuration. The generated files will appear in the `task_src/` directory. Note: the default task will not include any editable modules, so this will just show the domain's codebase structures.
 
 ## CLI Reference
 
@@ -221,7 +221,7 @@ cd task_src/OnPolicyRL
 python run_main.py
 ```
 
-### Workflow 2: Using the example config
+### Workflow 2: Using an example config
 
 ```bash
 # 1. Create the task

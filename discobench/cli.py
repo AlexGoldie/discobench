@@ -12,7 +12,7 @@ from discobench import (
     get_discobench_tasks,
     get_domains,
     get_modules,
-    sample_task,
+    sample_task_config,
 )
 
 
@@ -180,7 +180,7 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
     default="task_config.yaml",
     help="Where the config should be saved after sampling.",
 )
-def sample_task_cmd(
+def sample_task_config_cmd(
     p_edit: float,
     p_data: list[float],
     eval_type: str,
@@ -192,7 +192,7 @@ def sample_task_cmd(
 ) -> None:
     """Create task source files for a specified task domain."""
     use_backends = not no_backends
-    task_domain, task_config = sample_task(
+    task_domain, task_config = sample_task_config(
         p_edit=p_edit,
         p_data=p_data,
         eval_type=eval_type,
