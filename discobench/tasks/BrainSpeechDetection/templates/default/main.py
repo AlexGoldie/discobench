@@ -198,9 +198,7 @@ def train_and_eval_model(config: Dict, model: SpeechClassifier, train_dataloader
 
     final_test_metrics = test_results[0] if test_results else {}
 
-    all_metrics = {
-        "test_metrics": final_test_metrics
-    }
+    all_metrics = final_test_metrics
 
     return trainer, model, all_metrics
 

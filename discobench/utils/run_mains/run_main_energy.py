@@ -56,6 +56,18 @@ def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
     return results
 
 
+def _get_nested_metric(metrics: dict[str, Any], path: str) -> float | dict[str, Any] | None:
+    """Traverse a nested dictionary using a dot-separated path."""
+    keys = path.split(".")
+    current = metrics
+    for key in keys:
+        if isinstance(current, dict) and key in current:
+            current = current[key]
+        else:
+            return None
+    return current
+
+
 def _extract_scores(
     baseline_scores: dict[str, Any],
     metrics: dict[str, Any],
@@ -67,8 +79,10 @@ def _extract_scores(
     metrics["Energy (kWh)"] = energy
     metrics["Exceeded Threshold"] = True
     for metric_name, baseline_score in baseline_scores.items():
-        if metric_name in metrics:
-            if metrics[metric_name] < baseline_score:
+        metric_value = _get_nested_metric(metrics, metric_name)
+
+        if metric_value is not None:
+            if metric_value < baseline_score:
                 metrics["Exceeded Threshold"] = False
                 break
         else:
