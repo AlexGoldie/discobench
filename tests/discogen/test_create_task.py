@@ -157,3 +157,28 @@ def test_create_task_with_config_path(mock_make_files: MagicMock) -> None:
         mock_make_files.return_value.make_files.assert_called_once_with(
             {"key": "val"}, train=True, use_base=False, no_data=False, eval_type="performance", baseline_scale=1.0
         )
+
+
+def test_create_task_eval_type_from_config(mock_make_files: MagicMock) -> None:
+    """Ensure eval_type is read from config when not passed as arg."""
+    config = {"train_task_id": ["t1"], "eval_type": "energy"}
+    create_task("OnPolicyRL", test=False, config_dict=config)
+
+    _, kwargs = mock_make_files.return_value.make_files.call_args
+    assert kwargs["eval_type"] == "energy"
+
+
+def test_create_task_eval_type_conflict(mock_make_files: MagicMock) -> None:
+    """Ensure conflicting eval_type in arg and config raises ValueError."""
+    config = {"train_task_id": ["t1"], "eval_type": "energy"}
+    with pytest.raises(ValueError, match="eval_type specified both"):
+        create_task("OnPolicyRL", test=False, config_dict=config, eval_type="time")
+
+
+def test_create_task_eval_type_arg_and_config_agree(mock_make_files: MagicMock) -> None:
+    """Ensure matching eval_type in arg and config doesn't raise."""
+    config = {"train_task_id": ["t1"], "eval_type": "energy"}
+    create_task("OnPolicyRL", test=False, config_dict=config, eval_type="energy")
+
+    _, kwargs = mock_make_files.return_value.make_files.call_args
+    assert kwargs["eval_type"] == "energy"

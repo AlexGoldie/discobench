@@ -51,7 +51,7 @@ def sample_task_config(
     attempts = 0
 
     for _ in range(max_attempts):
-        result = _generate_config(discogen_path, p_edit, p_data, use_backends, source_path, rng)
+        result = _generate_config(discogen_path, p_edit, p_data, use_backends, source_path, rng, eval_type)
         if result:
             return result
 
@@ -61,7 +61,13 @@ def sample_task_config(
 
 
 def _generate_config(
-    base_path: Path, p_edit: float, p_data: list[float], use_backends: bool, source_path: str, rng: np.random.Generator
+    base_path: Path,
+    p_edit: float,
+    p_data: list[float],
+    use_backends: bool,
+    source_path: str,
+    rng: np.random.Generator,
+    eval_type: str,
 ) -> tuple[str, dict[str, Any]] | None:
     """Attempt to generate a single valid configuration. Returns None if invalid."""
     # Ensure consistent sorting for reproducibility
@@ -105,6 +111,8 @@ def _generate_config(
     has_train = len(new_config["train_task_id"]) > 0
     has_test = len(new_config["test_task_id"]) > 0
     has_edits = total_edit > 0
+
+    new_config = _generate_eval(new_config, eval_type=eval_type, rng=rng)
 
     if has_train and has_test and has_edits:
         return random_domain, new_config
@@ -159,3 +167,13 @@ def _normalize_p_data(p_data: list[float]) -> list[float]:
         raise ValueError("Each entry in p_data must be < 1 to allow for a mix of train/test tasks.")
 
     return p_data
+
+
+def _generate_eval(result: dict[str, Any], eval_type: str, rng: np.random.Generator) -> dict[str, Any]:
+    """Add eval_type to the sampled configuration."""
+    if eval_type == "random":
+        eval_type = rng.choice(["performance", "energy", "time"])
+
+    result["eval_type"] = str(eval_type)
+
+    return result

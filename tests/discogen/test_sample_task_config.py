@@ -98,6 +98,7 @@ class TestGenerateConfig:
             use_backends=True,
             source_path="test_src",
             rng=rng,
+            eval_type="time",
         )
 
         assert result is not None
@@ -107,6 +108,7 @@ class TestGenerateConfig:
         assert config["template_backend"] == "backend1"
         assert config["change_module_1"] is True
         assert config["change_module_2"] is True  # Driven by p_edit=1.0
+        assert config["eval_type"] == "time"
 
     def test_failed_generation_returns_none(self, mock_filesystem: Path) -> None:
         """Test that config generation returns None when no edits are made."""
@@ -120,6 +122,7 @@ class TestGenerateConfig:
             use_backends=False,
             source_path="test_src",
             rng=rng,
+            eval_type="energy",
         )
 
         assert result is None
