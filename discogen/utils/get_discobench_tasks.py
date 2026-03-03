@@ -8,7 +8,7 @@ def get_discobench_tasks() -> list[str]:
         List of [discobench_task_names].
 
     Note:
-        Entries in this list can be passed to discobench.create_discobench() to load discobench tasks.
+        Entries in this list can be passed to discogen.create_discobench() to load discobench tasks.
     """
     task_path = pathlib.Path(__file__).parent.parent / "discobench_configs"
     discobench_tasks = sorted([p.name.split(".")[0] for p in task_path.iterdir()])

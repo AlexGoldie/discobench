@@ -1,16 +1,16 @@
 # Using DiscoGen
 
-This guide covers how to use DiscoBench for algorithm discovery tasks.
+This guide covers how to use DiscoGen for algorithm discovery tasks.
 
 ## Installation
 
-Install DiscoBench using pip (once published) or from source:
+Install DiscoGen using pip (once published) or from source:
 
 ### From Source
 
 ```bash
-git clone https://github.com/AlexGoldie/discobench.git
-cd discobench
+git clone https://github.com/AlexGoldie/discogen.git
+cd discogen
 make install
 ```
 
@@ -26,7 +26,7 @@ This will:
 See all available task domains:
 
 ```bash
-discobench get-domains
+discogen get-domains
 ```
 
 ### 2. View Modules for Each Domain
@@ -34,7 +34,7 @@ discobench get-domains
 See which modules are available for each domain:
 
 ```bash
-discobench get-modules
+discogen get-modules
 ```
 
 ### 3. Create a Task
@@ -42,14 +42,14 @@ discobench get-modules
 Create task files for a specific domain:
 
 ```bash
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 ```
 
 This creates a training task with default configuration. The generated files will appear in the `task_src/` directory. Note: the default task will not include any editable modules, so this will just show the domain's codebase structures.
 
 ## CLI Reference
 
-DiscoBench provides three main commands:
+DiscoGen provides four main commands:
 
 ### `create-task`
 
@@ -57,7 +57,7 @@ Create task source files for algorithm discovery.
 
 **Usage:**
 ```bash
-discobench create-task --task-domain DOMAIN [OPTIONS]
+discogen create-task --task-domain DOMAIN [OPTIONS]
 ```
 
 **Required Options:**
@@ -75,22 +75,22 @@ discobench create-task --task-domain DOMAIN [OPTIONS]
 
 Create a meta-training task for OnPolicyRL (note, this will use the baseline codebase which does *not* include editable modules):
 ```bash
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 ```
 
 Create a meta-test task (note, this will use the baseline codebase which does *not* include editable modules):
 ```bash
-discobench create-task --task-domain OnPolicyRL --test
+discogen create-task --task-domain OnPolicyRL --test
 ```
 
 Use a custom configuration:
 ```bash
-discobench create-task --task-domain LanguageModelling --config-path my_config.yaml
+discogen create-task --task-domain LanguageModelling --config-path my_config.yaml
 ```
 
 Use the example configuration:
 ```bash
-discobench create-task --task-domain LanguageModelling --example
+discogen create-task --task-domain LanguageModelling --example
 ```
 
 ### `get-domains`
@@ -99,7 +99,7 @@ List all available task domains in DiscoBench.
 
 **Usage:**
 ```bash
-discobench get-domains
+discogen get-domains
 ```
 
 **Output:**
@@ -111,7 +111,7 @@ List all available modules for each domain.
 
 **Usage:**
 ```bash
-discobench get-modules
+discogen get-modules
 ```
 
 **Output:**
@@ -133,12 +133,12 @@ Randomly sample a new config. This will uniformly sample from domains, and use w
 
 ## Python API
 
-You can also use DiscoBench programmatically from Python:
+You can also use DiscoGen programmatically from Python:
 
 ### Creating Tasks
 
 ```python
-from discobench import create_task
+from discogen import create_task
 
 # Create a training task
 create_task(task_domain="OnPolicyRL", test=False)
@@ -161,7 +161,7 @@ create_task(
 ### Getting Domain Information
 
 ```python
-from discobench import get_domains, get_modules
+from discogen import get_domains, get_modules
 
 # Get list of all domains
 domains = get_domains()
@@ -176,7 +176,7 @@ for domain, module_list in modules.items():
 ### Creating Custom Configurations
 
 ```python
-from discobench import create_config
+from discogen import create_config
 
 # Get default config for a domain
 config = create_config(task_domain="OnPolicyRL")
@@ -224,7 +224,7 @@ change_train: false
 
 ```bash
 # 1. Create the task
-discobench create-task --task-domain OnPolicyRL
+discogen create-task --task-domain OnPolicyRL
 
 # 2. Navigate to the created task
 cd task_src/OnPolicyRL
@@ -239,7 +239,7 @@ python run_main.py
 
 ```bash
 # 1. Create the task
-discobench create-task --task-domain OnPolicyRL --example
+discogen create-task --task-domain OnPolicyRL --example
 
 # 2. Navigate to the created task
 cd task_src/OnPolicyRL
@@ -247,7 +247,7 @@ cd task_src/OnPolicyRL
 # 3. Run your agent to develop new algorithms
 
 # 4. Create the test task
-discobench create-task --task-domain OnPolicyRL --example --test
+discogen create-task --task-domain OnPolicyRL --example --test
 
 # 5. Run evaluation
 python run_main.py
@@ -257,7 +257,7 @@ python run_main.py
 
 1. Get the default config:
    ```python
-   from discobench import create_config
+   from discogen import create_config
    config = create_config("OnPolicyRL")
    ```
 
@@ -269,7 +269,7 @@ python run_main.py
 
 3. Create task with custom config:
    ```python
-   from discobench import create_task
+   from discogen import create_task
    create_task("OnPolicyRL", test=False, config_dict=config)
    ```
 
@@ -277,18 +277,18 @@ python run_main.py
 
 ## Running DiscoBench
 
-We provide all DiscoBench configs in `discobench/discobench_configs`. DiscoBench is a set of specific, hand-designed tasks for meta-meta-evaluation of algorithm discovery agents; in other words, these are tasks that exist within the support of DiscoGen, but should not be directly optimised on.
+We provide all DiscoBench configs in `discogen/discobench_configs`. DiscoBench is a set of specific, hand-designed tasks for meta-meta-evaluation of algorithm discovery agents; in other words, these are tasks that exist within the support of DiscoGen, but should not be directly optimised on.
 
 To run all DiscoBench tasks:
 1. Get the list of discobench tasks:
 ```python
-from discobench.utils import get_discobench_tasks
+from discogen.utils import get_discobench_tasks
 discobench_task_list = get_discobench_tasks()
 ```
 
 2. Loop through creating all tasks:
 ```python
-from discobench import create_discobench
+from discogen import create_discobench
 for task in discobench_task_list:
     create_discobench(task, eval_type='performance')
     # Run agent on discobench task and report score

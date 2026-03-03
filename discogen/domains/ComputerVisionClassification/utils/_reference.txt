@@ -1,4 +1,4 @@
-This file contains reference information for the Computer Vision Classification task in DiscoBench.
+This file contains reference information for the Computer Vision Classification task in DiscoGen.
 
 # Datasets References
 These are the datasets supported by this task and their reference links:
