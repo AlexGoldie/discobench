@@ -10,6 +10,7 @@ import yaml
 def sample_task_config(
     p_edit: float,
     p_data: list[float],
+    p_use_base: float = 0.5,
     eval_type: str = "random",
     use_backends: bool = True,
     source_path: str = "task_src",
@@ -22,6 +23,7 @@ def sample_task_config(
     Args:
         p_edit: The probability a module is marked as editable. Must be between 0. and 1.
         p_data: A list of probabilities or weights for sampling. Supports either a list of 2 values, which must be [p_meta_train, p_meta_test], or a list of 3 values, which can be probabilities or weights [w_meta_train, w_meta_test, w_exclude].
+        p_use_base: The probability that the modules start from a full baseline implementation rather than just providing the module interfaces.
         eval_type: What eval_type to use. Supports 'random', which will select a random eval_type, or one of ['performance', 'energy', 'time']. Defaults to 'random'.
         use_backends: Whether to only use the default backend, or randomly sample from the supported backend for each domain. Defaults to True.
         source_path: Where the task code should be saved after calling create_task() on the returned config.
@@ -37,7 +39,7 @@ def sample_task_config(
         At most one of seed and rng should be set. If both are set, an error will be returned.
 
     """
-    p_data = _check_args(p_edit, p_data, eval_type, use_backends, source_path, max_attempts, rng, seed)
+    p_data = _check_args(p_edit, p_data, p_use_base, eval_type, use_backends, source_path, max_attempts, rng, seed)
 
     if rng is None:
         rng = np.random.default_rng(seed)
@@ -46,13 +48,8 @@ def sample_task_config(
 
     task_domains = [x.name for x in discogen_path.iterdir() if x.is_dir()]
 
-    total_edit = 0
-    total_train = 0
-    total_test = 0
-    attempts = 0
-
     for _ in range(max_attempts):
-        result = _generate_config(discogen_path, p_edit, p_data, use_backends, source_path, rng, eval_type)
+        result = _generate_config(discogen_path, p_edit, p_data, p_use_base, use_backends, source_path, rng, eval_type)
         if result:
             return result
 
@@ -65,6 +62,7 @@ def _generate_config(
     base_path: Path,
     p_edit: float,
     p_data: list[float],
+    p_use_base: float,
     use_backends: bool,
     source_path: str,
     rng: np.random.Generator,
@@ -108,6 +106,8 @@ def _generate_config(
 
     new_config["source_path"] = source_path
 
+    new_config["use_base"] = rng.random() < p_use_base
+
     # Ensure valid config
     has_train = len(new_config["train_task_id"]) > 0
     has_test = len(new_config["test_task_id"]) > 0
@@ -124,6 +124,7 @@ def _generate_config(
 def _check_args(
     p_edit: float,
     p_data: list[float],
+    p_use_base: float,
     eval_type: str,
     use_backends: bool,
     source_path: str,
@@ -133,6 +134,9 @@ def _check_args(
 ) -> list[float]:
     if not (0 < p_edit <= 1):
         raise ValueError("p_edit must be between 0 and 1.")
+
+    if not (0 <= p_use_base <= 1):
+        raise ValueError("p_use_base must be between 0 and 1.")
 
     p_data = _normalize_p_data(p_data)
 

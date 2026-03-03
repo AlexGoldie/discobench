@@ -118,6 +118,13 @@ def test_create_task_invalid_eval_type(mock_make_files: MagicMock) -> None:
         create_task("OnPolicyRL", test=False, config_dict={"a": 1}, eval_type="invalid")
 
 
+def test_create_task_invalid_eval_type_in_config(mock_make_files: MagicMock) -> None:
+    """Ensure invalid eval_type in config raises ValueError."""
+    config = {"train_task_id": ["t1"], "eval_type": "invalid"}
+    with pytest.raises(ValueError, match="eval_type"):
+        create_task("OnPolicyRL", test=False, config_dict=config)
+
+
 @pytest.mark.parametrize("scale", [0.0, -1.0, -0.001])
 def test_create_task_invalid_baseline_scale(mock_make_files: MagicMock, scale: float) -> None:
     """Ensure non-positive baseline_scale raises ValueError."""
@@ -145,6 +152,15 @@ def test_create_task_default_eval_type(mock_make_files: MagicMock) -> None:
     assert kwargs["baseline_scale"] == 1.0
 
 
+def test_create_task_default_use_base(mock_make_files: MagicMock) -> None:
+    """Ensure use_base defaults to False when not specified."""
+    config = {"train_task_id": ["t1"]}
+    create_task("OnPolicyRL", test=False, config_dict=config)
+
+    _, kwargs = mock_make_files.return_value.make_files.call_args
+    assert kwargs["use_base"] is False
+
+
 def test_create_task_with_config_path(mock_make_files: MagicMock) -> None:
     """Ensure passing config_path reads from that path."""
     with (
@@ -157,6 +173,9 @@ def test_create_task_with_config_path(mock_make_files: MagicMock) -> None:
         mock_make_files.return_value.make_files.assert_called_once_with(
             {"key": "val"}, train=True, use_base=False, no_data=False, eval_type="performance", baseline_scale=1.0
         )
+
+
+# --- eval_type config resolution tests ---
 
 
 def test_create_task_eval_type_from_config(mock_make_files: MagicMock) -> None:
@@ -182,3 +201,31 @@ def test_create_task_eval_type_arg_and_config_agree(mock_make_files: MagicMock) 
 
     _, kwargs = mock_make_files.return_value.make_files.call_args
     assert kwargs["eval_type"] == "energy"
+
+
+# --- use_base config resolution tests ---
+
+
+def test_create_task_use_base_from_config(mock_make_files: MagicMock) -> None:
+    """Ensure use_base is read from config when not passed as arg."""
+    config = {"train_task_id": ["t1"], "use_base": True}
+    create_task("OnPolicyRL", test=False, config_dict=config)
+
+    _, kwargs = mock_make_files.return_value.make_files.call_args
+    assert kwargs["use_base"] is True
+
+
+def test_create_task_use_base_conflict(mock_make_files: MagicMock) -> None:
+    """Ensure conflicting use_base in arg and config raises ValueError."""
+    config = {"train_task_id": ["t1"], "use_base": True}
+    with pytest.raises(ValueError, match="use_base specified both"):
+        create_task("OnPolicyRL", test=False, config_dict=config, use_base=False)
+
+
+def test_create_task_use_base_arg_and_config_agree(mock_make_files: MagicMock) -> None:
+    """Ensure matching use_base in arg and config doesn't raise."""
+    config = {"train_task_id": ["t1"], "use_base": True}
+    create_task("OnPolicyRL", test=False, config_dict=config, use_base=True)
+
+    _, kwargs = mock_make_files.return_value.make_files.call_args
+    assert kwargs["use_base"] is True
