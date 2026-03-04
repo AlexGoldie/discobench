@@ -49,7 +49,7 @@ extra:
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/discogen
     - icon: fontawesome/solid/blog
-      link: https://alexgoldie.github.io/discobench-blog/
+      link: https://alexgoldie.github.io/discogen-blog/
 
 markdown_extensions:
   - toc:

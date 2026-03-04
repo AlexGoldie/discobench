@@ -194,7 +194,7 @@ If you use DiscoGen in your research, please cite:
 
 - **GitHub Repository**: [https://github.com/AlexGoldie/discogen](https://github.com/AlexGoldie/discogen)
 - **Documentation**: [https://AlexGoldie.github.io/discogen](https://AlexGoldie.github.io/discogen)
-- **Blog**: [https://alexgoldie.github.io/discobench-blog/](https://alexgoldie.github.io/discobench-blog/)
+- **Blog**: [https://alexgoldie.github.io/discogen-blog/](https://alexgoldie.github.io/discogen-blog/)
 - **PyPI Package**: Coming soon
 
 ## License
