@@ -1,4 +1,4 @@
-"""A function to create a DiscoBench task given the task_name. A list of task names can be obtained from discobench.utils.get_discobench_tasks."""
+"""A function to create a DiscoBench task given the task_name. A list of task names can be obtained from discogen.utils.get_discobench_tasks."""
 
 from pathlib import Path
 
