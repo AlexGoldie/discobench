@@ -78,7 +78,7 @@ If you use DiscoGen in your research, please cite:
 @article{goldie2026discogen,
   title={DiscoGen: Procedural Generation of Algorithm Discovery Tasks in Machine Learning},
   author={Alexander D. Goldie and Zilin Wang and Adrian Hayler and Deepak Nathani and Edan Toledo and Ken Thampiratwong and Aleksandra Kalisz and Michael Beukman and Alistair Letcher and Shashank Reddy and Clarisse Wibault and Theo Wolf and Charles O'Neill and Uljad Berdica and Nicholas Roberts and Saeed Rahmani and Hannah Erlebach and Roberta Raileanu and Shimon Whiteson and Jakob N. Foerster},
-  year={2025}
+  year={2026}
 }
 ```
 
