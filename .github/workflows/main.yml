@@ -46,7 +46,7 @@ jobs:
       - name: Run tests
         run: uv run python -m pytest tests --cov=discogen --cov-report=xml --junitxml=junit/test-results.xml
       - name: Check typing
-        run: uv run mypy discogen
+        run: uv run mypy
 
       - name: Coverage Report Comment
         uses: MishaKav/pytest-coverage-comment@main
