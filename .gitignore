@@ -220,4 +220,3 @@ __marimo__/
 task_src/
 task_configs/
 cache/
-uv.lock
