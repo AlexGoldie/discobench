@@ -19,7 +19,6 @@ class Transition(NamedTuple):
     value: jnp.ndarray
     reward: jnp.ndarray
     log_prob: jnp.ndarray
-    obs: jnp.ndarray
     info: jnp.ndarray
     avail_actions: jnp.ndarray
 
@@ -162,6 +161,7 @@ def make_train(config):
                     _info["returned_won_episode"] = info["returned_won_episode"]
                 info = jax.tree.map(lambda x: x.reshape((config["NUM_ACTORS"])), _info)
                 done_batch = batchify(done, env.agents, config["NUM_ACTORS"]).squeeze()
+                info = {"returned_episode_returns": info["returned_episode_returns"]}
                 transition = Transition(
                     jnp.tile(done["__all__"], env.num_agents),
                     last_done,
@@ -169,7 +169,6 @@ def make_train(config):
                     value.squeeze(),
                     batchify(reward, env.agents, config["NUM_ACTORS"]).squeeze(),
                     log_prob.squeeze(),
-                    obs_batch,
                     info,
                     avail_actions,
                 )
