@@ -52,19 +52,6 @@ jobs:
       - name: Check typing
         run: uv run mypy
 
-      - name: Coverage Report Comment
-        uses: MishaKav/pytest-coverage-comment@main
-        if: always() && github.event_name == 'pull_request' && matrix.python-version == '3.12'
-        with:
-          pytest-xml-coverage-path: coverage.xml
-          junitxml-path: junit/test-results.xml
-          title: "Test Coverage Report"
-          create-new-comment: false
-          unique-id-for-comment: python-coverage
-          xml-skip-covered: true
-          report-only-changed-files: true
-
-
 
   check-docs:
     runs-on: ubuntu-latest
