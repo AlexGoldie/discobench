@@ -9,7 +9,6 @@ class ModelConfig:
     vocab_size: int = 50304
     d_model: int = 768
     n_layer: int = 12
-    # Add other SSM-specific hyperparameters as needed (d_state, d_conv, expand, etc.)
 
 
 class Model(nn.Module):
@@ -18,16 +17,11 @@ class Model(nn.Module):
         super().__init__()
         self.config = config
 
-        # Initialize your Mamba/SSM model here.
-        # Typical components:
-        # - self.embedding: Token embeddings
-        # - self.layers: Stack of Mamba/SSM blocks
-        # - self.norm_f: Final normalization layer
-        # - self.lm_head: Output projection to vocab_size
+        # Initialize your model here.
 
     def forward(self, idx):
         """
-        Forward pass of the Mamba model.
+        Forward pass of the state-space model.
 
         Args:
             idx (torch.Tensor): Input token indices of shape (batch_size, sequence_length)
@@ -39,10 +33,6 @@ class Model(nn.Module):
         """
 
         # Implement forward pass of the model here.
-        # 1. Embed tokens: x = self.embedding(idx)
-        # 2. Pass through SSM layers
-        # 3. Apply final normalization
-        # 4. Project to vocabulary: logits = self.lm_head(x)
         logits = ...
 
         return logits

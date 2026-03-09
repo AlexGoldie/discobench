@@ -24,13 +24,13 @@ def create_optimizers(
     model: nn.Module, config: OptimizerConfig
 ) -> Tuple[List[torch.optim.Optimizer], List[torch.optim.lr_scheduler.LRScheduler]]:
     """
-    Creates and returns optimizers and schedulers for the Mamba model.
+    Creates and returns optimizers and schedulers for the SSM model.
 
     Uses AdamW with weight decay applied to most parameters except embeddings,
     biases, and normalization weights.
 
     Args:
-        model (nn.Module): The Mamba model to optimize.
+        model (nn.Module): The SSM model to optimize.
         config (OptimizerConfig): The configuration for the optimizer.
 
     Returns:

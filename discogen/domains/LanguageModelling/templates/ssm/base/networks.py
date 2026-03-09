@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from mamba_ssm import Mamba2
 
 # -----------------------------------------------------------------------------
-# PyTorch nn.Module definitions for the Mamba 2 language model
+# PyTorch nn.Module definitions for the SSM language model
 
 
 class RMSNorm(nn.Module):
@@ -19,11 +19,11 @@ class RMSNorm(nn.Module):
         return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.weight
 
 
-class MambaBlock(nn.Module):
+class SSMBlock(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.norm = RMSNorm(config.d_model)
-        self.mamba = Mamba2(
+        self.ssm = Mamba2(
             d_model=config.d_model,
             d_state=config.d_state,
             d_conv=config.d_conv,
@@ -32,12 +32,12 @@ class MambaBlock(nn.Module):
 
     def forward(self, x):
         # Compute residual connection in fp32 for numerical stability
-        hidden = self.mamba(self.norm(x))
+        hidden = self.ssm(self.norm(x))
         return (x.float() + hidden.float()).to(x.dtype)
 
 
 # -----------------------------------------------------------------------------
-# The main Mamba 2 model
+# The main SSM model
 
 
 @dataclass
@@ -57,7 +57,7 @@ class Model(nn.Module):
         self.config = config
 
         self.embedding = nn.Embedding(config.vocab_size, config.d_model)
-        self.layers = nn.ModuleList([MambaBlock(config) for _ in range(config.n_layer)])
+        self.layers = nn.ModuleList([SSMBlock(config) for _ in range(config.n_layer)])
         self.norm_f = RMSNorm(config.d_model)
         self.lm_head = nn.Linear(config.d_model, config.vocab_size, bias=False)
 
