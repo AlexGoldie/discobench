@@ -80,13 +80,11 @@ def main():
         )
     x, y = train_loader.next_batch()
 
-    # there are only 50257 unique GPT-2 tokens; we extend to nearest multiple of 128 for efficiency. suggested to me by @Grad62304977.
-    # this originates from Karpathy's experiments.
     num_vocab = 50304
     model = Model(ModelConfig(vocab_size=num_vocab))
     model = model.cuda()
     if hasattr(config, "coordinate_descent_tuning"):
-        config.coordinate_descent_tuning = True  # suggested by @Chillee
+        config.coordinate_descent_tuning = True
     model = torch.compile(model)
     # here we wrap model into DDP container
     model = DDP(model, device_ids=[ddp_local_rank])
@@ -186,7 +184,8 @@ def main():
                     f"step:{step + 1}/{args.num_iterations} train_loss:{train_loss.item():.4f} train_time:{approx_time:.0f}ms step_avg:{approx_time / timed_steps:.2f}ms\n"
                 )
 
-    torch.save(model.state_dict(), "model.pt")
+    if master_process:
+        torch.save({k.replace("_orig_mod.", ""): v for k, v in raw_model.state_dict().items()}, "model.pt")
     with open("model_config.pt", "wb") as f:
         pickle.dump(raw_model.get_config(), f)
     f.close()
