@@ -73,6 +73,16 @@ Please note, after installing the ModelUnlearning `requirements.txt`, you must i
 pip install flash-attn==2.6.3 --no-build-isolation
 ```
 
+## NeuralCellularAutomata
+
+The agent must design algorithms for evolving neural cellular automata, which must do tasks like reproduce images of emojis or classify digits from MNIST.
+
+### Modules
+`loss`, `optimiser`, `perceive`, `train`, `update`
+
+### Datasets
+`GrowingButterfly`, `GrowingLizard`, `MatrixOperations`, `MNISTInpainting`, `SelfClassifyingMNIST`
+
 ## OfflineRL
 The agent must train a value-based RL agent in game environments.
 

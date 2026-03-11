@@ -43,6 +43,7 @@ Every domain includes references in `discogen/domains/<task_domain>/utils/_refer
 | **GreenhouseGasPrediction** | data_processing, model | 4 Mauna Loa Time-series (CO2, N2O, SF6, CH4). | Time-series forecasting of atmospheric greenhouse gas concentrations. |
 | **LanguageModelling** | loss, networks, optim | OPCFineWebCode, OPCFineWebMath, LMFineWeb, TinyStories. | Training transformer-based models on code, mathematics, and narrative text. |
 | **ModelUnlearning** | loss | MUSE, TOFU, WMDP_Cyber. | Fine-tuning pretrained models to remove specific knowledge or data points while retaining others. |
+| **NeuralCellularAutomata** | loss, optimiser, perceive, train, update | GrowingButterfly, GrowingLizard, MatrixOperations, MNISTInpainting, SelfClassifyingMNIST. | Evolving neural cellular automata to different tasks based on reproduction and classification. |
 | **OfflineRL** | actor_loss, critic_loss, optim, networks, train | 10 OGBench | Training RL policies from offline datasets. |
 | **OffPolicyRL** | q_update, policy, networks, optim, rb, train, config | 4 MinAtar. | Value-based RL for training an agent in MinAtar. |
 | **OnPolicyMARL** | activation, loss, networks, optim, targets, train | 5 MABrax, MPE Spread, 11 SMAX | Training multiple on-policy RL agents in different multi-agent environments. |
