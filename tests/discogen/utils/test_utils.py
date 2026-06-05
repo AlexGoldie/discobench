@@ -16,7 +16,7 @@ def test_exist() -> None:
 
 def test_run_main_exist() -> None:
     """Ensure run_main_{x} is in discogen/utils/run_mains."""
-    expected_run_mains = ["energy", "performance", "time"]
+    expected_run_mains = ["energy", "performance", "time", "golf"]
 
     for name in expected_run_mains:
         if not os.path.exists(f"{UTILS_PATH}/run_mains/run_main_{name}.py"):

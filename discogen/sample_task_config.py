@@ -24,7 +24,7 @@ def sample_task_config(
         p_edit: The probability a module is marked as editable. Must be between 0. and 1.
         p_data: A list of probabilities or weights for sampling. Supports either a list of 2 values, which must be [p_meta_train, p_meta_test], or a list of 3 values, which can be probabilities or weights [w_meta_train, w_meta_test, w_exclude].
         p_use_base: The probability that the modules start from a full baseline implementation rather than just providing the module interfaces.
-        eval_type: What eval_type to use. Supports 'random', which will select a random eval_type, or one of ['performance', 'energy', 'time']. Defaults to 'random'.
+        eval_type: What eval_type to use. Supports 'random', which will select a random eval_type, or one of ['performance', 'energy', 'time', 'golf']. Defaults to 'random'.
         use_backends: Whether to only use the default backend, or randomly sample from the supported backend for each domain. Defaults to True.
         source_path: Where the task code should be saved after calling create_task() on the returned config.
         max_attempts: The max number of attempts supported for sampling a task from DiscoGen. Prevents the risk of infinite or very long loops, if probabilities are set in such a way that valid tasks are hard to sample. Defaults to 10.
@@ -140,8 +140,8 @@ def _check_args(
 
     p_data = _normalize_p_data(p_data)
 
-    if eval_type not in ["random", "performance", "energy", "time"]:
-        raise ValueError("eval_type must be one of  ['random', 'performance', 'energy', 'time'].")
+    if eval_type not in ["random", "performance", "energy", "time", "golf"]:
+        raise ValueError("eval_type must be one of  ['random', 'performance', 'energy', 'time', 'golf'].")
 
     if seed is not None and rng is not None:
         raise ValueError("When sampling a task, at most only one of seed and rng can be set.")
@@ -177,7 +177,7 @@ def _normalize_p_data(p_data: list[float]) -> list[float]:
 def _generate_eval(result: dict[str, Any], eval_type: str, rng: np.random.Generator) -> dict[str, Any]:
     """Add eval_type to the sampled configuration."""
     if eval_type == "random":
-        eval_type = rng.choice(["performance", "energy", "time"])
+        eval_type = rng.choice(["performance", "energy", "time", "golf"])
 
     result["eval_type"] = str(eval_type)
 

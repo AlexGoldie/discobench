@@ -6,3 +6,6 @@ time_description: |-
 
 energy_description: |-
   In this task, your objective is to minimise the energy used by your discovered algorithms to match a performance threshold. As such, when you run experiments, you will be told how well your algorithms are performing in addition to how energy used by your algorithm. It is important to remember that your algorithms will be evaluated on held-out datasets. Your algorithm failing to meet the performance threshold is equivalent to failing the task.
+
+golf_description: |-
+  In this task, your objective is to minimise the filesizeof your discovered algorithms, while matching a performance threshold. As such, when you run experiments, you will be told how well your algorithms are performing in addition to the filesize of your algorithm (considering only the files in discovered/). It is important to remember that your algorithms will be evaluated on held-out datasets, and any file not in discovered/ will be rebuilt before held-out evaluation. Your algorithm failing to meet the performance threshold is equivalent to failing the task.

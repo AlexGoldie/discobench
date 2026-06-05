@@ -2,7 +2,6 @@ import json
 import os
 import subprocess
 import sys
-import time
 from typing import Any
 
 
@@ -33,9 +32,7 @@ def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str, str
 
         print(f"Running: {main_path}")
         try:
-            start = time.perf_counter()
             result = subprocess.run([sys.executable, main_path], check=True, capture_output=True, text=True)  # noqa: S603
-            end = time.perf_counter()
 
             metrics = next(
                 (
@@ -47,7 +44,7 @@ def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str, str
             )
 
             if metrics:
-                _extract_scores(baseline_scores, metrics, root, main_path, start, end, results, errors)
+                _extract_scores(baseline_scores, metrics, root, main_path, results, errors)
             else:
                 errors[root] = result.stdout
         except subprocess.CalledProcessError as e:
@@ -55,6 +52,8 @@ def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str, str
             errors[root] = error_message
         except json.JSONDecodeError as e:
             errors[root] = f"Failed to parse metrics JSON: {e}"
+
+    _calculate_golf_score(start_dir, results)
 
     print(json.dumps({"results": results, "errors": errors}))
     return results, errors
@@ -77,13 +76,10 @@ def _extract_scores(
     metrics: dict[str, Any],
     root: str,
     main_path: str,
-    start: float,
-    end: float,
     results: dict[str, Any],
     errors: dict[str, str],
 ) -> None:
     results[root] = metrics
-    results[root]["time_to_completion (s)"] = end - start
     missing_metrics = []
     for metric_name, baseline_score in baseline_scores.items():
         metric_value = _get_nested_metric(metrics, metric_name)
@@ -95,9 +91,18 @@ def _extract_scores(
                 results[root][f"Exceeded Threshold For {metric_name}"] = True
         else:
             missing_metrics.append(metric_name)
-
     if len(missing_metrics) > 0:
         errors[root] = f"Script {main_path} did not produce any metric for {missing_metrics}."
+
+
+def _calculate_golf_score(start_dir: str, results: dict[str, Any]) -> None:
+    discovered_path = f"{start_dir}/discovered"
+    golf_score = 0
+
+    for file in os.listdir(discovered_path):
+        file_path = os.path.join(discovered_path, file)
+        golf_score += os.path.getsize(file_path)
+    results["Code Golf Score (Bytes)"] = golf_score
 
 
 if __name__ == "__main__":

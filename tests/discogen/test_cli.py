@@ -25,7 +25,7 @@ def runner() -> CliRunner:
 @pytest.mark.parametrize("example", [True, False])
 @pytest.mark.parametrize("use_base", [True, False])
 @pytest.mark.parametrize("no_data", [True, False])
-@pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "abcdef"])
+@pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "abcdef"])
 @pytest.mark.parametrize("baseline_scale", [0.5, 1.5, 1.0])
 @pytest.mark.parametrize("cache_root", ["cache1", "cache2"])
 def test_create_task_cli(
@@ -157,7 +157,7 @@ def test_create_config_cmd(runner: CliRunner, tmp_path: Path) -> None:
 @pytest.mark.parametrize("test", [True, False])
 @pytest.mark.parametrize("use_base", [True, False])
 @pytest.mark.parametrize("no_data", [True, False])
-@pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "abcdef"])
+@pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "abcdef"])
 @pytest.mark.parametrize("cache_root", ["cache1", "cache2"])
 def test_create_discobench_cli(
     runner: CliRunner,
@@ -276,7 +276,7 @@ class TestSampleTaskConfigCli:
         assert result.exit_code == 0
         assert mock_sample.call_args.kwargs["use_backends"] is False
 
-    @pytest.mark.parametrize("eval_type", ["random", "performance", "time", "energy"])
+    @pytest.mark.parametrize("eval_type", ["random", "performance", "time", "energy", "golf"])
     @patch("builtins.open", new_callable=mock_open)
     @patch("discogen.cli.sample_task_config")
     def test_valid_eval_types(

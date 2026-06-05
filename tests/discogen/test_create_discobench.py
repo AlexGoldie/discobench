@@ -18,7 +18,7 @@ def mock_make_files() -> Iterator[MagicMock]:
 
 
 @pytest.mark.parametrize("task_name", get_discobench_tasks())
-@pytest.mark.parametrize("eval_type", ["performance", "energy", "time"])
+@pytest.mark.parametrize("eval_type", ["performance", "energy", "time", "golf"])
 @pytest.mark.parametrize("test_mode, expected_train", [(True, False), (False, True)])
 def test_create_discobench_task(
     mock_make_files: MagicMock, test_mode: bool, expected_train: bool, eval_type: str, task_name: str

@@ -30,8 +30,8 @@ def create_task(
         no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
         config_path: The path to the task configuration file. If not provided, the default task configuration file will be used. Check `discogen/domains/{task_domain}/task_config.yaml` for expected structure for a given task.
         config_dict: A pre-built config dictionary, following the expected structure from `discogen/domains/{task_domain}/task_config.yaml`.
-        eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy']. In 'performance', the goal is to discover algorithms which maximise performance. In 'time', the goal is to discover algorithms that match the baseline performance in the shortest length of time. In 'energy', the objective is to discover algorithms which match the baseline performance using the least amount of estimated energy. This can also be provided in task_config. If eval_type is also provided in the config, passing an eval_type arg will raise an error. If neither are provided, defaults to performance.
-        baseline_scale: What relative scale to allow compared to the baseline when using either the 'time' or 'energy' eval_type. If not provided, this will default to 1.0. Must be greater than 0.
+        eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy']. In 'performance', the goal is to discover algorithms which maximise performance. In 'time', the goal is to discover algorithms that match the baseline performance in the shortest length of time. In 'energy', the objective is to discover algorithms which match the baseline performance using the least amount of estimated energy.  In 'golf', the objective is to discover algorithms which are written in the least number of Bytes. This can also be provided in task_config. If eval_type is also provided in the config, passing an eval_type arg will raise an error. If neither are provided, defaults to performance.
+        baseline_scale: What relative scale to allow compared to the baseline when using either the 'time', 'energy', 'golf' eval_type. If not provided, this will default to 1.0. Must be greater than 0.
         cache_root: A directory which data can be cached in.
 
     Notes:
@@ -85,8 +85,8 @@ def _resolve_config_overrides(
         )
 
     eval_type = eval_type or config_eval or "performance"
-    if eval_type not in ["performance", "time", "energy"]:
-        raise ValueError("Ensure eval_type is one of ['performance', 'time', 'energy'].")
+    if eval_type not in ["performance", "time", "energy", "golf"]:
+        raise ValueError("Ensure eval_type is one of ['performance', 'time', 'energy', 'golf'].")
 
     config_use_base = task_config.get("use_base")
 
