@@ -5,8 +5,8 @@ return_mean:
     Brax/Reacher: -57.21268
     Brax/Walker2D: 1657.53419
     MinAtar/Asterix: 17.01563
-    MinAtar/Breakout: 69.90625
-    MinAtar/Freeway: 61.82031
+    MinAtar/Breakout: 60.25
+    MinAtar/Freeway: 62.2734375
     MinAtar/SpaceInvaders: 180.875
     Brax/Ant: 7091.34668
     Brax/HalfCheetah: 5049.28662

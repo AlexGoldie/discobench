@@ -2,12 +2,14 @@
 
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
+from pynvml import c_nvmlDevice_t  # type: ignore[import-untyped]
 
 from discogen import create_config
 from discogen.utils import get_domains
@@ -212,7 +214,7 @@ class TestBuildBaseDescription:
 class TestGetEvalDescription:
     """All tests for _get_eval_description."""
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_returns_nonempty_string(self, mf: MakeFiles, eval_type: str) -> None:
         """Test that each valid eval_type returns a non-empty description."""
         result = mf._get_eval_description(eval_type)
@@ -226,8 +228,8 @@ class TestGetEvalDescription:
 
     def test_different_eval_types_return_different_descriptions(self, mf: MakeFiles) -> None:
         """Test that each eval_type produces a distinct description."""
-        descriptions = {et: mf._get_eval_description(et) for et in ["performance", "time", "energy", "golf"]}
-        assert len(set(descriptions.values())) == 4
+        descriptions = {et: mf._get_eval_description(et) for et in ["performance", "time", "energy", "golf", "memory"]}
+        assert len(set(descriptions.values())) == 5
 
     @pytest.mark.parametrize(
         ("eval_type", "expected_substring"),
@@ -236,6 +238,10 @@ class TestGetEvalDescription:
             ("time", "minimise the time taken by your discovered algorithms to match a performance threshold"),
             ("energy", "minimise the energy used by your discovered algorithms to match a performance threshold"),
             ("golf", "the filesize of your algorithm (considering only the files in discovered/)"),
+            (
+                "memory",
+                "As such, when you run experiments, you will be told how well your algorithms are performing in addition to the peak memory usage during the running of your algorithm. Where you are told both RAM and GPU memory, you should prioritise GPU memory.",
+            ),
         ],
     )
     def test_description_contains_expected_content(
@@ -254,7 +260,7 @@ class TestGetEvalDescription:
 class TestLoadRunMain:
     """All tests for _load_run_main."""
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_copies_run_main(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that run_main.py is created in the source directory."""
         mf.source_path = source_path
@@ -271,14 +277,14 @@ class TestLoadRunMain:
     def test_different_eval_types_produce_different_content(self, mf: MakeFiles, source_path: Path) -> None:
         """Test that each eval_type copies a distinct run_main.py."""
         contents = {}
-        for eval_type in ["performance", "time", "energy", "golf"]:
+        for eval_type in ["performance", "time", "energy", "golf", "memory"]:
             mf.source_path = source_path
             mf._load_run_main(eval_type)
             contents[eval_type] = (source_path / "run_main.py").read_text()
         # At least two of the three should differ
         assert len(set(contents.values())) > 1
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_run_main_contains_run_all_main_py(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that every run_main.py defines or calls run_all_main_py."""
         mf.source_path = source_path
@@ -286,7 +292,7 @@ class TestLoadRunMain:
         content = (source_path / "run_main.py").read_text()
         assert "run_all_main_py" in content
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_run_main_contains_expected_imports(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that every run_main.py has the expected standard imports."""
         mf.source_path = source_path
@@ -303,6 +309,7 @@ class TestLoadRunMain:
             ("time", "time.perf_counter()"),
             ("energy", """EmissionsTracker(log_level="error", save_to_file=False)"""),
             ("golf", "golf_score += os.path.getsize(file_path)"),
+            ("memory", "GPU Memory (GB)"),
         ],
     )
     def test_run_main_has_eval_specific_content(
@@ -319,7 +326,7 @@ class TestLoadRunMain:
         else:
             assert expected_substring in content, f"Expected '{expected_substring}' in run_main_{eval_type}.py"
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_run_main_is_executable_python(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that each run_main.py can be compiled (is valid Python syntax)."""
         mf.source_path = source_path
@@ -327,7 +334,7 @@ class TestLoadRunMain:
         content = (source_path / "run_main.py").read_text()
         compile(content, f"run_main_{eval_type}.py", "exec")  # raises SyntaxError if invalid
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_run_main_has_main_guard(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that each run_main.py has an if __name__ == '__main__' guard."""
         mf.source_path = source_path
@@ -365,7 +372,7 @@ class TestLoadRunMain:
         expected_keys: dict[str, list[str]] = {
             "time": ["time_to_completion (s)", "Exceeded Threshold For dummy_metric"],
             "energy": ["Energy (kWh)", "Exceeded Threshold For dummy_metric"],
-            "golf": ["Code Golf Score (Bytes)", "Exceeded Threshold For dummy_metric"],
+            "memory": ["RAM (GB)", "GPU Memory (GB)", "Exceeded Threshold For dummy_metric"],
         }
 
         # Create a fake task directory with a main.py
@@ -383,6 +390,84 @@ class TestLoadRunMain:
         mock_result = type("CompletedProcess", (), {"stdout": mock_stdout + "\n", "stderr": "", "returncode": 0})()
 
         with patch("subprocess.run", return_value=mock_result):
+            results, errors = run_fn(start_dir=str(source_path))
+
+        assert len(results) > 0, "run_all_main_py returned no results"
+        assert type(errors) is dict
+        for _dir, metrics in results.items():
+            for key in expected_keys[eval_type]:
+                assert key in metrics, f"Expected key '{key}' missing from {eval_type} metrics output"
+                if baseline_score > 1:
+                    assert not metrics["Exceeded Threshold For dummy_metric"]
+                else:
+                    assert metrics["Exceeded Threshold For dummy_metric"]
+
+    @pytest.mark.parametrize("eval_type", ["memory"])
+    @pytest.mark.parametrize("baseline_score", [0.5, 1.0, 1.5])
+    def test_run_main_output_keys_memory(
+        self, mf: MakeFiles, source_path: Path, eval_type: str, baseline_score: float
+    ) -> None:
+        """Test that run_main.py, when mocked, produces the expected metric keys.
+
+        We patch subprocess.run so that each main.py "returns" a known JSON line,
+        then verify run_all_main_py picks up the metrics dict.
+        """
+        mf.source_path = source_path
+        mf._load_run_main(eval_type)
+        content = (source_path / "run_main.py").read_text()
+
+        # Compile and extract run_all_main_py from the copied script
+        code_globals: dict[str, Any] = {}
+        exec(compile(content, "run_main.py", "exec"), code_globals)  # noqa: S102
+
+        mock_tracker_class = MagicMock()
+
+        run_fn = code_globals["run_all_main_py"]
+
+        expected_keys: dict[str, list[str]] = {
+            "memory": ["RAM (GB)", "GPU Memory (GB)", "Exceeded Threshold For dummy_metric"]
+        }
+
+        # Create a fake task directory with a main.py
+        task_dir = source_path / "fake_task"
+        task_dir.mkdir()
+        # The fake main.py just prints a JSON dict — content doesn't matter because
+        # we mock subprocess.run below.
+        (task_dir / "main.py").write_text("print(json.dumps({'dummy_metric':1.0}))")
+        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": baseline_score}))
+
+        # Build a mock metrics dict with all expected keys
+        mock_metrics = {"dummy_metric": 1.0}
+        mock_stdout = json.dumps(mock_metrics)
+
+        mock_popen = MagicMock()
+        mock_popen.pid = os.getpid()
+        mock_popen.returncode = 0
+
+        def delayed_communicate() -> tuple[str, str]:
+            time.sleep(0.05)  # Give the background thread time to poll the mock
+            return (mock_stdout + "\n", "")
+
+        mock_popen.communicate.side_effect = delayed_communicate
+        mock_mem_info = MagicMock()
+        mock_mem_info.used = 2 * 1024**3  # fake 2GB used
+
+        call_count = {"n": 0}
+
+        def fake_mem_info(handle: c_nvmlDevice_t) -> MagicMock:
+            call_count["n"] += 1
+            result = MagicMock()
+            result.used = (1 if call_count["n"] == 1 else 2) * 1024**3
+            return result
+
+        with (
+            patch("subprocess.Popen", return_value=mock_popen),
+            patch("pynvml.nvmlInit"),
+            patch("pynvml.nvmlShutdown"),
+            patch("pynvml.nvmlDeviceGetCount", return_value=1),
+            patch("pynvml.nvmlDeviceGetHandleByIndex", return_value=MagicMock()),
+            patch("pynvml.nvmlDeviceGetMemoryInfo", side_effect=fake_mem_info),
+        ):
             results, errors = run_fn(start_dir=str(source_path))
 
         assert len(results) > 0, "run_all_main_py returned no results"
@@ -414,11 +499,6 @@ class TestLoadRunMain:
         exec(compile(content, "run_main.py", "exec"), code_globals)  # noqa: S102
 
         mock_tracker_class = MagicMock()
-
-        mock_tracker_instance = mock_tracker_class.return_value
-        mock_tracker_instance.__enter__.return_value._total_energy.kWh = 123
-
-        code_globals["EmissionsTracker"] = mock_tracker_class
 
         run_fn = code_globals["run_all_main_py"]
 
@@ -714,7 +794,7 @@ class TestBuildFullDescription:
 
     def test_real_eval_descriptions_appear(self, mf: MakeFiles) -> None:
         """Test that real eval descriptions from _get_eval_description appear in full description."""
-        for eval_type in ["performance", "time", "energy", "golf"]:
+        for eval_type in ["performance", "time", "energy", "golf", "memory"]:
             eval_desc = mf._get_eval_description(eval_type)
             result = mf._build_full_description(
                 base_description="Base.",
@@ -981,7 +1061,7 @@ class TestSaveDescription:
 class TestSaveRequirements:
     """All tests for _save_requirements."""
 
-    @pytest.mark.parametrize("eval_type", ["time", "energy", "performance", "golf"])
+    @pytest.mark.parametrize("eval_type", ["time", "energy", "performance", "golf", "memory"])
     def test_copies_requirements(self, mf: MakeFiles, source_path: Path, eval_type: str) -> None:
         """Test that requirements.txt is copied to the source directory."""
         mf.source_path = source_path
@@ -1331,7 +1411,7 @@ class TestMakeFilesEndToEnd:
             dest = sp / f"{task_id}_{model_id}" if model_id else sp / task_id
             assert not (dest / "baseline_scores.json").exists()
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_make_files_train_all_eval_types(
         self, mf: MakeFiles, config_with_tmp: dict[str, Any], eval_type: str
     ) -> None:
@@ -1346,7 +1426,7 @@ class TestMakeFilesEndToEnd:
         assert (sp / "run_main.py").exists()
         assert (sp / "discovered").is_dir()
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_make_files_description_contains_eval_description(
         self, mf: MakeFiles, config_with_tmp: dict[str, Any], eval_type: str
     ) -> None:
@@ -1358,7 +1438,7 @@ class TestMakeFilesEndToEnd:
         eval_desc = mf._get_eval_description(eval_type)
         assert eval_desc in desc
 
-    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
+    @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory"])
     def test_make_files_energy_requirements(
         self, mf: MakeFiles, config_with_tmp: dict[str, Any], eval_type: str
     ) -> None:

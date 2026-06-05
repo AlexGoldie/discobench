@@ -22,13 +22,13 @@ def create_discobench(
         test: Whether to create the train or test version of a task (as defined by the config).
         use_base: Whether to use the baseline implementations for each editable module. Defaults to False, meaning a default task will use an `edit` implementation (i.e., only the interface for a module is defined).
         no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
-        eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy', 'golf']. In 'performance', the goal is to discover algorithms which maximise performance. In 'time', the goal is to discover algorithms that match the baseline performance in the shortest length of time. In 'energy', the objective is to discover algorithms which match the baseline performance using the least amount of estimated energy. In 'golf', the objective is to discover algorithms which are written in the least number of Bytes.
+        eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy', 'golf']. In 'performance', the goal is to discover algorithms which maximise performance. In 'time', the goal is to discover algorithms that match the baseline performance in the shortest length of time. In 'energy', the objective is to discover algorithms which match the baseline performance using the least amount of estimated energy. In 'golf', the objective is to discover algorithms which match the baseline performance and are written in the least number of Bytes. In 'memory', the objective is to discover algorithms which match the baseline performance with the lowest peak memory consumption.
         cache_root: A directory to which data can be downloaded and cached.
     """
     config_path = str(Path(__file__).parent / f"discobench_configs/{task_name}.yaml")
 
-    if eval_type not in ["performance", "time", "energy", "golf"]:
-        raise ValueError("Ensure eval_type is one of ['performance', 'time', 'energy', 'golf'].")
+    if eval_type not in ["performance", "time", "energy", "golf", "memory"]:
+        raise ValueError("Ensure eval_type is one of ['performance', 'time', 'energy', 'golf', 'memory].")
 
     with open(config_path) as f:
         task_config = yaml.safe_load(f)

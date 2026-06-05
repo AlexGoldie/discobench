@@ -221,7 +221,9 @@ if __name__ == "__main__":
 
     # metrics has shape [num_seeds, num_lrs, num_updates]
     returns = metrics["metrics"]["returned_episode_returns"]
-    returns = returns[..., -1]
+    returns = jnp.nanmean(
+        returns[..., int(returns.shape[-1] * 0.95) :], axis=-1
+    ) # compute return from the final 5% of training
     returns = returns.reshape([num_seeds, len(lrs)])
 
     mean_returns = returns.mean(axis=0)  # average over seeds per LR

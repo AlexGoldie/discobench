@@ -156,7 +156,7 @@ class TestGenerateConfig:
         )
         assert result is not None
         _, config = result
-        assert config["eval_type"] in ["performance", "energy", "time", "golf"]
+        assert config["eval_type"] in ["performance", "energy", "time", "golf", "memory"]
 
     def test_use_base_always_true(self, mock_filesystem: Path) -> None:
         """Test that p_use_base=1.0 always produces use_base=True."""
