@@ -7,25 +7,25 @@ from typing import Any
 from codecarbon import EmissionsTracker
 
 
-def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str,str]]:
+def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str, str]]:
     """Run all main.py files in the given directory and its subdirectories.
 
     Args:
         start_dir: The directory to start the search for main.py files from.
-        
+
     Returns:
         results: A dictionary of scores for all successful runs
         errors: A dictionary of error messages for all unsuccessful runs
     """
     results: dict[str, Any] = {}
-    errors:  dict[str, str] = {}
+    errors: dict[str, str] = {}
 
     for root, dirs, files in os.walk(start_dir):
         dirs[:] = [d for d in dirs if d != "data"]
 
         if "main.py" not in files:
             continue
-        
+
         main_path = os.path.abspath(os.path.join(root, "main.py"))
 
         baseline_path = os.path.abspath(os.path.join(root, "baseline_scores.json"))
@@ -39,8 +39,11 @@ def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str,str]
             energy = tracker._total_energy.kWh
 
             metrics = next(
-                (json.loads(line) for line in reversed(result.stdout.strip().split("\n"))
-                 if line.strip().startswith("{")),
+                (
+                    json.loads(line)
+                    for line in reversed(result.stdout.strip().split("\n"))
+                    if line.strip().startswith("{")
+                ),
                 None,
             )
 
@@ -77,8 +80,8 @@ def _extract_scores(
     main_path: str,
     energy: float,
     results: dict[str, Any],
-    errors: dict[str, str]
-) -> dict[str, Any]:
+    errors: dict[str, str],
+) -> None:
     results[root] = metrics
     results[root]["Energy (kWh)"] = energy
     results[root]["Exceeded Threshold"] = True
@@ -94,7 +97,7 @@ def _extract_scores(
 
     if len(missing_metrics) > 0:
         errors[root] = f"Script {main_path} did not produce any metric for {missing_metrics}."
-        
+
 
 if __name__ == "__main__":
     run_all_main_py()

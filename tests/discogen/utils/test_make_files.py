@@ -383,6 +383,7 @@ class TestLoadRunMain:
             results, errors = run_fn(start_dir=str(source_path))
 
         assert len(results) > 0, "run_all_main_py returned no results"
+        assert type(errors) is dict
         for _dir, metrics in results.items():
             for key in expected_keys[eval_type]:
                 assert key in metrics, f"Expected key '{key}' missing from {eval_type} metrics output"
