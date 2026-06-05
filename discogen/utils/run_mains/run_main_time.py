@@ -91,7 +91,9 @@ def _extract_scores(
 
         if metric_value is not None:
             if metric_value < baseline_score:
-                results[root]["Exceeded Threshold"] = False
+                results[root][f"Exceeded Threshold For {metric_name}"] = False
+            else:
+                results[root][f"Exceeded Threshold For {metric_name}"] = True
         else:
             missing_metrics.append(metric_name)
 

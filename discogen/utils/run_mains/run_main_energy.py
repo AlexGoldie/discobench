@@ -84,14 +84,15 @@ def _extract_scores(
 ) -> None:
     results[root] = metrics
     results[root]["Energy (kWh)"] = energy
-    results[root]["Exceeded Threshold"] = True
     missing_metrics = []
     for metric_name, baseline_score in baseline_scores.items():
         metric_value = _get_nested_metric(metrics, metric_name)
 
         if metric_value is not None:
             if metric_value < baseline_score:
-                results[root]["Exceeded Threshold"] = False
+                results[root][f"Exceeded Threshold For {metric_name}"] = False
+            else:
+                results[root][f"Exceeded Threshold For {metric_name}"] = True
         else:
             missing_metrics.append(metric_name)
 
