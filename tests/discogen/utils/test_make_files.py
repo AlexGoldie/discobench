@@ -525,7 +525,7 @@ class TestLoadRunMain:
         with patch("subprocess.run", return_value=mock_result):
             run_result = run_fn(start_dir=str(source_path))
 
-        results, errors = run_result.result, run_result.errors
+        results, errors = run_result.results, run_result.errors
         assert len(results) > 0, "run_all_main_py returned no results"
         assert type(errors) is dict
         for outer_key in expected_outer_keys:
