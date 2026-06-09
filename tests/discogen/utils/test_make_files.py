@@ -469,8 +469,9 @@ class TestLoadRunMain:
             patch("pynvml.nvmlDeviceGetHandleByIndex", return_value=MagicMock()),
             patch("pynvml.nvmlDeviceGetMemoryInfo", side_effect=fake_mem_info),
         ):
-            results, errors = run_fn(start_dir=str(source_path))
+            run_result = run_fn(start_dir=str(source_path))
 
+        results, errors = run_result.results, run_result.errors
         assert len(results) > 0, "run_all_main_py returned no results"
         assert type(errors) is dict
         for _dir, metrics in results.items():
