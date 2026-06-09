@@ -3,10 +3,19 @@ import os
 import subprocess
 import sys
 import time
+from dataclasses import dataclass, field
 from typing import Any
 
 
-def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str, str]]:
+@dataclass
+class RunResult:
+    """Dataclass for storing all outputs of run_main.py."""
+
+    results: dict[str, Any] = field(default_factory=dict)
+    errors: dict[str, str] = field(default_factory=dict)
+
+
+def run_all_main_py(start_dir: str = ".") -> RunResult:
     """Run all main.py files in the given directory and its subdirectories.
 
     Args:
@@ -57,7 +66,7 @@ def run_all_main_py(start_dir: str = ".") -> tuple[dict[str, Any], dict[str, str
             errors[root] = f"Failed to parse metrics JSON: {e}"
 
     print(json.dumps({"results": results, "errors": errors}))
-    return results, errors
+    return RunResult(results, errors)
 
 
 def _get_nested_metric(metrics: dict[str, Any], path: str) -> float | dict[str, Any] | None:
@@ -84,7 +93,6 @@ def _extract_scores(
 ) -> None:
     results[root] = metrics
     results[root]["time_to_completion (s)"] = end - start
-    results[root]["Exceeded Threshold"] = True
     missing_metrics = []
     for metric_name, baseline_score in baseline_scores.items():
         metric_value = _get_nested_metric(metrics, metric_name)
