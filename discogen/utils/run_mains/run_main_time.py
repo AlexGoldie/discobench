@@ -3,56 +3,70 @@ import os
 import subprocess
 import sys
 import time
+from dataclasses import dataclass, field
 from typing import Any
 
 
-def run_all_main_py(start_dir: str = ".") -> dict[str, Any]:
+@dataclass
+class RunResult:
+    """Dataclass for storing all outputs of run_main.py."""
+
+    results: dict[str, Any] = field(default_factory=dict)
+    errors: dict[str, str] = field(default_factory=dict)
+
+
+def run_all_main_py(start_dir: str = ".") -> RunResult:
     """Run all main.py files in the given directory and its subdirectories.
 
     Args:
         start_dir: The directory to start the search for main.py files from.
+
+    Returns:
+        results: A dictionary of scores for all successful runs
+        errors: A dictionary of error messages for all unsuccessful runs
     """
     results: dict[str, Any] = {}
+    errors: dict[str, str] = {}
+
     for root, dirs, files in os.walk(start_dir):
         dirs[:] = [d for d in dirs if d != "data"]
 
-        if "main.py" in files:
-            main_path = os.path.abspath(os.path.join(root, "main.py"))
+        if "main.py" not in files:
+            continue
 
-            baseline_path = os.path.abspath(os.path.join(root, "baseline_scores.json"))
-            with open(baseline_path) as f:
-                baseline_scores = json.load(f)
+        main_path = os.path.abspath(os.path.join(root, "main.py"))
 
-            print(f"Running: {main_path}")
-            try:
-                start = time.perf_counter()
-                result = subprocess.run([sys.executable, main_path], check=True, capture_output=True, text=True)  # noqa: S603
-                end = time.perf_counter()
+        baseline_path = os.path.abspath(os.path.join(root, "baseline_scores.json"))
+        with open(baseline_path) as f:
+            baseline_scores = json.load(f)
 
-                output_lines = result.stdout.strip().split("\n")
-                metrics = None
+        print(f"Running: {main_path}")
+        try:
+            start = time.perf_counter()
+            result = subprocess.run([sys.executable, main_path], check=True, capture_output=True, text=True)  # noqa: S603
+            end = time.perf_counter()
 
-                for line in reversed(output_lines):
-                    if line.strip().startswith("{"):
-                        try:
-                            metrics = json.loads(line)
-                            break
-                        except json.JSONDecodeError:
-                            continue
+            metrics = next(
+                (
+                    json.loads(line)
+                    for line in reversed(result.stdout.strip().split("\n"))
+                    if line.strip().startswith("{")
+                ),
+                None,
+            )
 
-                if metrics:
-                    results[root] = _extract_scores(baseline_scores, metrics, root, main_path, results, start, end)
-                else:
-                    raise RuntimeError(
-                        f"Script {main_path} did not produce metrics.\n--- STDOUT ---\n{result.stdout}\n"
-                    )
-            except subprocess.CalledProcessError as e:
-                print(f"Error running {main_path}: {e}")
-                error_message = f"--- STDERR ---\n{e.stderr}\n"
-                raise RuntimeError(error_message) from e
+            if metrics:
+                _extract_scores(baseline_scores, metrics, root, main_path, start, end, results, errors)
+            else:
+                errors[root] = result.stdout
+        except subprocess.CalledProcessError as e:
+            error_message = e.stderr
+            errors[root] = error_message
+        except json.JSONDecodeError as e:
+            errors[root] = f"Failed to parse metrics JSON: {e}"
 
-    print(json.dumps(results))
-    return results
+    print(json.dumps({"results": results, "errors": errors}))
+    return RunResult(results, errors)
 
 
 def _get_nested_metric(metrics: dict[str, Any], path: str) -> float | dict[str, Any] | None:
@@ -72,22 +86,27 @@ def _extract_scores(
     metrics: dict[str, Any],
     root: str,
     main_path: str,
-    results: dict[str, Any],
     start: float,
     end: float,
-) -> dict[str, Any]:
-    metrics["time_to_completion (s)"] = end - start
-    metrics["Exceeded Threshold"] = True
+    results: dict[str, Any],
+    errors: dict[str, str],
+) -> None:
+    results[root] = metrics
+    results[root]["time_to_completion (s)"] = end - start
+    missing_metrics = []
     for metric_name, baseline_score in baseline_scores.items():
         metric_value = _get_nested_metric(metrics, metric_name)
 
         if metric_value is not None:
             if metric_value < baseline_score:
-                metrics["Exceeded Threshold"] = False
-                break
+                results[root][f"Exceeded Threshold For {metric_name}"] = False
+            else:
+                results[root][f"Exceeded Threshold For {metric_name}"] = True
         else:
-            raise RuntimeError(f"Script {main_path} did not produce any metric for {metric_name}!\n")
-    return metrics
+            missing_metrics.append(metric_name)
+
+    if len(missing_metrics) > 0:
+        errors[root] = f"Script {main_path} did not produce any metric for {missing_metrics}."
 
 
 if __name__ == "__main__":

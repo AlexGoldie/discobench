@@ -361,8 +361,8 @@ class TestLoadRunMain:
         run_fn = code_globals["run_all_main_py"]
 
         expected_keys: dict[str, list[str]] = {
-            "time": ["time_to_completion (s)", "Exceeded Threshold"],
-            "energy": ["Energy (kWh)", "Exceeded Threshold"],
+            "time": ["time_to_completion (s)", "Exceeded Threshold For dummy_metric"],
+            "energy": ["Energy (kWh)", "Exceeded Threshold For dummy_metric"],
         }
 
         # Create a fake task directory with a main.py
@@ -380,16 +380,18 @@ class TestLoadRunMain:
         mock_result = type("CompletedProcess", (), {"stdout": mock_stdout + "\n", "stderr": "", "returncode": 0})()
 
         with patch("subprocess.run", return_value=mock_result):
-            results = run_fn(start_dir=str(source_path))
+            run_result = run_fn(start_dir=str(source_path))
 
+        results, errors = run_result.results, run_result.errors
         assert len(results) > 0, "run_all_main_py returned no results"
+        assert type(errors) is dict
         for _dir, metrics in results.items():
             for key in expected_keys[eval_type]:
                 assert key in metrics, f"Expected key '{key}' missing from {eval_type} metrics output"
                 if baseline_score > 1:
-                    assert not metrics["Exceeded Threshold"]
+                    assert not metrics["Exceeded Threshold For dummy_metric"]
                 else:
-                    assert metrics["Exceeded Threshold"]
+                    assert metrics["Exceeded Threshold For dummy_metric"]
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
