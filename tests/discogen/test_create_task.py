@@ -57,7 +57,7 @@ def test_create_task_example_path_resolution(mock_make_files: MagicMock, mock_ya
     assert kwargs["train"] is True
 
 
-@pytest.mark.parametrize("eval_type", ["performance", "energy", "time"])
+@pytest.mark.parametrize("eval_type", ["performance", "energy", "time", "golf", "memory"])
 @pytest.mark.parametrize("baseline_scale", [0.5, 1.0, 1.5])
 def test_create_task_with_config_dict(mock_make_files: MagicMock, eval_type: str, baseline_scale: float) -> None:
     """Ensures that passing a dict bypasses file reading entirely."""
@@ -73,7 +73,7 @@ def test_create_task_with_config_dict(mock_make_files: MagicMock, eval_type: str
 
 
 @pytest.mark.parametrize("test_mode, expected_train", [(True, False), (False, True)])
-@pytest.mark.parametrize("eval_type", ["performance", "energy", "time"])
+@pytest.mark.parametrize("eval_type", ["performance", "energy", "time", "golf", "memory"])
 @pytest.mark.parametrize("baseline_scale", [0.5, 1.0, 1.5])
 def test_create_task_train_test_toggle(
     mock_make_files: MagicMock,

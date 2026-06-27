@@ -48,15 +48,15 @@ def cli() -> None:
 )
 @click.option(
     "--eval-type",
-    type=click.Choice(["performance", "time", "energy"], case_sensitive=False),
+    type=click.Choice(["performance", "time", "energy", "golf", "memory"], case_sensitive=False),
     default="performance",
-    help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
+    help="What type of evaluation to use. Options are: 'performance' (find the highest performance algorithm); 'time' (find an algorithm which matches baseline performance in the least time); 'energy' (find an algorithm which matches the baseline performance using the least energy); 'golf' (find the algorithm using the least number of characters); 'memory' ((find an algorithm which matches the baseline performance with the least peak memory usage (RAM and GPU)). Default: performance",
 )
 @click.option(
     "--baseline-scale",
     type=float,
     default=1.0,
-    help="If using 'time' or 'energy' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",
+    help="If using 'time', 'energy', 'golf', 'memory' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",
 )
 @click.option("--cache-root", type=str, default="cache", help="A directory to which data can be downloaded and cached.")
 def create_task_cmd(
@@ -149,9 +149,9 @@ def create_config_cmd(task_domain: str, save_dir: str) -> None:
 )
 @click.option(
     "--eval-type",
-    type=click.Choice(["performance", "time", "energy", "random"], case_sensitive=False),
+    type=click.Choice(["performance", "time", "energy", "golf", "memory", "random"], case_sensitive=False),
     default="random",
-    help="What eval_type to use. Supports 'random', which will select a random eval_type, or one of ['performance', 'energy', 'time']. Defaults to 'random'.",
+    help="What eval_type to use. Supports 'random', which will select a random eval_type, or one of ['performance', 'energy', 'time', 'golf', 'memory']. Defaults to 'random'.",
 )
 @click.option(
     "--no-backends",
@@ -249,9 +249,9 @@ def sample_task_config_cmd(
 )
 @click.option(
     "--eval-type",
-    type=click.Choice(["performance", "time", "energy"], case_sensitive=False),
+    type=click.Choice(["performance", "time", "energy", "golf", "memory"], case_sensitive=False),
     default="performance",
-    help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm), 'time' (find the algorithm which matches baseline performance in the least time) and 'energy' (find the algorithm which matched the baseline performance using the least energy). Default: performance",
+    help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm); 'time' (find the algorithm which matches baseline performance in the least time); 'energy' (find the algorithm which matched the baseline performance using the least energy); 'golf' (find the algorithm using the least number of characters); 'memory' ((find an algorithm which matches the baseline performance with the least peak memory usage (RAM and GPU)). Default: performance",
 )
 @click.option("--cache-root", type=str, default="cache", help="A directory to which data can be downloaded and cached.")
 def create_discobench_task_cmd(

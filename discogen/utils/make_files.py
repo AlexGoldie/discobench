@@ -565,8 +565,8 @@ class MakeFiles:
             train: Whether to create the training subset of the task.
             use_base: If True, will use the baseline implementation for editable modules.
             no_data: If True, will create the codebase without loading any data files.
-            eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy']
-            baseline_scale: When using 'time' or 'energy' eval_type, what relative scaling to apply to the baseline score. Default to 1.0 (i.e., match the baseline)
+            eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy', 'golf', 'memory']
+            baseline_scale: When using 'time', 'energy', 'golf', 'memory' eval_type, what relative scaling to apply to the baseline score. Default to 1.0 (i.e., match the baseline)
         """
         self.source_path = Path(config.get("source_path", "task_src"))
 
@@ -598,7 +598,7 @@ class MakeFiles:
         model_descriptions = []
         all_discovered_files = set()
 
-        if eval_type in ["time", "energy"]:
+        if eval_type in ["time", "energy", "golf", "memory"]:
             baseline_path = self.base_path / "utils" / "baseline_scores.yaml"
             with open(baseline_path) as f:
                 baselines = yaml.safe_load(f)

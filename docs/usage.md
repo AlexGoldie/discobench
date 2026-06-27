@@ -198,9 +198,9 @@ discogen create-task --task-domain DOMAIN [OPTIONS]
 
 - `--no-data`: Creates codebase without downloading or copying any data. This will not run in a production setting, but can be useful for quickly understanding how a codebase looks before running experiments (without having to wait for data download).
 
-- `--eval-type EVAL_TYPE`: The type of evaluation to use. This defaults to `performance`, meaning the agent must maximise the performance of the algorithm. We also support `energy`, where the agent must minimise the energy used to train a model with the algorithm, and `time`, where the agent must minimise the time used to train a model with the algorithm. Defaults to `performance`.
+- `--eval-type EVAL_TYPE`: The type of evaluation to use. This defaults to `performance`, meaning the agent must maximise the performance of the algorithm. We also support: `energy`, where the agent must minimise the energy used to train a model with the algorithm; `time`, where the agent must minimise the time used to train a model with the algorithm; `golf`, where the agent must minimise the length of their algorithm program; `memory`, where the agent must minimise the peak RAM and GPU memory used by their algorithm. Defaults to `performance`.
 
-- `--baseline-scale BASELINE_SCALE`: If using `eval_type=energy` or `eval_type=time`, the agent's objective is to match a threshold score using minimum resources. Adjusting the baseline score can be used to make tasks easier (`scale<1`) or harder (`scale>1`). Defaults to `1`, meaning the agent must match the score of the baseline implementation.
+- `--baseline-scale BASELINE_SCALE`: If using `eval_type=energy`, `eval_type=time`, `eval_type=golf`, `eval_type=memory`, the agent's objective is to match a threshold score using minimum resources. Adjusting the baseline score can be used to make tasks easier (`scale<1`) or harder (`scale>1`). Defaults to `1`, meaning the agent must match the score of the baseline implementation.
 
 - `--cache-root CACHE_ROOT`: Where downloaded data should be cached to.
 
@@ -270,7 +270,7 @@ NOTE: After sampling a config, you will then need to create a task using the sam
 
 - `--p-use-base FLOAT`: The probability of starting each editable module off from a baseline implementation, rather than using the interface-only inputs.
 
-- `--eval-type`: Which type of evaluation to use. Can be one of `["random", "performance", "time", "energy]`. `"random"` will randomly sample an `eval_type` dueing the config sampling process.
+- `--eval-type`: Which type of evaluation to use. Can be one of `["random", "performance", "time", "energy", "golf", "memory"]`. `"random"` will randomly sample an `eval_type` dueing the config sampling process.
 
 - `--no-backends`: If passed, will only sample tasks from the `default` backend.
 

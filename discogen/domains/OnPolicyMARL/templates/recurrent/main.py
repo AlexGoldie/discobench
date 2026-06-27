@@ -195,9 +195,8 @@ if __name__ == "__main__":
 
     # metrics has shape [num_seeds, num_lrs, num_updates]
     returns = metrics["metrics"]["mean_training_return"]
-    len_returns = returns.shape[-1]
     returns = jnp.nanmean(
-        returns[..., int(len_returns * 0.95) :], axis=-1
+        returns[..., int(returns.shape[-1] * 0.95) :], axis=-1
     )  # compute return from the final 5% of training
     returns = returns.reshape([num_seeds, len(lrs)])
 
