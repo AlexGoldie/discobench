@@ -264,7 +264,6 @@ def sample_task_config_cmd(
     "--source-path",
     type=str,
     required=False,
-    default="task_src",
     help="Where the task code should be saved after calling create_task() on the returned config.",
 )
 def create_discobench_task_cmd(
@@ -274,8 +273,8 @@ def create_discobench_task_cmd(
     no_data: bool,
     eval_type: str,
     cache_root: str,
-    source_path: str,
     baseline_scale: float,
+    source_path: str | None = None,
 ) -> None:
     """Create task source files for a specified task domain."""
     if test and use_base:
