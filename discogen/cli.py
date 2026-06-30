@@ -254,15 +254,42 @@ def sample_task_config_cmd(
     help="What type of evaluation to use. Options are 'performance' (find the highest performance algorithm); 'time' (find the algorithm which matches baseline performance in the least time); 'energy' (find the algorithm which matched the baseline performance using the least energy); 'golf' (find the algorithm using the least number of characters); 'memory' ((find an algorithm which matches the baseline performance with the least peak memory usage (RAM and GPU)). Default: performance",
 )
 @click.option("--cache-root", type=str, default="cache", help="A directory to which data can be downloaded and cached.")
+@click.option(
+    "--baseline-scale",
+    type=float,
+    default=1.0,
+    help="If using 'time', 'energy', 'golf', 'memory' evaluation, what tolerance is allowed compared to baseline score. For instance, if this is 0.5, an algorithm is valid if it reaches a score within 0.5 of the baseline. Default: 1.0. Must be above 0.",
+)
+@click.option(
+    "--source-path",
+    type=str,
+    required=False,
+    default="task_src",
+    help="Where the task code should be saved after calling create_task() on the returned config.",
+)
 def create_discobench_task_cmd(
-    task_name: str, test: bool, use_base: bool, no_data: bool, eval_type: str, cache_root: str
+    task_name: str,
+    test: bool,
+    use_base: bool,
+    no_data: bool,
+    eval_type: str,
+    cache_root: str,
+    source_path: str,
+    baseline_scale: float,
 ) -> None:
     """Create task source files for a specified task domain."""
     if test and use_base:
         click.echo("Warning: --use-base has no effect with --test. Test tasks use discovered files from training.")
 
     create_discobench(
-        task_name=task_name, test=test, use_base=use_base, no_data=no_data, eval_type=eval_type, cache_root=cache_root
+        task_name=task_name,
+        test=test,
+        use_base=use_base,
+        no_data=no_data,
+        eval_type=eval_type,
+        cache_root=cache_root,
+        source_path=source_path,
+        baseline_scale=baseline_scale,
     )
     mode = "test" if test else "training"
     click.echo(f"Successfully created {mode} discobench task: {task_name}.")

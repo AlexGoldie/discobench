@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -32,3 +33,22 @@ def test_create_discobench_task(
     mock_make_files.return_value.make_files.assert_called_with(
         task_config, train=expected_train, use_base=False, no_data=True, baseline_scale=1.0, eval_type=eval_type
     )
+
+
+@pytest.mark.parametrize("task_name", ["GreenhouseGasPrediction_all", "OnPolicyRL_train", "OffPolicyRL_networks"])
+@pytest.mark.parametrize("source_path", ["tmp1", "tmp2", None])
+def test_different_source_path(
+    task_name: str, source_path: str | None, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Tests that each discobench task can be created."""
+    # Run inside a temp dir so generated files (task_src/, source_path, cache/) don't pollute the cwd.
+    monkeypatch.chdir(tmp_path)
+    create_discobench(task_name, test=False, no_data=True, source_path=source_path)
+
+    task_name_sp = Path(f"task_src/{task_name}")
+    if source_path is not None:
+        sp = Path(source_path)
+        assert sp.exists()
+        assert not task_name_sp.exists()
+    else:
+        assert task_name_sp.exists()

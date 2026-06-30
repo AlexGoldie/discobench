@@ -159,6 +159,8 @@ def test_create_config_cmd(runner: CliRunner, tmp_path: Path) -> None:
 @pytest.mark.parametrize("no_data", [True, False])
 @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf", "memory", "abcdef"])
 @pytest.mark.parametrize("cache_root", ["cache1", "cache2"])
+@pytest.mark.parametrize("source_path", ["tmp1", "tmp2"])
+@pytest.mark.parametrize("baseline_scale", [1.0, 0.5])
 def test_create_discobench_cli(
     runner: CliRunner,
     task_name: str,
@@ -168,10 +170,24 @@ def test_create_discobench_cli(
     no_data: bool,
     eval_type: str,
     cache_root: str,
+    source_path: str,
+    baseline_scale: float,
 ) -> None:
     """Test that create_discobench is called correctly."""
     with patch("discogen.cli.create_discobench") as mock_create:
-        args = ["create-discobench", "--task-name", task_name, "--eval-type", eval_type, "--cache-root", cache_root]
+        args = [
+            "create-discobench",
+            "--task-name",
+            task_name,
+            "--eval-type",
+            eval_type,
+            "--cache-root",
+            cache_root,
+            "--source-path",
+            source_path,
+            "--baseline-scale",
+            str(baseline_scale),
+        ]
         if test:
             args.append("--test")
         if use_base:
@@ -201,6 +217,8 @@ def test_create_discobench_cli(
                 no_data=no_data,
                 eval_type=eval_type,
                 cache_root=cache_root,
+                source_path=source_path,
+                baseline_scale=baseline_scale,
             )
             assert results.exit_code == 0
             assert f"Successfully created {mode} discobench task: {expected_task_name}" in results.output

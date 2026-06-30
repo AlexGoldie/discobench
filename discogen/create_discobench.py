@@ -14,6 +14,8 @@ def create_discobench(
     no_data: bool = False,
     eval_type: str | None = "performance",
     cache_root: str = "cache",
+    source_path: str | None = None,
+    baseline_scale: float = 1,
 ) -> None:
     """Prepare files for the training or testing subset of a DiscoBench task.
 
@@ -24,6 +26,8 @@ def create_discobench(
         no_data: Whether to create the codebase without loading any of the data files. If the code loads a pretrained model, this will also be skipped.
         eval_type: What type of evaluation to use. One of ['performance', 'time', 'energy', 'golf']. In 'performance', the goal is to discover algorithms which maximise performance. In 'time', the goal is to discover algorithms that match the baseline performance in the shortest length of time. In 'energy', the objective is to discover algorithms which match the baseline performance using the least amount of estimated energy. In 'golf', the objective is to discover algorithms which match the baseline performance and are written in the least number of Bytes. In 'memory', the objective is to discover algorithms which match the baseline performance with the lowest peak memory consumption.
         cache_root: A directory to which data can be downloaded and cached.
+        source_path: A directory path if you do not want data to be stored in the the default location (task_src/{task_name}).
+        baseline_scale: A scale factor to multiply the baseline score by, to make non-performance type problems have different baseline scores. Defaults to 1 (match the baseline).
     """
     config_path = str(Path(__file__).parent / f"discobench_configs/{task_name}.yaml")
 
@@ -33,10 +37,13 @@ def create_discobench(
     with open(config_path) as f:
         task_config = yaml.safe_load(f)
 
+    if source_path is not None:
+        task_config["source_path"] = source_path
+
     train = not test
 
     task_domain = task_name.split("_")[0]
 
     MakeFiles(task_domain, cache_root=cache_root).make_files(
-        task_config, train=train, use_base=use_base, no_data=no_data, eval_type=eval_type, baseline_scale=1
+        task_config, train=train, use_base=use_base, no_data=no_data, eval_type=eval_type, baseline_scale=baseline_scale
     )
