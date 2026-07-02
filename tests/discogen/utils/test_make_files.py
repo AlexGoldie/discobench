@@ -381,7 +381,7 @@ class TestLoadRunMain:
         # The fake main.py just prints a JSON dict — content doesn't matter because
         # we mock subprocess.run below.
         (task_dir / "main.py").write_text("print(json.dumps({'dummy_metric':1.0}))")
-        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": baseline_score}))
+        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": (baseline_score, "max")}))
 
         # Build a mock metrics dict with all expected keys
         mock_metrics = {"dummy_metric": 1.0}
@@ -435,7 +435,7 @@ class TestLoadRunMain:
         # The fake main.py just prints a JSON dict — content doesn't matter because
         # we mock subprocess.run below.
         (task_dir / "main.py").write_text("print(json.dumps({'dummy_metric':1.0}))")
-        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": baseline_score}))
+        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": (baseline_score, "max")}))
 
         # Build a mock metrics dict with all expected keys
         mock_metrics = {"dummy_metric": 1.0}
@@ -513,7 +513,7 @@ class TestLoadRunMain:
         # The fake main.py just prints a JSON dict — content doesn't matter because
         # we mock subprocess.run below.
         (task_dir / "main.py").write_text("print(json.dumps({'dummy_metric':1.0}))")
-        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": baseline_score}))
+        (task_dir / "baseline_scores.json").write_text(json.dumps({"dummy_metric": (baseline_score, "max")}))
         (source_path / "discovered").mkdir()
         (source_path / "discovered" / "hello_world.py").write_text("print('hello world')")
 
@@ -626,8 +626,7 @@ class TestCreateBaselineScores:
         scores_path = dest / "baseline_scores.json"
         assert scores_path.exists()
         scores = json.loads(scores_path.read_text())
-        # min objective flips sign: 2.0 * -1 * 1.0 = -2.0
-        assert scores["return_mean"] == -2.0
+        assert scores["return_mean"] == [2.0, "min"]
 
     def test_max_objective_preserves_sign(self, mf: MakeFiles, tmp_path: Path) -> None:
         """Test that max objective keeps positive sign."""
@@ -637,7 +636,7 @@ class TestCreateBaselineScores:
         mf._create_baseline_scores(baselines, dest, template_backend="default", task_id="task_a", baseline_scale=1.0)
         scores = json.loads((dest / "baseline_scores.json").read_text())
         # max objective: 0.95 * 1 * 1.0 = 0.95
-        assert scores["accuracy"] == pytest.approx(0.95)
+        assert scores["accuracy"] == [pytest.approx(0.95), "max"]
 
     def test_baseline_scale_applied(self, mf: MakeFiles, tmp_path: Path) -> None:
         """Test that baseline_scale multiplies the score."""
@@ -646,8 +645,7 @@ class TestCreateBaselineScores:
         baselines = {"return_mean": {"objective": "min", "default": {"task_a": 2.0}}}
         mf._create_baseline_scores(baselines, dest, template_backend="default", task_id="task_a", baseline_scale=0.5)
         scores = json.loads((dest / "baseline_scores.json").read_text())
-        # 2.0 * -1 * 0.5 = -1.0
-        assert scores["return_mean"] == pytest.approx(-1.0)
+        assert scores["return_mean"] == [pytest.approx(1.0), "min"]
 
     def test_missing_task_id_produces_empty_targets(self, mf: MakeFiles, tmp_path: Path) -> None:
         """Test that a task_id absent from the baseline dict writes an empty JSON object."""
@@ -670,10 +668,10 @@ class TestCreateBaselineScores:
         }
         mf._create_baseline_scores(baselines, dest, template_backend="default", task_id="task_a", baseline_scale=2.0)
         scores = json.loads((dest / "baseline_scores.json").read_text())
-        # metric_a: 10.0 * -1 * 2.0 = -20.0
-        assert scores["metric_a"] == pytest.approx(-20.0)
-        # metric_b: 3.0 * 1 * 2.0 = 6.0
-        assert scores["metric_b"] == pytest.approx(6.0)
+        # metric_a: 10.0 * 2.0 = -20.0
+        assert scores["metric_a"] == [pytest.approx(20.0), "min"]
+        # metric_b: 3.0  * 2.0 = 6.0
+        assert scores["metric_b"] == [pytest.approx(6.0), "max"]
 
     def test_uses_template_backend_key(self, mf: MakeFiles, tmp_path: Path) -> None:
         """Test that the correct template_backend key is used to look up scores."""
@@ -684,8 +682,8 @@ class TestCreateBaselineScores:
             baselines, dest, template_backend="custom_backend", task_id="task_a", baseline_scale=1.0
         )
         scores = json.loads((dest / "baseline_scores.json").read_text())
-        # Should use custom_backend value, not default: 1.5 * -1 * 1.0 = -1.5
-        assert scores["loss"] == pytest.approx(-1.5)
+        # Should use custom_backend value, not default: 1.5 * 1.0 = -1.5
+        assert scores["loss"] == [pytest.approx(1.5), "min"]
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -1468,7 +1466,7 @@ class TestMakeFilesEndToEnd:
 
         for key in unscaled_scores:
             if unscaled_scores[key] != 0:
-                assert scaled_scores[key] == pytest.approx(unscaled_scores[key] * 2.0)
+                assert scaled_scores[key][0] == pytest.approx(unscaled_scores[key][0] * 2.0)
 
     @pytest.mark.parametrize("eval_type", ["performance", "time", "energy", "golf"])
     def test_make_files_run_main_matches_eval_type(
