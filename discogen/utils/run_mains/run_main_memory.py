@@ -202,8 +202,14 @@ def _extract_scores(
     for metric_name, baseline_score in baseline_scores.items():
         metric_value = _get_nested_metric(metrics, metric_name)
 
-        if metric_value is not None:
-            if metric_value < baseline_score:
+        if metric_value is not None and isinstance(metric_value, (int, float)):
+            baseline = baseline_score[0]
+            baseline_objective = baseline_score[1]
+
+            def comp_baseline(x: float, y: float) -> bool:
+                return x < y if baseline_objective == "max" else x > y
+
+            if comp_baseline(metric_value, baseline):
                 results[root][f"Exceeded Threshold For {metric_name}"] = False
             else:
                 results[root][f"Exceeded Threshold For {metric_name}"] = True
