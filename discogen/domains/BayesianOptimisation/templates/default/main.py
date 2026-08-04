@@ -1,10 +1,5 @@
 import os
 
-os.environ["TF_CUDNN_DETERMINISTIC"] = "1"
-os.environ["XLA_FLAGS"] = (
-    "--xla_gpu_deterministic_ops=true "
-    "--xla_gpu_triton_gemm_any=true"
-)
 os.environ.pop("LD_LIBRARY_PATH", None)
 os.environ.pop("CUDA_VISIBLE_DEVICES", None)
 

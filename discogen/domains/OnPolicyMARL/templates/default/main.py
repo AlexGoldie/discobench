@@ -1,7 +1,4 @@
 import os
-os.environ["XLA_FLAGS"] = "--xla_gpu_deterministic_ops=true"
-os.environ["TF_CUDNN_DETERMINISTIC"] = "1"
-
 import json
 import flax.linen as nn
 import jax
