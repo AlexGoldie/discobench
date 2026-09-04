@@ -18,6 +18,7 @@ from optim import make_optimizer
 from gymnax.environments import environment, spaces
 from activation import get_activation
 from targets import get_targets
+from schedule import make_schedule_fn
 
 def make_train(config):
 
