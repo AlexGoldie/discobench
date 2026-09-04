@@ -15,10 +15,10 @@ from gymnax.environments import environment, spaces
 from loss import loss_actor_and_critic
 from make_env import make_env
 from networks import ActorCritic, RecurrentModule
-from optim import scale_by_optimizer
+from optim import make_optimizer
 from activation import get_activation
 from targets import get_targets
-
+from schedule import make_schedule_fn
 
 class Transition(NamedTuple):
     done: jnp.ndarray
@@ -40,14 +40,6 @@ def make_train(config):
     env, env_params = make_env()
 
     def train(rng, lr):
-
-        def linear_anneal(count):
-            frac = (
-                1.0
-                - (count // (config["NUM_MINIBATCHES"] * config["UPDATE_EPOCHS"]))
-                / config["NUM_UPDATES"]
-            )
-            return -lr * frac
 
         def get_action_dim(action_space):
             if isinstance(action_space, spaces.Discrete):
@@ -72,20 +64,22 @@ def make_train(config):
             config["NUM_ENVS"], config["HSIZE"]
         )
         network_params = network.init(_rng, init_hstate, init_x)
-        schedule_fn = optax.linear_schedule(
-            init_value=-lr, end_value=-lr, transition_steps=0
-        )
-        if config.get("ANNEAL_LR", True):
+
+        if config.get("SCHEDULE_LR", True):
+            scale_by_optimizer = make_optimizer(config)
+            schedule_fn = make_schedule_fn(config, lr)
             tx = optax.chain(
-                optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
-                scale_by_optimizer(),
-                optax.scale_by_schedule(linear_anneal),
-            )
-        else:
-            tx = optax.chain(
-                optax.clip_by_global_norm(config["MAX_GRAD_NORM"]),
                 scale_by_optimizer(),
                 optax.scale_by_schedule(schedule_fn),
+            )
+        else:
+            scale_by_optimizer = make_optimizer(config)
+            constant_schedule = optax.linear_schedule(
+                init_value=lr, end_value=lr, transition_steps=0
+            )
+            tx = optax.chain(
+                scale_by_optimizer(),
+                optax.scale_by_schedule(constant_schedule),
             )
         train_state = TrainState.create(
             apply_fn=network.apply,
