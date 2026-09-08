@@ -41,6 +41,7 @@ def make_train(config):
     env, env_params = make_env()
 
     def train(rng, lr):
+        lr = -1 * lr
 
         def get_action_dim(action_space):
             if isinstance(action_space, spaces.Discrete):
