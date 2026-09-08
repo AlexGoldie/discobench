@@ -41,6 +41,8 @@ def make_train(config):
     env, env_params = make_env()
 
     def train(rng, lr):
+        # multiply lr by -1, since we focus on gradient *descent* and scale_by_optimizer is implemented for gradient *ascent*
+        lr = -1 * lr
 
         def get_action_dim(action_space):
             if isinstance(action_space, spaces.Discrete):
