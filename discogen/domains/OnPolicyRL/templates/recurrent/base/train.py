@@ -28,6 +28,7 @@ class Transition(NamedTuple):
     log_prob: jnp.ndarray
     obs: jnp.ndarray
     info: jnp.ndarray
+    next_done: jnp.ndarray
 
 
 def make_train(config):
@@ -119,8 +120,38 @@ def make_train(config):
                 obsv, env_state, reward, done, info = env.step(
                     rng_step, env_state, action, env_params
                 )
+
+                # Evaluate the genuine post-transition observation with the
+                # recurrent state produced from the current observation. Do
+                # not reset the recurrent state: the final observation still
+                # belongs to the episode that just truncated.
+                bootstrap_truncation = jnp.asarray(info["truncated"]) & ~jnp.asarray(
+                    info["terminated"]
+                )
+
+                def get_final_value(_):
+                    final_input = (
+                        info["final_observation"][np.newaxis, :],
+                        jnp.zeros_like(done)[np.newaxis, :],
+                    )
+                    _, _, final_value = network.apply(
+                        train_state.params, hstate, final_input
+                    )
+                    return final_value.squeeze(0)
+
+                final_value = jax.lax.cond(
+                    jnp.any(bootstrap_truncation),
+                    get_final_value,
+                    lambda _: jnp.zeros_like(value),
+                    operand=None,
+                )
+                reward = jnp.where(
+                    bootstrap_truncation,
+                    reward + config["GAMMA"] * jax.lax.stop_gradient(final_value),
+                    reward,
+                )
                 transition = Transition(
-                    last_done, action, value, reward, log_prob, last_obs, info
+                    last_done, action, value, reward, log_prob, last_obs, info, done
                 )
                 runner_state = (train_state, env_state, obsv, done, hstate, rng)
                 return runner_state, transition

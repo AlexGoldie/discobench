@@ -105,6 +105,28 @@ def make_train(config):
                 obsv, env_state, reward, done, info = env.step(
                     rng_step, env_state, action, env_params
                 )
+
+                bootstrap_truncation = jnp.asarray(info["truncated"]) & ~jnp.asarray(
+                    info["terminated"]
+                )
+
+                def get_final_value(_):
+                    _, final_value = network.apply(
+                        train_state.params, info["final_observation"]
+                    )
+                    return final_value
+
+                final_value = jax.lax.cond(
+                    jnp.any(bootstrap_truncation),
+                    get_final_value,
+                    lambda _: jnp.zeros_like(value),
+                    operand=None,
+                )
+                reward = jnp.where(
+                    bootstrap_truncation,
+                    reward + config["GAMMA"] * jax.lax.stop_gradient(final_value),
+                    reward,
+                )
                 transition = Transition(
                     done, action, value, reward, log_prob, last_obs, info
                 )
